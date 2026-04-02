@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import importlib.util
 import math
-import platform
-import sys
 import unittest
 
 from tests.path_setup import ensure_src_path
@@ -20,16 +18,13 @@ from qclab.backends import (
 )
 from qclab.backends.base import ExecutionTier
 from qclab.observables import make_pauli_observable
+from qclab.utils.runtime import is_aer_execution_guard_required
 
 
 QISKIT_AVAILABLE = importlib.util.find_spec("qiskit") is not None
 QISKIT_AER_AVAILABLE = importlib.util.find_spec("qiskit_aer") is not None
 QISKIT_RUNTIME_AVAILABLE = importlib.util.find_spec("qiskit_ibm_runtime") is not None
-AER_LOCAL_GUARD = (
-    platform.system() == "Darwin"
-    and platform.machine() == "arm64"
-    and sys.version_info >= (3, 14)
-)
+AER_LOCAL_GUARD = is_aer_execution_guard_required()
 
 
 @unittest.skipUnless(QISKIT_AVAILABLE, "qiskit is not installed")
@@ -91,7 +86,7 @@ class ExactLocalQiskitIntegrationTests(unittest.TestCase):
 )
 @unittest.skipIf(
     AER_LOCAL_GUARD,
-    "Aer live integration is guarded on macOS arm64 with Python 3.14+ due to local libomp runtime aborts; use Python 3.10-3.13 for validated Aer coverage.",
+    "Aer live integration is guarded on macOS arm64 with Python 3.13+ due to observed OpenMP shared-memory aborts; use Python 3.10-3.12 for local Aer coverage on this host.",
 )
 class AerQiskitIntegrationTests(unittest.TestCase):
     """Verify the noisy-local wrapper when Aer is installed."""
@@ -126,7 +121,7 @@ class AerQiskitIntegrationTests(unittest.TestCase):
 )
 @unittest.skipIf(
     AER_LOCAL_GUARD,
-    "IBM Runtime local testing uses Aer-backed fake backends and is guarded on macOS arm64 with Python 3.14+ in this environment.",
+    "IBM Runtime local testing uses Aer-backed fake backends and is guarded on macOS arm64 with Python 3.13+ in this environment.",
 )
 class IBMRuntimeLocalTestingIntegrationTests(unittest.TestCase):
     """Verify the IBM Runtime wrapper against local testing mode when available."""

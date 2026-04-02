@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from qclab.analysis.comparison import ComparisonRecord
+from qclab.plotting.backend import configure_noninteractive_backend
 from qclab.plotting.style import apply_publication_style
 from qclab.utils.optional import require_dependency
 
@@ -16,6 +17,7 @@ def plot_scalar_comparison(
 ):
     """Create a simple benchmark-versus-candidate comparison figure."""
 
+    configure_noninteractive_backend()
     pyplot = require_dependency(
         "matplotlib.pyplot",
         "plot scalar comparison figures",

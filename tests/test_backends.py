@@ -208,19 +208,51 @@ class BackendExecutionTests(unittest.TestCase):
             primitive_factory=primitive_factory,
             backend_factory=backend_factory,
         )
-        executor.run(
-            "circuit",
-            observable,
-            request=BackendRequest(
-                tier=ExecutionTier.NOISY_LOCAL,
-                backend_name="aer_estimator",
-                shots=2048,
-                seed=11,
-            ),
-        )
+        with patch("qclab.backends.execution.guard_aer_execution"):
+            executor.run(
+                "circuit",
+                observable,
+                request=BackendRequest(
+                    tier=ExecutionTier.NOISY_LOCAL,
+                    backend_name="aer_estimator",
+                    shots=2048,
+                    seed=11,
+                ),
+            )
         self.assertEqual(backend_factory.calls[0], {})
         self.assertEqual(primitive_factory.calls[0]["backend"].name, "aer_simulator")
         self.assertEqual(primitive_factory.calls[0]["options"]["seed_simulator"], 11)
+
+    def test_aer_executor_raises_guard_before_backend_initialization(self) -> None:
+        observable = make_pauli_observable(
+            name="z_expectation",
+            terms={"Z": 1.0},
+            physical_meaning="Infrastructure-only Pauli-Z observable.",
+        )
+        primitive_factory = _FactoryRecorder(_FakePrimitive([_FakePubResult(evs=(0.5,), stds=(0.02,))]))
+        backend_factory = _BackendFactoryRecorder(_FakeBackend("aer_simulator"))
+        executor = AerEstimatorExecutor(
+            primitive_factory=primitive_factory,
+            backend_factory=backend_factory,
+        )
+        with patch(
+            "qclab.backends.execution.guard_aer_execution",
+            side_effect=RuntimeError("OpenMP shared-memory initialization guard"),
+        ):
+            with self.assertRaisesRegex(
+                RuntimeError,
+                "OpenMP shared-memory initialization",
+            ):
+                executor.run(
+                    "circuit",
+                    observable,
+                    request=BackendRequest(
+                        tier=ExecutionTier.NOISY_LOCAL,
+                        backend_name="aer_estimator",
+                    ),
+                )
+        self.assertEqual(backend_factory.calls, [])
+        self.assertEqual(primitive_factory.calls, [])
 
     def test_backend_preparation_applies_layout_when_payload_supports_it(self) -> None:
         fake_payload = _FakeLayoutAwareObservable()

@@ -12,10 +12,8 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(repository_root))
     sys.path.insert(0, str(repository_root / "src"))
 
-import matplotlib.pyplot as plt
-
 from qclab.observables import ObservableEvaluation
-from qclab.plotting import apply_publication_style
+from qclab.plotting import apply_publication_style, configure_noninteractive_backend
 from qclab.utils.paths import repository_relative_path
 
 from experiments.gut_toy_gauge.benchmark import (
@@ -24,6 +22,10 @@ from experiments.gut_toy_gauge.benchmark import (
 )
 from experiments.gut_toy_gauge.common import DEFAULT_CONFIG_PATH, load_experiment_definition
 from experiments.gut_toy_gauge.observables import build_observables
+
+configure_noninteractive_backend()
+
+import matplotlib.pyplot as plt
 
 
 def _load_json(path: Path):

@@ -90,6 +90,8 @@ python experiments/particle_creation_flrw/run_aer.py
 python experiments/particle_creation_flrw/analyze.py
 ```
 
+For the current Apple Silicon Aer runtime note, including the macOS arm64 Python 3.13+ guard status, see the repository [user guide](../../docs/operations/user-guide.md).
+
 The IBM Runtime path is intentionally separate and should be used only after the exact-local and noisy-local validation outputs have been reviewed:
 
 ```bash

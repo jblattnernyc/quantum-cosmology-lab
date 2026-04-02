@@ -5,8 +5,6 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
-import platform
-import sys
 import tempfile
 import unittest
 
@@ -29,15 +27,12 @@ from experiments.gut_toy_gauge.common import (
 from experiments.gut_toy_gauge.observables import build_observables
 from experiments.gut_toy_gauge.run_aer import run_noisy_local
 from experiments.gut_toy_gauge.run_local import run_exact_local
+from qclab.utils.runtime import is_aer_execution_guard_required
 
 
 QISKIT_AVAILABLE = importlib.util.find_spec("qiskit") is not None
 QISKIT_AER_AVAILABLE = importlib.util.find_spec("qiskit_aer") is not None
-AER_LOCAL_GUARD = (
-    platform.system() == "Darwin"
-    and platform.machine() == "arm64"
-    and sys.version_info >= (3, 14)
-)
+AER_LOCAL_GUARD = is_aer_execution_guard_required()
 
 
 class GutToyGaugeTests(unittest.TestCase):
@@ -247,7 +242,7 @@ class GutToyGaugeTests(unittest.TestCase):
     )
     @unittest.skipIf(
         AER_LOCAL_GUARD,
-        "Aer workflow tests are guarded on macOS arm64 with Python 3.14+ due to local libomp runtime aborts.",
+        "Aer workflow tests are guarded on macOS arm64 with Python 3.13+ due to observed OpenMP shared-memory aborts.",
     )
     def test_noisy_local_workflow_writes_expected_outputs_for_temp_config(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:

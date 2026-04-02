@@ -8,6 +8,13 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Defaulted repository analysis and plotting entrypoints to a non-interactive Matplotlib `Agg` backend unless `MPLBACKEND` is explicitly set, preventing macOS GUI-backend aborts during headless validation while leaving persisted figure outputs unchanged.
+- Added a shared preflight guard for Aer-backed local execution on macOS arm64 with Python 3.13 and later, after reproducing the native OpenMP shared-memory abort on Python 3.13.12 in addition to the previously documented Python 3.14 environment.
+- Updated the guarded Aer test surface and operational documentation so affected Apple Silicon hosts now skip the unsafe live-Aer subset instead of aborting the interpreter during repository validation.
+- Added short cross-references in each official experiment `README.md` to the repository-level Apple Silicon Aer runtime guidance in the user guide.
+
 ## [1.0.0] - 2026-04-02
 
 ### Added

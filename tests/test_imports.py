@@ -33,9 +33,11 @@ class ImportIntegrityTests(unittest.TestCase):
             "qclab.observables",
             "qclab.observables.pauli",
             "qclab.plotting",
+            "qclab.plotting.backend",
             "qclab.plotting.comparison",
             "qclab.utils",
             "qclab.utils.paths",
+            "qclab.utils.runtime",
         )
         for module_name in module_names:
             with self.subTest(module=module_name):

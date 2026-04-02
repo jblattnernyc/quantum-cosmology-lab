@@ -30,7 +30,7 @@ Before using the repository, ensure that the following are available on the loca
 
 The repository declares its primary dependencies in `pyproject.toml`, including Qiskit, qiskit-aer, qiskit-ibm-runtime, NumPy, SciPy, SymPy, pandas, matplotlib, pytest, and YAML support.
 
-The currently validated repository test matrix covers Python 3.10 through 3.13. Python 3.14 and later should be treated as experimental until the full local test and Aer execution surface has been confirmed there.
+The currently validated repository test matrix covers Python 3.10 through 3.13. On macOS arm64 specifically, local Aer-backed validation is guarded on Python 3.13 and later because the current `qiskit-aer` runtime has been observed to abort during OpenMP shared-memory initialization there. Python 3.14 and later should therefore still be treated as experimental overall, and Python 3.13 on Apple Silicon should be treated as Aer-guarded until that runtime constraint is resolved.
 
 ## Environment Setup
 
@@ -149,15 +149,17 @@ This command should likewise be used only after the exact-local and noisy-local 
 
 ## Local Environment Note for Aer
 
-In the local repository validation performed on macOS arm64 with Python 3.14.2, direct Aer execution from a restrictive sandbox produced an OpenMP shared-memory initialization failure of the form `OMP: Error #178: Function Can't open SHM2 failed`.
+In local repository validation on macOS arm64, the Aer-backed estimator path has now been reproduced aborting at native-code level on both Python 3.14.2 and Python 3.13.12 with an OpenMP shared-memory initialization failure of the form `OMP: Error #178: Function Can't open SHM2 failed`.
 
-In that environment, the noisy-local Aer workflow still succeeded when run outside the restrictive sandbox. This should be treated as an environment or runtime constraint rather than as a scientific failure of the experiment logic itself.
+Because that abort occurs inside the native Aer/OpenMP runtime rather than in repository Python code, the repository now guards the affected local Aer-backed validation paths on macOS arm64 with Python 3.13 and later before entering Aer. This should be treated as an environment or runtime constraint rather than as a scientific failure of the experiment logic itself.
 
 For the most conservative local validation path, prefer:
 
-- Python 3.10 through 3.13 for routine Aer validation,
-- a writable matplotlib configuration directory such as `MPLCONFIGDIR=/tmp/mpl` when generating figures in constrained environments,
-- non-restrictive local execution for Aer workflows when the host OpenMP runtime requires shared-memory setup.
+- Python 3.10 through 3.12 for local Aer validation on Apple Silicon until the guarded runtime issue is resolved,
+- Python 3.10 through 3.13 for the non-Aer repository surface and for CI environments that do not reproduce the Apple Silicon Aer abort,
+- a writable matplotlib configuration directory such as `MPLCONFIGDIR=/tmp/mpl` when constrained environments make the default cache location unwritable,
+- awareness that repository analysis scripts now default to a non-interactive `Agg` backend unless `MPLBACKEND` is set explicitly,
+- non-restrictive local execution for Aer workflows when the host OpenMP runtime requires shared-memory setup and has been verified locally to avoid the abort.
 
 ## Generated Outputs
 

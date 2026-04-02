@@ -23,6 +23,7 @@ from qclab.observables import (
     observable_to_qiskit,
 )
 from qclab.utils.optional import require_dependency
+from qclab.utils.runtime import guard_aer_execution
 
 
 @dataclass(frozen=True)
@@ -448,6 +449,7 @@ class AerEstimatorExecutor:
         )
         if effective_request.tier is not ExecutionTier.NOISY_LOCAL:
             raise ValueError("AerEstimatorExecutor requires NOISY_LOCAL requests.")
+        guard_aer_execution("Noisy local Aer execution")
         options = dict(effective_request.options)
         backend_options = dict(options.get("backend_options", {}))
         estimator_options = dict(options.get("estimator_options", {}))
@@ -538,6 +540,10 @@ class IBMRuntimeEstimatorExecutor:
             instance=instance,
             provided_backend=backend,
         )
+        if bool(selection_metadata.get("local_testing_mode", False)):
+            guard_aer_execution(
+                "IBM Runtime local testing with Aer-backed fake backends"
+            )
         selected_backend_name = (
             selection_metadata.get("selected_backend_name") or request.backend_name
         )

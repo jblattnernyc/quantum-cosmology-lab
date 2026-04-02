@@ -103,7 +103,7 @@ The package declares the compact initial scientific software stack required by t
 
 The current dependency constraints target the Qiskit 2.2+ primitive generation used by the shared backend wrappers.
 
-The repository's validated CI matrix currently covers Python 3.10 through 3.13. Python 3.14 and later should be treated as experimental until the full test and Aer execution surface has been validated there.
+The repository's validated CI matrix currently covers Python 3.10 through 3.13. On macOS arm64 specifically, local Aer-backed validation is guarded on Python 3.13 and later because the currently observed `qiskit-aer` runtime can abort during OpenMP shared-memory initialization there. Python 3.14 and later therefore remain experimental overall, and Python 3.13 on Apple Silicon should be treated as Aer-guarded until that runtime constraint is resolved.
 
 A small [Makefile](Makefile) is provided as a convenience interface for routine repository commands. It does not replace the experiment scripts, `pyproject.toml`, or the governing documents.
 
@@ -123,7 +123,7 @@ In environments where `pytest` is not yet installed, the baseline test suite can
 python -m unittest discover -s tests -v
 ```
 
-Some integration tests are intentionally guarded. Exact-local primitive tests run when `qiskit` is installed, and noisy-local Aer tests run only when `qiskit-aer` is installed.
+Some integration tests are intentionally guarded. Exact-local primitive tests run when `qiskit` is installed, and noisy-local Aer tests run only when `qiskit-aer` is installed. On macOS arm64 with Python 3.13 and later, the Aer-backed subset is skipped rather than allowed to enter a native OpenMP abort path. Repository analysis scripts also default to a non-interactive Matplotlib backend unless `MPLBACKEND` is set explicitly, so routine figure-generation tests no longer require a manual `Agg` override.
 
 ## Reproducing the Official Experiments
 
