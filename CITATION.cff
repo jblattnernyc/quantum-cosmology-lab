@@ -8,6 +8,7 @@ authors:
 version: "1.0.0"
 date-released: "2026-04-02"
 license: "Apache-2.0"
+repository-code: "https://github.com/jblattnernyc/quantum-cosmology-lab"
 abstract: >
   Reduced, benchmarked, and interpretable Qiskit workflows for early-universe
   research models, including official reduced minisuperspace, curved-spacetime
