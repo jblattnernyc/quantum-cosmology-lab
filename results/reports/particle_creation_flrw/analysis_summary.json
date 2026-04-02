@@ -1,0 +1,43 @@
+{
+  "benchmark_values": {
+    "pairing_correlator_expectation": -0.3465452307022457,
+    "single_mode_particle_number_expectation": 0.03422860544437148,
+    "total_particle_number_expectation": 0.06845721088874296
+  },
+  "comparison_figure": "results/figures/particle_creation_flrw/observable_comparison.png",
+  "exact_local_absolute_errors": {
+    "pairing_correlator_expectation": 1.1102230246251565e-16,
+    "single_mode_particle_number_expectation": 2.7755575615628914e-17,
+    "total_particle_number_expectation": 0.0
+  },
+  "exact_local_values": {
+    "pairing_correlator_expectation": -0.3465452307022456,
+    "single_mode_particle_number_expectation": 0.03422860544437145,
+    "total_particle_number_expectation": 0.06845721088874296
+  },
+  "ibm_runtime_absolute_errors": {
+    "pairing_correlator_expectation": 0.13982031674937304,
+    "single_mode_particle_number_expectation": 0.2694795210090256,
+    "total_particle_number_expectation": 0.5228915817597541
+  },
+  "ibm_runtime_comparisons_json": "data/processed/particle_creation_flrw/ibm_runtime_comparisons.json",
+  "ibm_runtime_json": "data/processed/particle_creation_flrw/ibm_runtime.json",
+  "ibm_runtime_metadata_json": "data/raw/particle_creation_flrw/ibm_runtime_metadata.json",
+  "ibm_runtime_report_markdown": "results/reports/particle_creation_flrw/ibm_runtime_report.md",
+  "ibm_runtime_values": {
+    "pairing_correlator_expectation": -0.20672491395287265,
+    "single_mode_particle_number_expectation": 0.30370812645339706,
+    "total_particle_number_expectation": 0.591348792648497
+  },
+  "noisy_local_absolute_errors": {
+    "pairing_correlator_expectation": 0.044386957320950715,
+    "single_mode_particle_number_expectation": 0.029620315418937865,
+    "total_particle_number_expectation": 0.0538449473846383
+  },
+  "noisy_local_values": {
+    "pairing_correlator_expectation": -0.302158273381295,
+    "single_mode_particle_number_expectation": 0.06384892086330934,
+    "total_particle_number_expectation": 0.12230215827338126
+  },
+  "observable_summary_table_markdown": "results/tables/particle_creation_flrw/observable_summary.md"
+}

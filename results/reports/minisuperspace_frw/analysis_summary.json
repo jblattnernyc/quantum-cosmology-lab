@@ -1,0 +1,43 @@
+{
+  "benchmark_values": {
+    "effective_hamiltonian_expectation": -0.29999999999999993,
+    "scale_factor_expectation_value": 1.2399999999999998,
+    "volume_expectation_value": 2.2383999999999995
+  },
+  "comparison_figure": "results/figures/minisuperspace_frw/observable_comparison.png",
+  "exact_local_absolute_errors": {
+    "effective_hamiltonian_expectation": 5.551115123125783e-17,
+    "scale_factor_expectation_value": 2.220446049250313e-16,
+    "volume_expectation_value": 0.0
+  },
+  "exact_local_values": {
+    "effective_hamiltonian_expectation": -0.3,
+    "scale_factor_expectation_value": 1.24,
+    "volume_expectation_value": 2.2383999999999995
+  },
+  "ibm_runtime_absolute_errors": {
+    "effective_hamiltonian_expectation": 0.0048497379028048515,
+    "scale_factor_expectation_value": 0.008784189239048112,
+    "volume_expectation_value": 0.027758037995391227
+  },
+  "ibm_runtime_comparisons_json": "data/processed/minisuperspace_frw/ibm_runtime_comparisons.json",
+  "ibm_runtime_json": "data/processed/minisuperspace_frw/ibm_runtime.json",
+  "ibm_runtime_metadata_json": "data/raw/minisuperspace_frw/ibm_runtime_metadata.json",
+  "ibm_runtime_report_markdown": "results/reports/minisuperspace_frw/ibm_runtime_report.md",
+  "ibm_runtime_values": {
+    "effective_hamiltonian_expectation": -0.3048497379028048,
+    "scale_factor_expectation_value": 1.2487841892390479,
+    "volume_expectation_value": 2.2661580379953907
+  },
+  "noisy_local_absolute_errors": {
+    "effective_hamiltonian_expectation": 0.01622399999999996,
+    "scale_factor_expectation_value": 0.012159999999999727,
+    "volume_expectation_value": 0.03842560000000006
+  },
+  "noisy_local_values": {
+    "effective_hamiltonian_expectation": -0.283776,
+    "scale_factor_expectation_value": 1.22784,
+    "volume_expectation_value": 2.1999743999999994
+  },
+  "observable_summary_table_markdown": "results/tables/minisuperspace_frw/observable_summary.md"
+}

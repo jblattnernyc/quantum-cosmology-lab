@@ -1,0 +1,87 @@
+experiment_name: minisuperspace_frw
+status: official
+official_experiment: true
+scientific_question: >
+  In a two-state positive-scale-factor truncation of an FRW minisuperspace toy
+  Hamiltonian, what are the benchmark ground-state expectation values of the
+  scale-factor and volume operators, and how accurately do exact local and
+  noisy local quantum workflows reproduce them?
+parameters:
+  scale_factor_small: 0.6
+  scale_factor_large: 1.4
+  diagonal_bias: 0.18
+  tunneling_strength: 0.24
+truncation:
+  basis: positive_scale_factor_bin_basis
+  cutoff: 2
+  bin_centers:
+    - 0.6
+    - 1.4
+  rationale: >
+    The experiment keeps two representative positive-scale-factor bins in order
+    to build the smallest explicit and benchmarkable FRW minisuperspace toy
+    model consistent with the repository's first official experiment line.
+observables:
+  - scale_factor_expectation_value
+  - volume_expectation_value
+  - effective_hamiltonian_expectation
+execution:
+  exact_local:
+    enabled: true
+    backend_name: statevector_estimator
+    precision: 0.0
+  noisy_local:
+    enabled: true
+    backend_name: aer_estimator
+    precision: 0.02
+    seed: 314159
+    options:
+      backend_options:
+        method: density_matrix
+  ibm_hardware:
+    enabled: false
+    backend_name: null
+    precision: 0.03
+    optimization_level: 1
+    options:
+      selection_policy:
+        strategy: explicit
+        operational: true
+        simulator: false
+        min_num_qubits: 1
+      mitigation_policy:
+        resilience_level: 1
+        measure_mitigation: true
+        twirling_enable_measure: true
+      runtime_options:
+        environment:
+          job_tags:
+            - qclab
+            - official
+            - minisuperspace_frw
+            - ibm_runtime
+artifacts:
+  benchmark_json: data/processed/minisuperspace_frw/benchmark.json
+  exact_local_json: data/processed/minisuperspace_frw/exact_local.json
+  exact_local_comparisons_json: data/processed/minisuperspace_frw/exact_local_comparisons.json
+  noisy_local_json: data/processed/minisuperspace_frw/noisy_local.json
+  noisy_local_comparisons_json: data/processed/minisuperspace_frw/noisy_local_comparisons.json
+  ibm_runtime_json: data/processed/minisuperspace_frw/ibm_runtime.json
+  ibm_runtime_comparisons_json: data/processed/minisuperspace_frw/ibm_runtime_comparisons.json
+  ibm_runtime_metadata_json: data/raw/minisuperspace_frw/ibm_runtime_metadata.json
+  ibm_runtime_report_markdown: results/reports/minisuperspace_frw/ibm_runtime_report.md
+  analysis_summary_json: results/reports/minisuperspace_frw/analysis_summary.json
+  analysis_report_markdown: results/reports/minisuperspace_frw/analysis_report.md
+  observable_summary_table_markdown: results/tables/minisuperspace_frw/observable_summary.md
+  comparison_figure: results/figures/minisuperspace_frw/observable_comparison.png
+noise_model:
+  one_qubit_depolarizing_probability: 0.004
+  readout_error_probability: 0.02
+  method: density_matrix
+notes:
+  - >
+    This is an official reduced toy experiment. It is benchmarked and
+    interpretable within its two-state truncation only.
+  - >
+    IBM Runtime execution is optional and must follow prior exact-local and
+    noisy-local validation.

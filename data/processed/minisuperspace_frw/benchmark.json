@@ -1,0 +1,31 @@
+{
+  "benchmark": {
+    "effective_hamiltonian_expectation": -0.29999999999999993,
+    "ground_energy": -0.3,
+    "ground_state": [
+      0.4472135954999579,
+      0.8944271909999159
+    ],
+    "large_scale_factor_probability": 0.7999999999999999,
+    "rotation_angle": 2.214297435588181,
+    "scale_factor_expectation_value": 1.2399999999999998,
+    "volume_expectation_value": 2.2383999999999995
+  },
+  "experiment_name": "minisuperspace_frw",
+  "parameters": {
+    "diagonal_bias": 0.18,
+    "scale_factor_large": 1.4,
+    "scale_factor_small": 0.6,
+    "tunneling_strength": 0.24
+  },
+  "scientific_question": "In a two-state positive-scale-factor truncation of an FRW minisuperspace toy Hamiltonian, what are the benchmark ground-state expectation values of the scale-factor and volume operators, and how accurately do exact local and noisy local quantum workflows reproduce them?\n",
+  "truncation": {
+    "basis": "positive_scale_factor_bin_basis",
+    "bin_centers": [
+      0.6,
+      1.4
+    ],
+    "cutoff": 2,
+    "rationale": "The experiment keeps two representative positive-scale-factor bins in order to build the smallest explicit and benchmarkable FRW minisuperspace toy model consistent with the repository's first official experiment line.\n"
+  }
+}

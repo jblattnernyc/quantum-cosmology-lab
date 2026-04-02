@@ -1,0 +1,26 @@
+[
+  {
+    "absolute_error": 0.014666767274716552,
+    "benchmark_value": 0.0,
+    "candidate_value": 0.014666767274716552,
+    "interpretation": "IBM Runtime hardware comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "gauge_invariance_violation_expectation",
+    "relative_error": null
+  },
+  {
+    "absolute_error": 0.006073933017933242,
+    "benchmark_value": -0.6,
+    "candidate_value": -0.6060739330179332,
+    "interpretation": "IBM Runtime hardware comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "link_alignment_order_parameter",
+    "relative_error": 0.010123221696555404
+  },
+  {
+    "absolute_error": 0.0466469223368734,
+    "benchmark_value": 0.7999999999999999,
+    "candidate_value": 0.7533530776631265,
+    "interpretation": "IBM Runtime hardware comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "wilson_line_correlator_proxy",
+    "relative_error": 0.058308652921091754
+  }
+]

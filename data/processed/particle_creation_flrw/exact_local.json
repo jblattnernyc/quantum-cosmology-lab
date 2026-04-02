@@ -1,0 +1,76 @@
+{
+  "evaluations": [
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "single_mode_particle_number_expectation",
+      "operator_label": "(0.5+0j)*II + (-0.5+0j)*IZ",
+      "physical_meaning": "Expectation value of the retained occupation number for mode k, encoded in qiskit qubit 0.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.03422860544437145
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "total_particle_number_expectation",
+      "operator_label": "(1+0j)*II + (-0.5+0j)*IZ + (-0.5+0j)*ZI",
+      "physical_meaning": "Expectation value of the total retained particle number n_k + n_-k in the two-mode truncation.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.06845721088874296
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "pairing_correlator_expectation",
+      "operator_label": "(0.5+0j)*XX + (-0.5+0j)*YY",
+      "physical_meaning": "Expectation value of a_k^dagger a_-k^dagger + a_k a_-k within the retained two-mode truncation.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": -0.3465452307022456
+    }
+  ],
+  "job_metadata": {
+    "circuit_metadata": {
+      "experiment": "particle_creation_flrw",
+      "state_preparation": "discrete_pair_creation_from_vacuum",
+      "time_steps": 6
+    },
+    "target_precision": 0.0
+  },
+  "provenance": {
+    "backend_name": "statevector_estimator",
+    "job_id": "338bfd0f-5392-43a7-bc85-5f5f6e1ab579",
+    "metadata": {},
+    "optimization_level": null,
+    "precision": 0.0,
+    "primitive_name": "qiskit.primitives.StatevectorEstimator",
+    "seed": null,
+    "shots": null,
+    "tier": "exact_local",
+    "timestamp_utc": "2026-04-01T17:07:45.235914+00:00"
+  },
+  "request": {
+    "backend_name": "statevector_estimator",
+    "mitigation_enabled": false,
+    "optimization_level": null,
+    "options": {},
+    "precision": 0.0,
+    "seed": null,
+    "shots": null,
+    "tier": "exact_local"
+  }
+}

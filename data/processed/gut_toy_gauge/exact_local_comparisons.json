@@ -1,0 +1,26 @@
+[
+  {
+    "absolute_error": 0.0,
+    "benchmark_value": 0.0,
+    "candidate_value": 0.0,
+    "interpretation": "Exact local comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "gauge_invariance_violation_expectation",
+    "relative_error": null
+  },
+  {
+    "absolute_error": 1.1102230246251565e-16,
+    "benchmark_value": -0.6,
+    "candidate_value": -0.5999999999999999,
+    "interpretation": "Exact local comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "link_alignment_order_parameter",
+    "relative_error": 1.8503717077085943e-16
+  },
+  {
+    "absolute_error": 2.220446049250313e-16,
+    "benchmark_value": 0.7999999999999999,
+    "candidate_value": 0.8000000000000002,
+    "interpretation": "Exact local comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "wilson_line_correlator_proxy",
+    "relative_error": 2.7755575615628914e-16
+  }
+]

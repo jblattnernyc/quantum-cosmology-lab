@@ -1,0 +1,54 @@
+"""Repository structure tests for the implemented repository baseline."""
+
+from __future__ import annotations
+
+import unittest
+from pathlib import Path
+
+
+class RepositoryLayoutTests(unittest.TestCase):
+    """Verify that the baseline repository files and directories exist."""
+
+    def test_required_paths_exist(self) -> None:
+        root = Path(__file__).resolve().parents[1]
+        required_paths = (
+            root / "README.md",
+            root / "LICENSE",
+            root / "NOTICE",
+            root / "CITATION.cff",
+            root / ".gitattributes",
+            root / ".gitignore",
+            root / "pyproject.toml",
+            root / "CHANGELOG.md",
+            root / "Makefile",
+            root / ".github" / "workflows" / "ci.yml",
+            root / "docs" / "architecture" / "overview.md",
+            root / "docs" / "methods" / "experiment-standard.md",
+            root / "docs" / "methods" / "figure-and-table-style-guide.md",
+            root / "docs" / "operations" / "user-guide.md",
+            root / "docs" / "operations" / "ibm-runtime-setup.md",
+            root / "docs" / "operations" / "results-and-provenance.md",
+            root / "docs" / "operations" / "internal-review-checklist.md",
+            root / "docs" / "operations" / "replication-checklist.md",
+            root / "docs" / "operations" / "archival-release-workflow.md",
+            root / "docs" / "references" / "citation-and-bibliography-policy.md",
+            root / "scripts" / "ibm_runtime" / "README.md",
+            root / "scripts" / "ibm_runtime" / "save_account_from_env.py",
+            root / "scripts" / "ibm_runtime" / "check_account.py",
+            root / "scripts" / "release" / "README.md",
+            root / "scripts" / "release" / "build_phase6_milestone_report.py",
+            root / "scripts" / "release" / "build_archival_release_manifest.py",
+            root / "src" / "qclab" / "__init__.py",
+            root / "experiments" / "minisuperspace_frw" / "README.md",
+            root / "experiments" / "particle_creation_flrw" / "README.md",
+            root / "experiments" / "gut_toy_gauge" / "README.md",
+            root / "results" / "reports" / "milestones" / "v1.0.0-phase6-20260402.md",
+            root
+            / "data"
+            / "processed"
+            / "releases"
+            / "v1.0.0-phase6-20260402_manifest.json",
+        )
+        for path in required_paths:
+            with self.subTest(path=path):
+                self.assertTrue(path.exists(), f"Missing required path: {path}")

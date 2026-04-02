@@ -1,0 +1,93 @@
+experiment_name: gut_toy_gauge
+status: official
+official_experiment: true
+scientific_question: >
+  In a reduced two-link Z2 gauge toy Hamiltonian with an explicit gauge-penalty
+  term, what are the benchmark ground-state values of gauge-invariance
+  violation, a link-alignment order parameter, and a Wilson-line correlator
+  proxy, and how accurately do exact local and noisy local estimator workflows
+  reproduce them?
+parameters:
+  electric_field_bias: 0.18
+  pair_flip_coupling: 0.24
+  gauge_penalty: 1.2
+truncation:
+  basis: two_link_z2_gauge_dimer
+  link_count: 2
+  local_link_values:
+    - -1
+    - 1
+  retained_gauge_invariant_sector:
+    - "|00>"
+    - "|11>"
+  gauge_constraint: "ZZ = +1"
+  rationale: >
+    The experiment keeps two binary Z2 links and treats the even-parity sector
+    as the reduced gauge-invariant subspace. This yields the smallest explicit
+    toy-gauge model that still supports a gauge-violation diagnostic, an order
+    parameter, and a Wilson-line-like correlator proxy.
+observables:
+  - gauge_invariance_violation_expectation
+  - link_alignment_order_parameter
+  - wilson_line_correlator_proxy
+execution:
+  exact_local:
+    enabled: true
+    backend_name: statevector_estimator
+    precision: 0.0
+  noisy_local:
+    enabled: true
+    backend_name: aer_estimator
+    precision: 0.03
+    seed: 161803
+    options:
+      backend_options:
+        method: density_matrix
+  ibm_hardware:
+    enabled: false
+    backend_name: null
+    precision: 0.05
+    optimization_level: 1
+    options:
+      selection_policy:
+        strategy: explicit
+        operational: true
+        simulator: false
+        min_num_qubits: 2
+      mitigation_policy:
+        resilience_level: 1
+        measure_mitigation: true
+        twirling_enable_measure: true
+      runtime_options:
+        environment:
+          job_tags:
+            - qclab
+            - official
+            - gut_toy_gauge
+            - ibm_runtime
+artifacts:
+  benchmark_json: data/processed/gut_toy_gauge/benchmark.json
+  exact_local_json: data/processed/gut_toy_gauge/exact_local.json
+  exact_local_comparisons_json: data/processed/gut_toy_gauge/exact_local_comparisons.json
+  noisy_local_json: data/processed/gut_toy_gauge/noisy_local.json
+  noisy_local_comparisons_json: data/processed/gut_toy_gauge/noisy_local_comparisons.json
+  ibm_runtime_json: data/processed/gut_toy_gauge/ibm_runtime.json
+  ibm_runtime_comparisons_json: data/processed/gut_toy_gauge/ibm_runtime_comparisons.json
+  ibm_runtime_metadata_json: data/raw/gut_toy_gauge/ibm_runtime_metadata.json
+  ibm_runtime_report_markdown: results/reports/gut_toy_gauge/ibm_runtime_report.md
+  analysis_summary_json: results/reports/gut_toy_gauge/analysis_summary.json
+  analysis_report_markdown: results/reports/gut_toy_gauge/analysis_report.md
+  observable_summary_table_markdown: results/tables/gut_toy_gauge/observable_summary.md
+  comparison_figure: results/figures/gut_toy_gauge/observable_comparison.png
+noise_model:
+  one_qubit_depolarizing_probability: 0.002
+  two_qubit_depolarizing_probability: 0.008
+  readout_error_probability: 0.015
+  method: density_matrix
+notes:
+  - >
+    This is an official reduced toy-gauge experiment. It is benchmarked and
+    interpretable only within its two-link Z2 truncation.
+  - >
+    The directory name should not be read as a claim of realistic GUT
+    simulation. The implemented model is a small Track C toy model only.

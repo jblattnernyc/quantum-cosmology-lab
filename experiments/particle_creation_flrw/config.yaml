@@ -1,0 +1,96 @@
+experiment_name: particle_creation_flrw
+status: official
+official_experiment: true
+scientific_question: >
+  In a two-mode, single-pair truncation of a scalar field on a prescribed
+  expanding FLRW-like background, what particle-number and pair-correlation
+  observables are produced by an explicit stepwise time-dependent evolution,
+  and how accurately do exact local and noisy local estimator workflows
+  reproduce the benchmark?
+parameters:
+  comoving_momentum: 0.5
+  mass: 0.6
+  scale_factor_initial: 1.0
+  scale_factor_final: 2.4
+  time_extent: 1.5
+  time_steps: 6
+truncation:
+  basis: two_mode_single_pair_truncation
+  mode_count: 2
+  occupation_cutoff_per_mode: 1
+  retained_subspace:
+    - "|00>"
+    - "|11>"
+  rationale: >
+    The experiment keeps one momentum pair and truncates each mode to the
+    occupations {0, 1}. Starting from the vacuum and using only pair-creation
+    and pair-annihilation terms restricts the dynamics to the even-parity
+    sector, yielding the smallest explicitly benchmarkable particle-creation
+    model for the repository's Phase 3 line.
+observables:
+  - single_mode_particle_number_expectation
+  - total_particle_number_expectation
+  - pairing_correlator_expectation
+execution:
+  exact_local:
+    enabled: true
+    backend_name: statevector_estimator
+    precision: 0.0
+  noisy_local:
+    enabled: true
+    backend_name: aer_estimator
+    precision: 0.03
+    seed: 271828
+    options:
+      backend_options:
+        method: density_matrix
+  ibm_hardware:
+    enabled: false
+    backend_name: null
+    precision: 0.04
+    optimization_level: 1
+    options:
+      selection_policy:
+        strategy: explicit
+        operational: true
+        simulator: false
+        min_num_qubits: 2
+      mitigation_policy:
+        resilience_level: 1
+        measure_mitigation: true
+        twirling_enable_measure: true
+      runtime_options:
+        environment:
+          job_tags:
+            - qclab
+            - official
+            - particle_creation_flrw
+            - ibm_runtime
+artifacts:
+  benchmark_json: data/processed/particle_creation_flrw/benchmark.json
+  exact_local_json: data/processed/particle_creation_flrw/exact_local.json
+  exact_local_comparisons_json: data/processed/particle_creation_flrw/exact_local_comparisons.json
+  noisy_local_json: data/processed/particle_creation_flrw/noisy_local.json
+  noisy_local_comparisons_json: data/processed/particle_creation_flrw/noisy_local_comparisons.json
+  ibm_runtime_json: data/processed/particle_creation_flrw/ibm_runtime.json
+  ibm_runtime_comparisons_json: data/processed/particle_creation_flrw/ibm_runtime_comparisons.json
+  ibm_runtime_metadata_json: data/raw/particle_creation_flrw/ibm_runtime_metadata.json
+  ibm_runtime_report_markdown: results/reports/particle_creation_flrw/ibm_runtime_report.md
+  analysis_summary_json: results/reports/particle_creation_flrw/analysis_summary.json
+  analysis_report_markdown: results/reports/particle_creation_flrw/analysis_report.md
+  observable_summary_table_markdown: results/tables/particle_creation_flrw/observable_summary.md
+  comparison_figure: results/figures/particle_creation_flrw/observable_comparison.png
+noise_model:
+  one_qubit_depolarizing_probability: 0.001
+  two_qubit_depolarizing_probability: 0.003
+  readout_error_probability: 0.01
+  method: density_matrix
+notes:
+  - >
+    This is an official reduced QFT-in-curved-spacetime toy experiment. It is
+    benchmarked and interpretable only within its two-mode single-pair
+    truncation.
+  - >
+    The model is inflation-adjacent only in the weak sense that it studies
+    background-driven pair creation on an expanding spacetime. It is not a
+    literal inflation simulation.

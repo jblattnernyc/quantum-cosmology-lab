@@ -1,0 +1,26 @@
+[
+  {
+    "absolute_error": 0.012159999999999727,
+    "benchmark_value": 1.2399999999999998,
+    "candidate_value": 1.22784,
+    "interpretation": "Noisy local Aer comparison against the direct two-state diagonalization benchmark.",
+    "observable_name": "scale_factor_expectation_value",
+    "relative_error": 0.009806451612903007
+  },
+  {
+    "absolute_error": 0.03842560000000006,
+    "benchmark_value": 2.2383999999999995,
+    "candidate_value": 2.1999743999999994,
+    "interpretation": "Noisy local Aer comparison against the direct two-state diagonalization benchmark.",
+    "observable_name": "volume_expectation_value",
+    "relative_error": 0.017166547533952855
+  },
+  {
+    "absolute_error": 0.01622399999999996,
+    "benchmark_value": -0.29999999999999993,
+    "candidate_value": -0.283776,
+    "interpretation": "Noisy local Aer comparison against the direct two-state diagonalization benchmark.",
+    "observable_name": "effective_hamiltonian_expectation",
+    "relative_error": 0.05407999999999988
+  }
+]

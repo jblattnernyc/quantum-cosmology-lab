@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: "Quantum Cosmology Lab"
+message: "If you use this repository, please cite the software and the relevant experiment and provenance artifacts."
+type: software
+authors:
+  - family-names: "Blattner"
+    given-names: "John"
+version: "1.0.0"
+date-released: "2026-04-02"
+license: "Apache-2.0"
+abstract: >
+  Reduced, benchmarked, and interpretable Qiskit workflows for early-universe
+  research models, including official reduced minisuperspace, curved-spacetime
+  particle-creation, and toy-gauge experiment lines with preserved IBM Runtime
+  provenance.
+keywords:
+  - quantum cosmology
+  - qiskit
+  - early universe
+  - scientific computing
+  - ibm quantum

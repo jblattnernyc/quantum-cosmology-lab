@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upgrade pip
+        run: python -m pip install --upgrade pip
+
+      - name: Install package and test dependencies
+        run: python -m pip install -e '.[dev]'
+
+      - name: Run pytest suite
+        run: python -m pytest
+
+      - name: Run unittest suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Run particle-creation benchmark smoke path
+        run: python experiments/particle_creation_flrw/benchmark.py
+
+      - name: Run particle-creation exact-local smoke path
+        run: python experiments/particle_creation_flrw/run_local.py
+
+      - name: Run particle-creation analysis smoke path
+        env:
+          MPLCONFIGDIR: /tmp/mpl
+        run: python experiments/particle_creation_flrw/analyze.py
+
+      - name: Run toy-gauge benchmark smoke path
+        run: python experiments/gut_toy_gauge/benchmark.py
+
+      - name: Run toy-gauge exact-local smoke path
+        run: python experiments/gut_toy_gauge/run_local.py
+
+      - name: Run toy-gauge noisy-local smoke path
+        run: python experiments/gut_toy_gauge/run_aer.py
+
+      - name: Run toy-gauge analysis smoke path
+        env:
+          MPLCONFIGDIR: /tmp/mpl
+        run: python experiments/gut_toy_gauge/analyze.py
+
+      - name: Run minisuperspace IBM local-testing smoke path
+        if: matrix.python-version == '3.11'
+        run: python experiments/minisuperspace_frw/run_ibm.py --local-testing-backend FakeManilaV2
+
+      - name: Run particle-creation IBM local-testing smoke path
+        if: matrix.python-version == '3.11'
+        run: python experiments/particle_creation_flrw/run_ibm.py --local-testing-backend FakeManilaV2
+
+      - name: Run toy-gauge IBM local-testing smoke path
+        if: matrix.python-version == '3.11'
+        run: python experiments/gut_toy_gauge/run_ibm.py --local-testing-backend FakeManilaV2
+
+      - name: Run Phase 6 milestone-report smoke path
+        if: matrix.python-version == '3.11'
+        run: python scripts/release/build_phase6_milestone_report.py --milestone-id v1.0.0-phase6-ci --output /tmp/qclab_phase6_ci_report.md
+
+      - name: Run Phase 6 archival-manifest smoke path
+        if: matrix.python-version == '3.11'
+        run: python scripts/release/build_archival_release_manifest.py --release-id v1.0.0-phase6-ci --milestone-report /tmp/qclab_phase6_ci_report.md --output /tmp/qclab_phase6_ci_manifest.json
+
+      - name: Compile source, script, and test files
+        run: python -m compileall src tests scripts experiments
+
+      - name: Check installed dependency consistency
+        run: python -m pip check

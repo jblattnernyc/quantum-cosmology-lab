@@ -1,0 +1,86 @@
+{
+  "evaluations": [
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "aer_estimator",
+        "tier": "noisy_local"
+      },
+      "observable_name": "gauge_invariance_violation_expectation",
+      "operator_label": "(0.5+0j)*II + (-0.5+0j)*ZZ",
+      "physical_meaning": "Expectation value of the odd-parity projector that measures leakage out of the retained gauge-invariant sector.",
+      "shots": null,
+      "uncertainty": 0.005845945789103646,
+      "units": "dimensionless",
+      "value": 0.03956834532374098
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "aer_estimator",
+        "tier": "noisy_local"
+      },
+      "observable_name": "link_alignment_order_parameter",
+      "operator_label": "(0.5+0j)*IZ + (0.5+0j)*ZI",
+      "physical_meaning": "Expectation value of the average retained Z2 electric-flux orientation across the two links.",
+      "shots": null,
+      "uncertainty": 0.024291612442133643,
+      "units": "dimensionless",
+      "value": -0.5863309352517986
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "aer_estimator",
+        "tier": "noisy_local"
+      },
+      "observable_name": "wilson_line_correlator_proxy",
+      "operator_label": "(1+0j)*XX",
+      "physical_meaning": "Expectation value of a gauge-invariant two-link flip operator used here as a Wilson-line correlator proxy.",
+      "shots": null,
+      "uncertainty": 0.020659881861762482,
+      "units": "dimensionless",
+      "value": 0.7248201438848921
+    }
+  ],
+  "job_metadata": {
+    "circuit_metadata": {
+      "experiment": "gut_toy_gauge",
+      "state_preparation": "gauge_invariant_ground_state_rotation"
+    },
+    "shots": 1112,
+    "target_precision": 0.03
+  },
+  "provenance": {
+    "backend_name": "aer_estimator",
+    "job_id": "fc07622a-9dc2-453a-b8ea-6cfaa755a016",
+    "metadata": {},
+    "optimization_level": null,
+    "precision": 0.03,
+    "primitive_name": "qiskit.primitives.BackendEstimatorV2",
+    "seed": 161803,
+    "shots": null,
+    "tier": "noisy_local",
+    "timestamp_utc": "2026-04-01T21:16:36.229151+00:00"
+  },
+  "request": {
+    "backend_name": "aer_estimator",
+    "mitigation_enabled": false,
+    "optimization_level": null,
+    "options": {
+      "backend_options": {
+        "method": "density_matrix"
+      },
+      "noise_model_metadata": {
+        "method": "density_matrix",
+        "one_qubit_depolarizing_probability": 0.002,
+        "readout_error_probability": 0.015,
+        "two_qubit_depolarizing_probability": 0.008
+      }
+    },
+    "precision": 0.03,
+    "seed": 161803,
+    "shots": null,
+    "tier": "noisy_local"
+  }
+}

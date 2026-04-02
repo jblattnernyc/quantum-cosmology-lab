@@ -1,0 +1,26 @@
+[
+  {
+    "absolute_error": 0.03956834532374098,
+    "benchmark_value": 0.0,
+    "candidate_value": 0.03956834532374098,
+    "interpretation": "Noisy local Aer comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "gauge_invariance_violation_expectation",
+    "relative_error": null
+  },
+  {
+    "absolute_error": 0.013669064748201398,
+    "benchmark_value": -0.6,
+    "candidate_value": -0.5863309352517986,
+    "interpretation": "Noisy local Aer comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "link_alignment_order_parameter",
+    "relative_error": 0.022781774580335666
+  },
+  {
+    "absolute_error": 0.0751798561151078,
+    "benchmark_value": 0.7999999999999999,
+    "candidate_value": 0.7248201438848921,
+    "interpretation": "Noisy local Aer comparison against the direct two-link Z2 toy-gauge benchmark.",
+    "observable_name": "wilson_line_correlator_proxy",
+    "relative_error": 0.09397482014388477
+  }
+]

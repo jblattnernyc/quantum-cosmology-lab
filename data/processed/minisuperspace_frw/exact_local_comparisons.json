@@ -1,0 +1,26 @@
+[
+  {
+    "absolute_error": 2.220446049250313e-16,
+    "benchmark_value": 1.2399999999999998,
+    "candidate_value": 1.24,
+    "interpretation": "Exact local comparison against the direct two-state diagonalization benchmark.",
+    "observable_name": "scale_factor_expectation_value",
+    "relative_error": 1.790682297782511e-16
+  },
+  {
+    "absolute_error": 0.0,
+    "benchmark_value": 2.2383999999999995,
+    "candidate_value": 2.2383999999999995,
+    "interpretation": "Exact local comparison against the direct two-state diagonalization benchmark.",
+    "observable_name": "volume_expectation_value",
+    "relative_error": 0.0
+  },
+  {
+    "absolute_error": 5.551115123125783e-17,
+    "benchmark_value": -0.29999999999999993,
+    "candidate_value": -0.3,
+    "interpretation": "Exact local comparison against the direct two-state diagonalization benchmark.",
+    "observable_name": "effective_hamiltonian_expectation",
+    "relative_error": 1.8503717077085946e-16
+  }
+]

@@ -1,0 +1,21 @@
+Quantum Cosmology Lab
+NOTICE
+
+Copyright 2026 John Blattner
+
+This repository contains software, documentation, and associated research
+materials developed by John Blattner for the Quantum Cosmology Lab, a
+benchmarked and reproducible research codebase for reduced
+quantum-computational studies of early-universe models.
+
+This repository is licensed under the Apache License, Version 2.0. See the
+LICENSE file in the repository root for the governing license text.
+
+This repository may depend on third-party open-source software, including
+components from the Qiskit ecosystem and the scientific Python stack. Those
+dependencies remain subject to their own respective licenses and notices. This
+NOTICE file applies only to attribution notices for this repository and does
+not replace or modify any third-party license terms.
+
+The contents of this NOTICE file are for informational purposes only and do
+not modify the Apache License, Version 2.0.

@@ -1,0 +1,85 @@
+{
+  "evaluations": [
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "aer_estimator",
+        "tier": "noisy_local"
+      },
+      "observable_name": "scale_factor_expectation_value",
+      "operator_label": "(1+0j)*I + (-0.39999999999999997+0j)*Z",
+      "physical_meaning": "Expectation value of the scale-factor operator in the two-bin positive-scale-factor truncation.",
+      "shots": null,
+      "uncertainty": 0.0065753763207895555,
+      "units": "dimensionless",
+      "value": 1.22784
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "aer_estimator",
+        "tier": "noisy_local"
+      },
+      "observable_name": "volume_expectation_value",
+      "operator_label": "(1.4799999999999995+0j)*I + (-1.2639999999999998+0j)*Z",
+      "physical_meaning": "Expectation value of the comoving volume proxy a^3 within the two-bin truncation.",
+      "shots": null,
+      "uncertainty": 0.02077818917369499,
+      "units": "dimensionless",
+      "value": 2.1999743999999994
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "aer_estimator",
+        "tier": "noisy_local"
+      },
+      "observable_name": "effective_hamiltonian_expectation",
+      "operator_label": "(0.18+0j)*Z + (-0.24+0j)*X",
+      "physical_meaning": "Expectation value of the projected effective minisuperspace Hamiltonian used in this toy truncation.",
+      "shots": null,
+      "uncertainty": 0.006105292653166574,
+      "units": "dimensionless",
+      "value": -0.283776
+    }
+  ],
+  "job_metadata": {
+    "circuit_metadata": {
+      "experiment": "minisuperspace_frw",
+      "state_preparation": "ground_state_rotation"
+    },
+    "shots": 2500,
+    "target_precision": 0.02
+  },
+  "provenance": {
+    "backend_name": "aer_estimator",
+    "job_id": "a1925cd2-b1cc-498e-a094-36b5dc7320cb",
+    "metadata": {},
+    "optimization_level": null,
+    "precision": 0.02,
+    "primitive_name": "qiskit.primitives.BackendEstimatorV2",
+    "seed": 314159,
+    "shots": null,
+    "tier": "noisy_local",
+    "timestamp_utc": "2026-04-01T04:59:07.671273+00:00"
+  },
+  "request": {
+    "backend_name": "aer_estimator",
+    "mitigation_enabled": false,
+    "optimization_level": null,
+    "options": {
+      "backend_options": {
+        "method": "density_matrix"
+      },
+      "noise_model_metadata": {
+        "method": "density_matrix",
+        "one_qubit_depolarizing_probability": 0.004,
+        "readout_error_probability": 0.02
+      }
+    },
+    "precision": 0.02,
+    "seed": 314159,
+    "shots": null,
+    "tier": "noisy_local"
+  }
+}

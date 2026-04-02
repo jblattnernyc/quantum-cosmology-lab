@@ -1,0 +1,26 @@
+[
+  {
+    "absolute_error": 2.7755575615628914e-17,
+    "benchmark_value": 0.03422860544437148,
+    "candidate_value": 0.03422860544437145,
+    "interpretation": "Exact local comparison against the exact discrete particle-creation benchmark.",
+    "observable_name": "single_mode_particle_number_expectation",
+    "relative_error": 8.108882981147868e-16
+  },
+  {
+    "absolute_error": 0.0,
+    "benchmark_value": 0.06845721088874296,
+    "candidate_value": 0.06845721088874296,
+    "interpretation": "Exact local comparison against the exact discrete particle-creation benchmark.",
+    "observable_name": "total_particle_number_expectation",
+    "relative_error": 0.0
+  },
+  {
+    "absolute_error": 1.1102230246251565e-16,
+    "benchmark_value": -0.3465452307022457,
+    "candidate_value": -0.3465452307022456,
+    "interpretation": "Exact local comparison against the exact discrete particle-creation benchmark.",
+    "observable_name": "pairing_correlator_expectation",
+    "relative_error": 3.203688656673705e-16
+  }
+]
