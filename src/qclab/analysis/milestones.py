@@ -14,6 +14,7 @@ from qclab.utils.paths import repository_relative_path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+PHASE6_ARCHIVAL_BASELINE_PACKAGE_VERSION = "1.0.0"
 OFFICIAL_EXPERIMENTS = (
     "minisuperspace_frw",
     "particle_creation_flrw",
@@ -338,7 +339,7 @@ def collect_phase6_snapshot(
 
     return Phase6Snapshot(
         repository_root=repository_root.resolve(),
-        package_version=_qclab_package_version(repository_root.resolve()),
+        package_version=PHASE6_ARCHIVAL_BASELINE_PACKAGE_VERSION,
         roadmap_phase=6,
         generated_at_utc=_current_timestamp_utc(),
         governance_documents={

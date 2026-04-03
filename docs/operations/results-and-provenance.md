@@ -71,12 +71,19 @@ For the currently implemented official experiment lines, this pattern is realize
 
 These directory groupings should be preserved as the reference provenance layout for later official experiment lines unless a documented repository-level reason justifies a change.
 
-Phase 6 repository-level dissemination outputs extend this pattern in two conservative ways:
+The preserved Phase 6 Version 1 repository-level dissemination outputs extend this pattern in two conservative ways:
 
 - versioned milestone reports under `results/reports/milestones/`,
 - machine-readable archival release manifests under `data/processed/releases/`.
 
 These repository-level outputs should point to the preserved experiment artifacts and IBM manifest records. They should not replace or flatten the underlying provenance structure.
+
+Under the Version 1.1 governance posture, the repository may also generate phase-neutral current-state outputs in:
+
+- `results/reports/repository/`,
+- `data/processed/repository/`.
+
+These current-state outputs summarize the presently official experiment set discovered from repository metadata. They are not substitutes for experiment-level provenance and they do not overwrite the preserved historical Phase 6 archival record.
 
 ## IBM Artifact Retention Policy
 

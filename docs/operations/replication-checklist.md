@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This checklist defines the minimum steps for reproducing an official experiment workflow or a repository-level archival release snapshot after Phase 6.
+This checklist defines the minimum steps for reproducing an official experiment workflow or a repository-level archival release snapshot under the current governance baseline.
 
 ## Environment and Installation
 
@@ -27,7 +27,7 @@ This checklist defines the minimum steps for reproducing an official experiment 
 - [ ] Canonical IBM artifacts and timestamped archived IBM artifacts are both verified when live hardware provenance is part of the replication target.
 - [ ] `_local_testing` IBM artifacts are treated as operational validation outputs rather than as live QPU records.
 
-## Repository-Level Phase 6 Outputs
+## Historical Version 1 Release Outputs
 
 - [ ] The milestone report under `results/reports/milestones/` is regenerated or verified.
 - [ ] The archival release manifest under `data/processed/releases/` is regenerated or verified.

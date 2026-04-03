@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the conservative Phase 6 workflow for preparing a repository-level archival release. The workflow is designed to preserve the current official experiment set, the benchmark-before-hardware policy, and the already implemented IBM provenance structure.
+This document defines the conservative archival workflow for the preserved Phase 6 Version 1 repository baseline. The workflow is designed to preserve the founding official experiment set, the benchmark-before-hardware policy, and the already implemented IBM provenance structure.
 
 It is not a license to reclassify exploratory material as official or to replace experiment-level interpretation with release-level summary prose.
 
@@ -10,11 +10,11 @@ It is not a license to reclassify exploratory material as official or to replace
 
 Before preparing an archival release:
 
-1. Confirm that the repository remains limited to the currently implemented official experiment lines.
-2. Confirm that benchmark, exact-local, and noisy-local artifacts remain present for each official experiment.
+1. Confirm that the release target is the preserved Version 1 baseline rather than an ad hoc summary of later routine development.
+2. Confirm that benchmark, exact-local, and noisy-local artifacts remain present for each preserved Version 1 official experiment.
 3. Confirm that any live IBM hardware discussion is supported by the canonical artifacts, archived artifacts, and per-experiment `ibm_runtime_runs.jsonl` manifest entries.
 4. Confirm that `_local_testing` IBM artifacts remain operationally separate from the live-hardware scientific record.
-5. Run the relevant automated tests and any Phase 6 release-reporting smoke commands.
+5. Run the relevant automated tests and any historical Phase 6 release-reporting smoke commands.
 
 ## Release Assembly Steps
 
@@ -25,7 +25,7 @@ python scripts/release/build_phase6_milestone_report.py
 python scripts/release/build_archival_release_manifest.py
 ```
 
-The default public Phase 6 baseline writes:
+The default public preserved Phase 6 baseline writes:
 
 - `results/reports/milestones/v1.0.0-phase6-20260402.md`
 - `data/processed/releases/v1.0.0-phase6-20260402_manifest.json`
@@ -38,7 +38,7 @@ The preserved `v0.1.0` and `v0.2.0` Phase 6 artifacts should be retained as inte
 
 Review the generated milestone report and release manifest for the following points:
 
-- all three official experiment lines are present,
+- all three preserved Version 1 official experiment lines are present,
 - the governance documents are referenced correctly,
 - the latest live IBM run for each experiment is taken from the preserved manifest rather than inferred informally,
 - canonical IBM artifact paths and archived IBM artifact paths are both preserved,
@@ -70,4 +70,4 @@ Do not treat the following as part of the canonical archival scientific record u
 
 ## Interpretation Boundary
 
-The archival release workflow preserves provenance and dissemination structure. It does not change the scientific meaning of the underlying experiment lines.
+The archival release workflow preserves provenance and dissemination structure for the historical Version 1 baseline. It does not change the scientific meaning of the underlying experiment lines.

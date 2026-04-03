@@ -4,7 +4,7 @@
 
 This file defines the working rules for agents operating in the **Quantum Cosmology Lab** repository. It applies to all code, documentation, analysis, experiment design, and interpretation work performed in this repository.
 
-This repository is a professional research lab for **reduced, benchmarked, and reproducible** quantum-computational studies of early-universe models using Qiskit and related scientific Python tooling. It already contains the foundational repository layers, shared scientific infrastructure, and official reduced experiment lines across quantum cosmology, curved-spacetime particle creation, and toy-gauge studies, and it is expected to continue expanding in a phased and methodologically disciplined manner.
+This repository is a professional research lab for **reduced, benchmarked, and reproducible** quantum-computational studies of early-universe models using Qiskit and related scientific Python tooling. It already contains the foundational repository layers, shared scientific infrastructure, and official reduced experiment lines across quantum cosmology, curved-spacetime particle creation, and toy-gauge studies, preserved as the completed Version 1 founding buildout. Further work should proceed through mission-fit, methodologically disciplined official experiments and explicitly governed major expansions rather than by treating new phases as the default mechanism for routine development.
 
 ## 1. Authority and Priority
 
@@ -13,6 +13,8 @@ Agents must treat the following documents as governing sources, in this order:
 1. `AGENTS.md`
 2. `PLANS.md`
 3. repository source code and experiment documentation
+
+Under the Version 1.1 governance posture, `AGENTS.md` is the primary active governance document for current and future work. `PLANS.md` remains authoritative as the preserved Version 1 founding roadmap, charter, and boundary document, and it should be consulted for major expansion, scope interpretation, and other program-level changes.
 
 If a conflict appears between implementation convenience and scientific rigor, scientific rigor takes priority.
 
@@ -77,7 +79,7 @@ Do not interpret noisy histograms, hardware distortions, or nonuniform shot dist
 
 Agents must follow this workflow for substantial scientific or code changes.
 
-1. Read the relevant parts of `PLANS.md` and any experiment-local documentation before changing code.
+1. Read the relevant experiment-local documentation before changing code, and consult the relevant parts of `PLANS.md` whenever the work affects repository scope, official experiment admission, major expansion, or historical charter interpretation.
 2. Identify the scientific question and the mathematical object being implemented.
 3. State or encode the truncation, discretization, and assumptions explicitly.
 4. Implement or update the benchmark first, or at minimum in parallel with the circuit logic.
@@ -86,6 +88,17 @@ Agents must follow this workflow for substantial scientific or code changes.
 7. Document limits of interpretation in the experiment’s results or method files.
 
 If the task is exploratory, the work must still document that status clearly.
+
+### 5.1 Post-Version-1 Work Categories
+
+After completion of the Version 1 founding roadmap, agents should classify proposed work as one of the following:
+
+- **Maintenance:** dependency updates, test upkeep, documentation correction, reproducibility repairs, CI upkeep, and release packaging within the existing repository mission.
+- **Refinement:** scientifically modest improvement of existing official experiments, shared infrastructure, reporting, or governance language without materially extending repository scope.
+- **Ordinary new official experiment:** a new experiment line that fits the repository mission, satisfies the official experiment standard, preserves benchmark-before-hardware discipline, and does not materially broaden the lab's scientific or organizational scope.
+- **Major expansion:** a new primary research track, a material widening of scope boundaries, a new repository-wide methodological tier, or another change that substantially extends the preserved Version 1 program.
+
+Only the fourth category ordinarily requires prior amendment of `PLANS.md`. The third category may proceed without creation of a new phase, provided mission fit, scientific validity, reproducibility, and interpretive discipline are all explicit. No Phase 7 is implied by the first three categories.
 
 ## 6. Official Experiment Standard
 
@@ -263,7 +276,7 @@ Until the repository fully matures, agents should prioritize work in this order:
 6. early-universe toy gauge experiment,
 7. secondary data-analysis workflows.
 
-At the current repository state, the first six priorities have already been implemented at a baseline official level, and the baseline Phase 6 dissemination and governance layer is also now present. Agents working after that milestone should ordinarily treat maintenance, rigorous refinement of the implemented experiment lines and shared hardware framework, and carefully documented dissemination updates as the active priorities.
+At the current repository state, the first six priorities have already been implemented at a baseline official level, and the baseline Phase 6 dissemination and governance layer is also now present. Agents working after that milestone should ordinarily treat maintenance, rigorous refinement of the implemented experiment lines and shared hardware framework, ordinary mission-fit new official experiments, and carefully documented dissemination updates as the active priorities. A new roadmap phase is not the default mechanism for admitting routine official experiments.
 
 ## 17. Definition of Good Agent Work in This Repository
 

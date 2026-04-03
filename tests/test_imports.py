@@ -21,6 +21,7 @@ class ImportIntegrityTests(unittest.TestCase):
             "qclab",
             "qclab.analysis",
             "qclab.analysis.milestones",
+            "qclab.analysis.repository_state",
             "qclab.analysis.reporting",
             "qclab.backends",
             "qclab.backends.execution",

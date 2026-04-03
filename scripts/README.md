@@ -6,4 +6,6 @@ Scripts should complement the installable package and experiment directories rat
 
 Credential-safe IBM Runtime account helpers are provided under [scripts/ibm_runtime/README.md](ibm_runtime/README.md).
 
-Phase 6 release and milestone-report helpers are provided under [scripts/release/README.md](release/README.md).
+Historical Phase 6 release and milestone-report helpers are provided under [scripts/release/README.md](release/README.md).
+
+That release-script directory now also contains phase-neutral current-state helpers for reporting the currently official experiment set without redefining the preserved Version 1 archival baseline.

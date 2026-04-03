@@ -12,6 +12,7 @@ GUT_TOY_GAUGE_DIR := experiments/gut_toy_gauge
 	particle-analyze particle-creation particle-run-ibm particle-run-ibm-local \
 	gut-benchmark gut-run-local gut-run-aer gut-analyze gut-toy-gauge \
 	gut-run-ibm gut-run-ibm-local \
+	current-repository-report current-official-experiment-manifest current-state \
 	phase6-milestone-report phase6-release-manifest phase6-release \
 	clean-cache clean-build clean
 
@@ -46,6 +47,9 @@ help:
 		'  gut-toy-gauge     Run benchmark, exact local, noisy local, and analysis for the official Phase 5 experiment.' \
 		'  gut-run-ibm       Run the toy-gauge IBM Runtime workflow. Override BACKEND=<backend-name>.' \
 		'  gut-run-ibm-local Run the toy-gauge IBM Runtime local-testing workflow. Override LOCAL_TESTING_BACKEND=<fake-backend-class>.' \
+		'  current-repository-report Generate the phase-neutral current official experiment report. Override GENERATED_AT_UTC=<iso-utc> for deterministic output.' \
+		'  current-official-experiment-manifest Generate the phase-neutral current official experiment manifest. Override GENERATED_AT_UTC=<iso-utc> for deterministic output.' \
+		'  current-state      Generate both current-state repository outputs.' \
 		'  phase6-milestone-report  Generate the default Phase 6 versioned milestone report.' \
 		'  phase6-release-manifest Generate the default Phase 6 archival release manifest.' \
 		'  phase6-release     Generate both Phase 6 repository-level release outputs.' \
@@ -155,6 +159,14 @@ gut-run-ibm-local:
 		exit 1; \
 	fi
 	$(PYTHON) $(GUT_TOY_GAUGE_DIR)/run_ibm.py --local-testing-backend $(LOCAL_TESTING_BACKEND)
+
+current-repository-report:
+	$(PYTHON) scripts/release/build_current_repository_report.py $(if $(GENERATED_AT_UTC),--generated-at-utc $(GENERATED_AT_UTC),)
+
+current-official-experiment-manifest:
+	$(PYTHON) scripts/release/build_current_official_experiment_manifest.py $(if $(GENERATED_AT_UTC),--generated-at-utc $(GENERATED_AT_UTC),)
+
+current-state: current-repository-report current-official-experiment-manifest
 
 phase6-milestone-report:
 	$(PYTHON) scripts/release/build_phase6_milestone_report.py

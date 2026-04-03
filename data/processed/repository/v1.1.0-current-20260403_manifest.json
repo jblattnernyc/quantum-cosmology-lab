@@ -1,0 +1,163 @@
+{
+  "generated_at_utc": "2026-04-03T00:00:00+00:00",
+  "governance_documents": {
+    "agents": "AGENTS.md",
+    "experiment_standard": "docs/methods/experiment-standard.md",
+    "plans": "PLANS.md",
+    "readme": "README.md",
+    "results_and_provenance": "docs/operations/results-and-provenance.md"
+  },
+  "official_experiments": [
+    {
+      "artifacts": {
+        "analysis_report_markdown": "results/reports/gut_toy_gauge/analysis_report.md",
+        "analysis_summary_json": "results/reports/gut_toy_gauge/analysis_summary.json",
+        "benchmark_json": "data/processed/gut_toy_gauge/benchmark.json",
+        "comparison_figure": "results/figures/gut_toy_gauge/observable_comparison.png",
+        "exact_local_comparisons_json": "data/processed/gut_toy_gauge/exact_local_comparisons.json",
+        "exact_local_json": "data/processed/gut_toy_gauge/exact_local.json",
+        "ibm_runtime_comparisons_json": "data/processed/gut_toy_gauge/ibm_runtime_comparisons.json",
+        "ibm_runtime_json": "data/processed/gut_toy_gauge/ibm_runtime.json",
+        "ibm_runtime_metadata_json": "data/raw/gut_toy_gauge/ibm_runtime_metadata.json",
+        "ibm_runtime_report_markdown": "results/reports/gut_toy_gauge/ibm_runtime_report.md",
+        "noisy_local_comparisons_json": "data/processed/gut_toy_gauge/noisy_local_comparisons.json",
+        "noisy_local_json": "data/processed/gut_toy_gauge/noisy_local.json",
+        "observable_summary_table_markdown": "results/tables/gut_toy_gauge/observable_summary.md"
+      },
+      "documents": {
+        "config_yaml": "experiments/gut_toy_gauge/config.yaml",
+        "model_markdown": "experiments/gut_toy_gauge/model.md",
+        "readme_markdown": "experiments/gut_toy_gauge/README.md",
+        "results_markdown": "experiments/gut_toy_gauge/results.md"
+      },
+      "experiment_name": "gut_toy_gauge",
+      "latest_live_ibm_run": {
+        "archived_artifacts": {
+          "comparison_json": "data/processed/gut_toy_gauge/ibm_runtime_comparisons_20260402T005154Z_ibm_fez_d76rr60hnndc7385mgh0.json",
+          "execution_json": "data/processed/gut_toy_gauge/ibm_runtime_20260402T005154Z_ibm_fez_d76rr60hnndc7385mgh0.json",
+          "metadata_json": "data/raw/gut_toy_gauge/ibm_runtime_metadata_20260402T005154Z_ibm_fez_d76rr60hnndc7385mgh0.json",
+          "report_markdown": "results/reports/gut_toy_gauge/ibm_runtime_report_20260402T005154Z_ibm_fez_d76rr60hnndc7385mgh0.md"
+        },
+        "backend_name": "ibm_fez",
+        "canonical_artifacts": {
+          "comparison_json": "data/processed/gut_toy_gauge/ibm_runtime_comparisons.json",
+          "execution_json": "data/processed/gut_toy_gauge/ibm_runtime.json",
+          "metadata_json": "data/raw/gut_toy_gauge/ibm_runtime_metadata.json",
+          "report_markdown": "results/reports/gut_toy_gauge/ibm_runtime_report.md"
+        },
+        "job_id": "d76rr60hnndc7385mgh0",
+        "local_testing_mode": false,
+        "manifest_path": "data/raw/gut_toy_gauge/ibm_runtime_runs.jsonl",
+        "timestamp_utc": "2026-04-02T00:51:54.949130+00:00"
+      },
+      "live_ibm_run_count": 1,
+      "local_testing_artifacts_present": false,
+      "runs_manifest_jsonl": "data/raw/gut_toy_gauge/ibm_runtime_runs.jsonl",
+      "scientific_question": "In a reduced two-link Z2 gauge toy Hamiltonian with an explicit gauge-penalty term, what are the benchmark ground-state values of gauge-invariance violation, a link-alignment order parameter, and a Wilson-line correlator proxy, and how accurately do exact local and noisy local estimator workflows reproduce them?"
+    },
+    {
+      "artifacts": {
+        "analysis_report_markdown": "results/reports/minisuperspace_frw/analysis_report.md",
+        "analysis_summary_json": "results/reports/minisuperspace_frw/analysis_summary.json",
+        "benchmark_json": "data/processed/minisuperspace_frw/benchmark.json",
+        "comparison_figure": "results/figures/minisuperspace_frw/observable_comparison.png",
+        "exact_local_comparisons_json": "data/processed/minisuperspace_frw/exact_local_comparisons.json",
+        "exact_local_json": "data/processed/minisuperspace_frw/exact_local.json",
+        "ibm_runtime_comparisons_json": "data/processed/minisuperspace_frw/ibm_runtime_comparisons.json",
+        "ibm_runtime_json": "data/processed/minisuperspace_frw/ibm_runtime.json",
+        "ibm_runtime_metadata_json": "data/raw/minisuperspace_frw/ibm_runtime_metadata.json",
+        "ibm_runtime_report_markdown": "results/reports/minisuperspace_frw/ibm_runtime_report.md",
+        "noisy_local_comparisons_json": "data/processed/minisuperspace_frw/noisy_local_comparisons.json",
+        "noisy_local_json": "data/processed/minisuperspace_frw/noisy_local.json",
+        "observable_summary_table_markdown": "results/tables/minisuperspace_frw/observable_summary.md"
+      },
+      "documents": {
+        "config_yaml": "experiments/minisuperspace_frw/config.yaml",
+        "model_markdown": "experiments/minisuperspace_frw/model.md",
+        "readme_markdown": "experiments/minisuperspace_frw/README.md",
+        "results_markdown": "experiments/minisuperspace_frw/results.md"
+      },
+      "experiment_name": "minisuperspace_frw",
+      "latest_live_ibm_run": {
+        "archived_artifacts": {
+          "comparison_json": "data/processed/minisuperspace_frw/ibm_runtime_comparisons_20260401T233955Z_ibm_fez_d76qp1ohnndc7385l6dg.json",
+          "execution_json": "data/processed/minisuperspace_frw/ibm_runtime_20260401T233955Z_ibm_fez_d76qp1ohnndc7385l6dg.json",
+          "metadata_json": "data/raw/minisuperspace_frw/ibm_runtime_metadata_20260401T233955Z_ibm_fez_d76qp1ohnndc7385l6dg.json",
+          "report_markdown": "results/reports/minisuperspace_frw/ibm_runtime_report_20260401T233955Z_ibm_fez_d76qp1ohnndc7385l6dg.md"
+        },
+        "backend_name": "ibm_fez",
+        "canonical_artifacts": {
+          "comparison_json": "data/processed/minisuperspace_frw/ibm_runtime_comparisons.json",
+          "execution_json": "data/processed/minisuperspace_frw/ibm_runtime.json",
+          "metadata_json": "data/raw/minisuperspace_frw/ibm_runtime_metadata.json",
+          "report_markdown": "results/reports/minisuperspace_frw/ibm_runtime_report.md"
+        },
+        "job_id": "d76qp1ohnndc7385l6dg",
+        "local_testing_mode": false,
+        "manifest_path": "data/raw/minisuperspace_frw/ibm_runtime_runs.jsonl",
+        "timestamp_utc": "2026-04-01T23:39:55.166284+00:00"
+      },
+      "live_ibm_run_count": 1,
+      "local_testing_artifacts_present": false,
+      "runs_manifest_jsonl": "data/raw/minisuperspace_frw/ibm_runtime_runs.jsonl",
+      "scientific_question": "In a two-state positive-scale-factor truncation of an FRW minisuperspace toy Hamiltonian, what are the benchmark ground-state expectation values of the scale-factor and volume operators, and how accurately do exact local and noisy local quantum workflows reproduce them?"
+    },
+    {
+      "artifacts": {
+        "analysis_report_markdown": "results/reports/particle_creation_flrw/analysis_report.md",
+        "analysis_summary_json": "results/reports/particle_creation_flrw/analysis_summary.json",
+        "benchmark_json": "data/processed/particle_creation_flrw/benchmark.json",
+        "comparison_figure": "results/figures/particle_creation_flrw/observable_comparison.png",
+        "exact_local_comparisons_json": "data/processed/particle_creation_flrw/exact_local_comparisons.json",
+        "exact_local_json": "data/processed/particle_creation_flrw/exact_local.json",
+        "ibm_runtime_comparisons_json": "data/processed/particle_creation_flrw/ibm_runtime_comparisons.json",
+        "ibm_runtime_json": "data/processed/particle_creation_flrw/ibm_runtime.json",
+        "ibm_runtime_metadata_json": "data/raw/particle_creation_flrw/ibm_runtime_metadata.json",
+        "ibm_runtime_report_markdown": "results/reports/particle_creation_flrw/ibm_runtime_report.md",
+        "noisy_local_comparisons_json": "data/processed/particle_creation_flrw/noisy_local_comparisons.json",
+        "noisy_local_json": "data/processed/particle_creation_flrw/noisy_local.json",
+        "observable_summary_table_markdown": "results/tables/particle_creation_flrw/observable_summary.md"
+      },
+      "documents": {
+        "config_yaml": "experiments/particle_creation_flrw/config.yaml",
+        "model_markdown": "experiments/particle_creation_flrw/model.md",
+        "readme_markdown": "experiments/particle_creation_flrw/README.md",
+        "results_markdown": "experiments/particle_creation_flrw/results.md"
+      },
+      "experiment_name": "particle_creation_flrw",
+      "latest_live_ibm_run": {
+        "archived_artifacts": {
+          "comparison_json": "data/processed/particle_creation_flrw/ibm_runtime_comparisons_20260402T003415Z_ibm_fez_d76risohnndc7385m6j0.json",
+          "execution_json": "data/processed/particle_creation_flrw/ibm_runtime_20260402T003415Z_ibm_fez_d76risohnndc7385m6j0.json",
+          "metadata_json": "data/raw/particle_creation_flrw/ibm_runtime_metadata_20260402T003415Z_ibm_fez_d76risohnndc7385m6j0.json",
+          "report_markdown": "results/reports/particle_creation_flrw/ibm_runtime_report_20260402T003415Z_ibm_fez_d76risohnndc7385m6j0.md"
+        },
+        "backend_name": "ibm_fez",
+        "canonical_artifacts": {
+          "comparison_json": "data/processed/particle_creation_flrw/ibm_runtime_comparisons.json",
+          "execution_json": "data/processed/particle_creation_flrw/ibm_runtime.json",
+          "metadata_json": "data/raw/particle_creation_flrw/ibm_runtime_metadata.json",
+          "report_markdown": "results/reports/particle_creation_flrw/ibm_runtime_report.md"
+        },
+        "job_id": "d76risohnndc7385m6j0",
+        "local_testing_mode": false,
+        "manifest_path": "data/raw/particle_creation_flrw/ibm_runtime_runs.jsonl",
+        "timestamp_utc": "2026-04-02T00:34:15.918194+00:00"
+      },
+      "live_ibm_run_count": 1,
+      "local_testing_artifacts_present": false,
+      "runs_manifest_jsonl": "data/raw/particle_creation_flrw/ibm_runtime_runs.jsonl",
+      "scientific_question": "In a two-mode, single-pair truncation of a scalar field on a prescribed expanding FLRW-like background, what particle-number and pair-correlation observables are produced by an explicit stepwise time-dependent evolution, and how accurately do exact local and noisy local estimator workflows reproduce the benchmark?"
+    }
+  ],
+  "package_version": "1.1.0",
+  "report_kind": "current_official_experiments",
+  "report_markdown": "results/reports/repository/v1.1.0-current-20260403.md",
+  "repository_policies": {
+    "agents_primary_active_governance": true,
+    "benchmark_before_hardware": true,
+    "local_testing_artifacts_are_noncanonical": true,
+    "plans_required_for_major_expansion_only": true
+  },
+  "repository_root": "."
+}

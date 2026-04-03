@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the repository-standard citation and bibliography policy for Quantum Cosmology Lab reports, model notes, milestone reports, and archival release materials produced after Phase 6.
+This document defines the repository-standard citation and bibliography policy for Quantum Cosmology Lab reports, model notes, preserved Phase 6 milestone reports, and archival release materials used under the current governance baseline.
 
 The objective is not to force a journal-specific style on every future publication. The objective is to ensure that the lab's internal and archival documents preserve enough bibliographic structure to identify scientific sources, computational methods, repository artifacts, and historical materials clearly and reproducibly.
 
@@ -99,9 +99,9 @@ Bibliographies should:
 
 Historical or contextual materials may be included when they clarify the background of a model, method, or repository decision. They must be labeled as contextual or historical sources and must not be presented as direct validation of the experiment implementation.
 
-## Minimal Citation Set for Phase 6 Milestone Materials
+## Minimal Citation Set for Historical Phase 6 Milestone Materials
 
-At minimum, a Phase 6 milestone report or archival release packet should cite:
+At minimum, a historical Phase 6 milestone report or archival release packet should cite:
 
 - `AGENTS.md`,
 - `PLANS.md`,

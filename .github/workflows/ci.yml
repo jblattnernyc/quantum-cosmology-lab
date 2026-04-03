@@ -78,6 +78,14 @@ jobs:
         if: matrix.python-version == '3.11'
         run: python scripts/release/build_archival_release_manifest.py --release-id v1.0.0-phase6-ci --milestone-report /tmp/qclab_phase6_ci_report.md --output /tmp/qclab_phase6_ci_manifest.json
 
+      - name: Run current repository report smoke path
+        if: matrix.python-version == '3.11'
+        run: python scripts/release/build_current_repository_report.py --generated-at-utc 2026-04-03T00:00:00+00:00 --output /tmp/qclab_current_repository_report.md
+
+      - name: Run current official experiment manifest smoke path
+        if: matrix.python-version == '3.11'
+        run: python scripts/release/build_current_official_experiment_manifest.py --generated-at-utc 2026-04-03T00:00:00+00:00 --report /tmp/qclab_current_repository_report.md --output /tmp/qclab_current_official_experiments.json
+
       - name: Compile source, script, and test files
         run: python -m compileall src tests scripts experiments
 

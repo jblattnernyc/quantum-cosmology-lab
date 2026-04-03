@@ -2,15 +2,17 @@
 
 ## PLANS.md
 
-**Document Status:** Foundational roadmap completed through Phase 6; retained as the authoritative program record and change-control document for Version 1  
-**Project Status:** Implemented through Phase 6  
-**Repository Role:** Root roadmap, program-record, and future-expansion control guide for the official Quantum Cosmology Lab
+**Document Status:** Foundational roadmap completed through Phase 6; retained as the historical Version 1 program record, charter, and major-expansion control document under the Version 1.1 governance posture
+**Project Status:** Version 1 founding buildout completed through Phase 6; repository remains active for maintenance, refinement, and mission-fit official experiments
+**Repository Role:** Root historical roadmap, charter, boundary document, and major-expansion control guide for the official Quantum Cosmology Lab
 
 ## 1. Purpose
 
-This document defines the scientific, technical, organizational, and methodological plan by which the official **Quantum Cosmology Lab** was established as a rigorous Qiskit-based research repository, and it remains the governing document for any later programmatic extension. The lab is intended to support reproducible research on reduced models relevant to the early universe, with particular emphasis on quantum cosmology, quantum field theory in curved spacetime, and carefully scoped lattice or symmetry-breaking toy models.
+This document defines the scientific, technical, organizational, and methodological plan by which the official **Quantum Cosmology Lab** was established as a rigorous Qiskit-based research repository, and it remains the authoritative record of that founding program together with the governing document for any later major programmatic extension. The lab is intended to support reproducible research on reduced models relevant to the early universe, with particular emphasis on quantum cosmology, quantum field theory in curved spacetime, and carefully scoped lattice or symmetry-breaking toy models.
 
 The central objective is to build and preserve a laboratory that is scientifically valid, computationally reproducible, and historically well documented. The lab must therefore be more than a collection of cosmology-themed circuits. It must operate as a research system in which every experiment is derived from a defined model, every observable has a stated physical meaning, and every claim is benchmarked against exact or trusted classical reference results.
+
+Under the Version 1.1 governance posture, this document is not the ordinary approval gate for routine maintenance, refinement, or mission-fit official experiments. Those activities are governed actively by `AGENTS.md`, the official experiment standard, and experiment-local documentation. `PLANS.md` should instead be read primarily as the preserved Version 1 charter, boundary document, and change-control record for genuinely major expansion beyond the founding program.
 
 ## 2. Mission
 
@@ -329,9 +331,9 @@ The following interpretive rules are mandatory.
 4. All cosmological claims must be tied to explicit operators, models, and reference calculations.
 5. Exploratory circuits may be preserved, but they must be labeled as exploratory.
 
-## 12. Phased Roadmap
+## 12. Historical Founding Roadmap
 
-As of 2026-04-02, Phases 0, 1, 2, 3, 4, 5, and 6 have been implemented at a baseline official level in the repository. No work beyond Phase 6 is implemented in this planning state.
+As of April 3, 2026, Phases 0, 1, 2, 3, 4, 5, and 6 have been implemented at a baseline official level in the repository. Under the Version 1.1 governance posture, these phases are preserved as the historical build record of Version 1 rather than as the ordinary template for admitting future official experiments. No Phase 7 is defined in this planning state.
 
 ## Phase 0. Repository Foundation
 
@@ -473,9 +475,37 @@ This completed roadmap should be read as:
 
 No Phase 7 is currently defined in this document. Routine maintenance, dissemination updates, release preparation, test upkeep, documentation refinement, or reproducibility refreshes do not by themselves create a new roadmap phase.
 
-### 12.2 Post-Phase-6 Change Control
+### 12.2 Ordinary Official Experiment Admission Under Version 1.1
 
-After completion of Phase 6, no new major programmatic expansion should be treated as an official next phase unless it is first added explicitly to `PLANS.md`.
+After completion of Phase 6, future scientifically valid experiments may proceed without definition of a new roadmap phase when all of the following are true:
+
+- the work fits the mission and scope defined in Sections 2 through 5,
+- the work preserves the foundational principles and interpretation policy in Sections 3 and 11,
+- the work satisfies the official lab standard in Section 6,
+- the work preserves benchmark-before-hardware discipline and reproducibility expectations,
+- the work does not materially alter repository-wide scope boundaries, provenance policy, or execution architecture.
+
+Such work should be documented through experiment-local materials, repository governance documents where relevant, and `CHANGELOG.md` rather than by inventing a successor phase. Ordinary official experiment admission therefore depends on mission fit, scientific validity, and repository standards, not on prior phase pre-authorization.
+
+### 12.3 Maintenance, Refinement, Ordinary New Official Experiment, and Major Expansion
+
+Post-Phase-6 work should distinguish among four categories.
+
+- **Maintenance:** dependency updates, test upkeep, documentation corrections, CI refinement, release packaging, and reproducibility repairs within the existing repository mission.
+- **Refinement:** scientifically modest improvements to the existing official experiment lines, shared infrastructure, reporting, or governance documents that do not alter the repository's core scope.
+- **Ordinary new official experiment:** a new experiment line that fits the existing mission, satisfies the official lab standard, and does not materially widen the founding Version 1 scope.
+- **Major expansion:** new official research tracks, new major experiment families, new repository-wide methodological tiers, or other changes that materially extend the founding Version 1 program.
+
+Only the fourth category should ordinarily require prior amendment of `PLANS.md` or definition of a new roadmap phase. The first three categories should be tracked through repository governance documents, experiment-local materials, results records, and `CHANGELOG.md` rather than by inventing informal successor phases.
+
+### 12.4 PLANS Amendment Trigger
+
+After roadmap closure, formal amendment of `PLANS.md` should be reserved for genuinely major programmatic expansion, such as:
+
+- a new primary research track not already contemplated in Sections 4 and 5,
+- a material broadening of scope boundaries or interpretive posture,
+- a new repository-wide execution, validation, or dissemination tier,
+- a governance or provenance change that materially alters the preserved Version 1 scientific record.
 
 Any future major phase definition must include, at minimum:
 
@@ -486,21 +516,11 @@ Any future major phase definition must include, at minimum:
 - its relation to the existing official experiment lines,
 - its relation to the preserved IBM hardware provenance and archival policy.
 
-Until such a section is added, work after Phase 6 should be interpreted as maintenance, refinement, dissemination, or release management within the existing Version 1 program rather than as a new roadmap phase.
+No Phase 7 is created or implied by this Version 1.1 governance transition.
 
-### 12.3 Maintenance Versus Expansion
+## 13. Historical Priority Order
 
-Post-Phase-6 work should distinguish among three categories.
-
-- **Maintenance:** dependency updates, test upkeep, documentation corrections, CI refinement, release packaging, and reproducibility repairs within the existing repository mission.
-- **Refinement:** scientifically modest improvements to the existing official experiment lines, shared infrastructure, reporting, or governance documents that do not alter the repository's core scope.
-- **Expansion:** new official research tracks, new major experiment families, new repository-wide methodological tiers, or other changes that materially extend the founding Version 1 program.
-
-Only the third category should ordinarily require definition as a new roadmap phase. The first two categories should be tracked through repository governance documents, results records, and `CHANGELOG.md` rather than by inventing informal successor phases.
-
-## 13. Priority Order
-
-The work shall be executed in the following order.
+The work was executed in the following order during the founding Version 1 buildout.
 
 1. Repository foundation and standards.
 2. Reusable scientific infrastructure.
@@ -510,7 +530,7 @@ The work shall be executed in the following order.
 6. Gauge toy-model experiment.
 7. Secondary data-analysis track.
 
-The first six priorities have been completed at a baseline official level, and the baseline Phase 6 dissemination-and-governance layer has now been added to support internal reports, formal writeups, and archival release preparation. No Phase 7 work is defined in this planning document.
+The first six priorities have been completed at a baseline official level, and the baseline Phase 6 dissemination-and-governance layer has now been added to support internal reports, formal writeups, and archival release preparation. This ordering remains the historical record of the Version 1 build sequence rather than the ordinary gate for routine future experiment admission. No Phase 7 work is defined in this planning document.
 
 This ordering reflects the need to establish one mathematically disciplined core line before expanding into broader thematic coverage.
 

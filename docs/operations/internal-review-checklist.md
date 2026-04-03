@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This checklist defines the minimum repository-level review items for internal reports, milestone materials, and release-candidate dissemination packages after Phase 6.
+This checklist defines the minimum repository-level review items for internal reports, historical Phase 6 Version 1 milestone materials, and release-candidate dissemination packages under the current governance baseline.
 
 ## Scientific Scope
 
@@ -45,4 +45,4 @@ This checklist defines the minimum repository-level review items for internal re
 ## Repository Governance
 
 - [ ] The document cites the relevant repository policies when making governance or release claims.
-- [ ] The milestone or release identifier is recorded when the document is part of Phase 6 dissemination or archival work.
+- [ ] The milestone or release identifier is recorded when the document is part of preserved Phase 6 Version 1 dissemination or archival work.

@@ -4,6 +4,8 @@
 
 This document defines the minimum standard required for an experiment to count as an official Quantum Cosmology Lab experiment rather than an exploratory scaffold or development artifact.
 
+Under the Version 1.1 governance posture, this standard together with `AGENTS.md` is the primary admission rule for routine future official experiments. Prior creation of a new roadmap phase in `PLANS.md` is not ordinarily required. A `PLANS.md` amendment remains necessary when proposed work materially expands repository scope, track structure, execution policy, or governance responsibilities.
+
 ## Required Scientific Elements
 
 An official experiment must include all of the following:
@@ -67,6 +69,7 @@ results.md
 
 Before an experiment is treated as official, confirm the following:
 
+- the experiment fits the repository mission and scope defined by `AGENTS.md` and `PLANS.md`,
 - the model is mathematically explicit,
 - the truncation is justified,
 - the observable has stated physical meaning,
@@ -74,4 +77,5 @@ Before an experiment is treated as official, confirm the following:
 - local exact and noisy workflows agree to an interpretable degree,
 - hardware, if used, is presented as a validated comparison tier rather than primary evidence,
 - any IBM tier records backend-selection policy, mitigation policy, metadata capture, and a hardware report,
+- any proposal that materially extends repository scope has been escalated for `PLANS.md` treatment rather than admitted as routine experiment work,
 - written interpretation distinguishes result from speculation.
