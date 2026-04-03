@@ -1,0 +1,38 @@
+{
+  "benchmark": {
+    "effective_hamiltonian_expectation": -0.13427869803736275,
+    "focus_bin_probability": {
+      "observable_name": "smallest_scale_factor_probability",
+      "value": 0.11421161445833468
+    },
+    "ground_energy": -0.13427869803736275,
+    "ground_state": [
+      0.3379520889983293,
+      0.6116025155431901,
+      0.6193813657451855,
+      0.35790707214378426
+    ],
+    "large_scale_factor_probability": 0.12809747229053597,
+    "rotation_angle": null,
+    "scale_factor_expectation_value": 0.3409579452907099,
+    "volume_expectation_value": 0.058451698470842514
+  },
+  "experiment_name": "minisuperspace_frw_small_scale_factor",
+  "parameters": {
+    "inverse_square_barrier_strength": 0.001,
+    "nearest_neighbor_tunneling": 0.1,
+    "quadratic_potential_strength": 0.1
+  },
+  "scientific_question": "In a four-bin positive-scale-factor truncation of an FRW/Wheeler-DeWitt-inspired minisuperspace operator with a small-scale-factor inverse-square barrier term, what are the benchmark ground-state values of the retained scale-factor expectation, a volume proxy, and the smallest-bin occupation probability, and how accurately do exact local and noisy local quantum workflows reproduce them?\n",
+  "truncation": {
+    "basis": "positive_scale_factor_bin_basis",
+    "bin_centers": [
+      0.15,
+      0.25,
+      0.4,
+      0.6
+    ],
+    "cutoff": 4,
+    "rationale": "This exploratory refinement resolves the small positive-scale-factor sector more explicitly than the official two-bin baseline while remaining finite, exactly diagonalizable, and directly encodable on two qubits.\n"
+  }
+}

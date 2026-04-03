@@ -280,13 +280,14 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
     )
 
     report_lines = [
-        "# Minisuperspace FRW Analysis Report",
+        f"# {experiment.configuration.experiment_name} Analysis Report",
         "",
         "## Benchmark",
         "",
         f"- Ground-state energy: {benchmark.ground_energy:.6f}",
         f"- Scale-factor expectation value: {benchmark.scale_factor_expectation_value:.6f}",
         f"- Volume expectation value: {benchmark.volume_expectation_value:.6f}",
+        f"- Largest retained scale-factor probability: {benchmark.large_scale_factor_probability:.6f}",
         "",
         "## Execution Comparison",
         "",
@@ -297,9 +298,16 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
         "",
         "## Interpretation",
         "",
-        "The exact local workflow reproduces the direct diagonalization benchmark for the reduced two-state model.",
-        "The noisy local workflow preserves the ordering and approximate magnitude of the benchmark observables under the explicit Aer noise model, but it is not interpreted as evidence for full quantum-cosmological dynamics beyond this truncation.",
+        "The exact local workflow reproduces the direct diagonalization benchmark for the reduced minisuperspace model defined by the selected configuration.",
+        "The noisy local workflow preserves the ordering and approximate magnitude of the benchmark observables under the explicit Aer noise model, but it is not interpreted as evidence for full quantum-cosmological dynamics beyond the declared truncation.",
     ]
+    if benchmark.focus_bin_probability_name is not None and benchmark.focus_bin_probability is not None:
+        report_lines[7:7] = [
+            (
+                f"- {benchmark.focus_bin_probability_name}: "
+                f"{benchmark.focus_bin_probability:.6f}"
+            ),
+        ]
     if ibm_payload is not None:
         report_lines.extend(
             [

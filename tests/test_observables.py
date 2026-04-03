@@ -13,6 +13,7 @@ from qclab.observables import (
     infer_pauli_qubit_count,
     make_pauli_observable,
     observable_to_qiskit,
+    pauli_term_mapping_from_matrix,
 )
 from qclab.observables.base import PauliTerm
 
@@ -39,3 +40,15 @@ class ObservableConstructionTests(unittest.TestCase):
                 measurement_basis="pauli",
                 pauli_terms=(PauliTerm("X"), PauliTerm("ZZ")),
             )
+
+    def test_pauli_term_mapping_from_matrix_decomposes_two_qubit_projector(self) -> None:
+        projector = [
+            [1.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0],
+        ]
+        self.assertEqual(
+            pauli_term_mapping_from_matrix(projector),
+            {"II": 0.25, "IZ": 0.25, "ZI": 0.25, "ZZ": 0.25},
+        )

@@ -3,13 +3,24 @@
 from __future__ import annotations
 
 from collections.abc import Iterable, Mapping, Sequence
+import itertools
+import math
 from typing import Any
+
+import numpy as np
 
 from qclab.observables.base import ObservableDefinition, PauliTerm
 from qclab.utils.optional import require_dependency
 
 
 PauliTermInput = PauliTerm | str | tuple[str, complex]
+
+_PAULI_MATRICES: dict[str, np.ndarray] = {
+    "I": np.array([[1.0, 0.0], [0.0, 1.0]], dtype=complex),
+    "X": np.array([[0.0, 1.0], [1.0, 0.0]], dtype=complex),
+    "Y": np.array([[0.0, -1j], [1j, 0.0]], dtype=complex),
+    "Z": np.array([[1.0, 0.0], [0.0, -1.0]], dtype=complex),
+}
 
 
 def _coerce_pauli_term(term: PauliTermInput) -> PauliTerm:
@@ -34,6 +45,47 @@ def pauli_terms_from_mapping(term_mapping: Mapping[str, complex]) -> tuple[Pauli
         PauliTerm(label=label, coefficient=complex(coefficient))
         for label, coefficient in term_mapping.items()
     )
+
+
+def pauli_term_mapping_from_matrix(
+    matrix: Sequence[Sequence[complex]] | np.ndarray,
+    *,
+    tolerance: float = 1e-12,
+) -> dict[str, complex]:
+    """Return the Pauli decomposition of a square operator matrix.
+
+    The returned mapping uses Qiskit's Pauli-label ordering, where the leftmost
+    character acts on the highest-index qubit and the rightmost character acts
+    on qubit 0.
+    """
+
+    operator = np.asarray(matrix, dtype=complex)
+    if operator.ndim != 2 or operator.shape[0] != operator.shape[1]:
+        raise ValueError("Operator matrices must be square.")
+    dimension = int(operator.shape[0])
+    if dimension <= 0:
+        raise ValueError("Operator matrices must be non-empty.")
+    qubit_count = int(round(math.log2(dimension)))
+    if 2**qubit_count != dimension:
+        raise ValueError("Operator dimension must be a power of two.")
+
+    decomposition: dict[str, complex] = {}
+    for label_tuple in itertools.product(("I", "X", "Y", "Z"), repeat=qubit_count):
+        label = "".join(label_tuple)
+        pauli_operator = _PAULI_MATRICES[label_tuple[0]]
+        for symbol in label_tuple[1:]:
+            pauli_operator = np.kron(pauli_operator, _PAULI_MATRICES[symbol])
+        coefficient = complex(
+            np.trace(pauli_operator.conj().T @ operator) / float(dimension)
+        )
+        coefficient = complex(np.real_if_close(coefficient, tol=1000))
+        if abs(coefficient) <= tolerance:
+            continue
+        if abs(coefficient.imag) <= tolerance:
+            decomposition[label] = float(coefficient.real)
+        else:
+            decomposition[label] = coefficient
+    return decomposition
 
 
 def make_pauli_observable(
