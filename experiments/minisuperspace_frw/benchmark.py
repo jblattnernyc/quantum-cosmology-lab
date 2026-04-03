@@ -23,6 +23,7 @@ from experiments.minisuperspace_frw.common import (
     MinisuperspaceFRWExperiment,
     MinisuperspaceFRWParameters,
     effective_hamiltonian_matrix,
+    focus_bin_projector,
     ground_state_data,
     ground_state_rotation_angle,
     large_scale_factor_projector,
@@ -37,27 +38,32 @@ class MinisuperspaceFRWBenchmark:
     """Benchmark values for the default reduced FRW parameter set."""
 
     ground_energy: float
-    ground_state: tuple[float, float]
-    rotation_angle: float
+    ground_state: tuple[float, ...]
+    rotation_angle: float | None
     scale_factor_expectation_value: float
     volume_expectation_value: float
     effective_hamiltonian_expectation: float
     large_scale_factor_probability: float
+    focus_bin_probability_name: str | None = None
+    focus_bin_probability: float | None = None
 
     def expected_observable_values(self) -> dict[str, float]:
         """Return benchmark values keyed by observable name."""
 
-        return {
+        values = {
             "scale_factor_expectation_value": self.scale_factor_expectation_value,
             "volume_expectation_value": self.volume_expectation_value,
             "effective_hamiltonian_expectation": self.effective_hamiltonian_expectation,
         }
+        if self.focus_bin_probability_name is not None and self.focus_bin_probability is not None:
+            values[self.focus_bin_probability_name] = self.focus_bin_probability
+        return values
 
 
 def _expectation_value(operator: np.ndarray, statevector: np.ndarray) -> float:
     """Return the expectation value of a Hermitian operator."""
 
-    return float(np.real_if_close(statevector.T @ operator @ statevector))
+    return float(np.real_if_close(statevector.conj().T @ operator @ statevector))
 
 
 def compute_benchmark(
@@ -77,14 +83,24 @@ def compute_benchmark(
         large_scale_factor_projector(parameters),
         statevector,
     )
+    focus_bin_probability_name = None
+    focus_bin_probability = None
+    if parameters.focus_bin_observable is not None:
+        focus_bin_probability_name = parameters.focus_bin_observable.name
+        focus_bin_probability = _expectation_value(
+            focus_bin_projector(parameters),
+            statevector,
+        )
     return MinisuperspaceFRWBenchmark(
         ground_energy=ground_energy,
-        ground_state=(float(statevector[0]), float(statevector[1])),
+        ground_state=tuple(float(component) for component in statevector),
         rotation_angle=ground_state_rotation_angle(parameters),
         scale_factor_expectation_value=scale_factor_expectation,
         volume_expectation_value=volume_expectation,
         effective_hamiltonian_expectation=effective_hamiltonian_expectation,
         large_scale_factor_probability=large_scale_factor_probability,
+        focus_bin_probability_name=focus_bin_probability_name,
+        focus_bin_probability=focus_bin_probability,
     )
 
 
@@ -94,7 +110,7 @@ def benchmark_to_serializable(
 ) -> dict[str, object]:
     """Convert benchmark data into a serializable record."""
 
-    return {
+    payload = {
         "experiment_name": experiment.configuration.experiment_name,
         "scientific_question": experiment.configuration.scientific_question,
         "parameters": dict(experiment.configuration.parameters),
@@ -109,7 +125,13 @@ def benchmark_to_serializable(
             "large_scale_factor_probability": benchmark.large_scale_factor_probability,
         },
     }
-
+    if benchmark.focus_bin_probability_name is not None:
+        payload["benchmark"]["focus_bin_probability"] = {
+            "observable_name": benchmark.focus_bin_probability_name,
+            "value": benchmark.focus_bin_probability,
+        }
+    return payload
+ 
 
 def write_benchmark_json(
     experiment: MinisuperspaceFRWExperiment,
@@ -150,8 +172,8 @@ def comparison_records_for_evaluations(
                 benchmark_value=target_value,
                 candidate_value=evaluation.value,
                 interpretation=(
-                    f"{tier_label} comparison against the direct two-state "
-                    "diagonalization benchmark."
+                    f"{tier_label} comparison against the direct reduced "
+                    "minisuperspace diagonalization benchmark."
                 ),
             )
         )

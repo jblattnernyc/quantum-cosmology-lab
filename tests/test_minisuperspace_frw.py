@@ -31,6 +31,9 @@ from experiments.minisuperspace_frw.run_ibm import run_ibm_hardware
 
 
 QISKIT_AVAILABLE = importlib.util.find_spec("qiskit") is not None
+SMALL_SCALE_FACTOR_CONFIG_PATH = DEFAULT_CONFIG_PATH.with_name(
+    "config_small_scale_factor.yaml"
+)
 
 
 class MinisuperspaceFRWTests(unittest.TestCase):
@@ -77,13 +80,99 @@ class MinisuperspaceFRWTests(unittest.TestCase):
             [("Z", 0.18), ("X", -0.24)],
         )
 
+    def test_small_scale_factor_configuration_is_exploratory_and_complete(self) -> None:
+        experiment = load_experiment_definition(str(SMALL_SCALE_FACTOR_CONFIG_PATH))
+        self.assertFalse(experiment.configuration.official_experiment)
+        self.assertEqual(experiment.configuration.status, "exploratory")
+        self.assertEqual(
+            experiment.configuration.observables,
+            (
+                "scale_factor_expectation_value",
+                "volume_expectation_value",
+                "effective_hamiltonian_expectation",
+                "smallest_scale_factor_probability",
+            ),
+        )
+        self.assertEqual(experiment.parameters.scale_factor_bins, (0.15, 0.25, 0.4, 0.6))
+        self.assertEqual(experiment.parameters.qubit_count, 2)
+
+    def test_small_scale_factor_benchmark_values_match_reference_parameter_set(self) -> None:
+        experiment = load_experiment_definition(str(SMALL_SCALE_FACTOR_CONFIG_PATH))
+        benchmark = compute_benchmark(experiment.parameters)
+        self.assertAlmostEqual(benchmark.ground_energy, -0.13427869803736275)
+        self.assertAlmostEqual(
+            benchmark.scale_factor_expectation_value,
+            0.3409579452907098,
+        )
+        self.assertAlmostEqual(
+            benchmark.volume_expectation_value,
+            0.058451698470842514,
+        )
+        self.assertAlmostEqual(
+            benchmark.large_scale_factor_probability,
+            0.12809746928767865,
+        )
+        self.assertEqual(
+            benchmark.focus_bin_probability_name,
+            "smallest_scale_factor_probability",
+        )
+        self.assertAlmostEqual(
+            benchmark.focus_bin_probability,
+            0.11421160961397295,
+        )
+        self.assertIsNone(benchmark.rotation_angle)
+
+    def test_small_scale_factor_observables_include_focus_bin_projector(self) -> None:
+        experiment = load_experiment_definition(str(SMALL_SCALE_FACTOR_CONFIG_PATH))
+        observables = {
+            observable.name: observable for observable in build_observables(experiment.parameters)
+        }
+        self.assertIn("smallest_scale_factor_probability", observables)
+        self.assertEqual(
+            [
+                (term.label, term.coefficient)
+                for term in observables["smallest_scale_factor_probability"].pauli_terms
+            ],
+            [("II", 0.25), ("IZ", 0.25), ("ZI", 0.25), ("ZZ", 0.25)],
+        )
+
     def test_analysis_writes_observable_summary_table(self) -> None:
-        outputs = run_analysis()
-        table_path = Path(outputs["observable_summary_table_markdown"])
-        self.assertTrue(table_path.exists())
-        table_text = table_path.read_text(encoding="utf-8")
-        self.assertIn("|Observable|Benchmark|Exact local|Exact abs. error|Noisy local|Noisy abs. error|", table_text)
-        self.assertIn("|scale_factor_expectation_value|1.240000|1.240000|0.000000|1.227840|0.012160|", table_text)
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_root = Path(temp_dir)
+            config_mapping = yaml.safe_load(
+                DEFAULT_CONFIG_PATH.read_text(encoding="utf-8")
+            )
+            config_mapping["artifacts"]["analysis_summary_json"] = str(
+                temp_root / "analysis_summary.json"
+            )
+            config_mapping["artifacts"]["analysis_report_markdown"] = str(
+                temp_root / "analysis_report.md"
+            )
+            config_mapping["artifacts"]["observable_summary_table_markdown"] = str(
+                temp_root / "observable_summary.md"
+            )
+            config_mapping["artifacts"]["comparison_figure"] = str(
+                temp_root / "observable_comparison.png"
+            )
+            config_path = temp_root / "config.yaml"
+            config_path.write_text(
+                yaml.safe_dump(config_mapping, sort_keys=False),
+                encoding="utf-8",
+            )
+
+            outputs = run_analysis(str(config_path))
+            table_path = Path(outputs["observable_summary_table_markdown"])
+            self.assertTrue(table_path.exists())
+            table_text = table_path.read_text(encoding="utf-8")
+
+        self.assertIn(
+            "|Observable|Benchmark|Exact local|Exact abs. error|Noisy local|Noisy abs. error|",
+            table_text,
+        )
+        self.assertIn(
+            "|scale_factor_expectation_value|1.240000|1.240000|0.000000|1.227840|0.012160|",
+            table_text,
+        )
 
     def test_analysis_exposes_ibm_artifact_paths_when_ibm_outputs_exist(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -253,3 +342,17 @@ class MinisuperspaceFRWTests(unittest.TestCase):
             ground_state_rotation_angle(experiment.parameters),
             places=12,
         )
+
+    @unittest.skipUnless(QISKIT_AVAILABLE, "qiskit is not installed")
+    def test_small_scale_factor_circuit_prepares_the_benchmark_ground_state(self) -> None:
+        from qiskit.quantum_info import Statevector
+
+        experiment = load_experiment_definition(str(SMALL_SCALE_FACTOR_CONFIG_PATH))
+        benchmark = compute_benchmark(experiment.parameters)
+        artifact = build_ground_state_artifact(experiment.parameters)
+        statevector = Statevector.from_instruction(artifact.payload).data
+        self.assertEqual(artifact.qubit_count, 2)
+        self.assertEqual(artifact.parameter_values, {})
+        for observed, expected in zip(statevector, benchmark.ground_state, strict=True):
+            self.assertAlmostEqual(float(observed.real), expected, places=10)
+            self.assertAlmostEqual(float(observed.imag), 0.0, places=10)

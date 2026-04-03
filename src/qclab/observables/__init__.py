@@ -6,6 +6,7 @@ from qclab.observables.pauli import (
     infer_pauli_qubit_count,
     make_pauli_observable,
     observable_to_qiskit,
+    pauli_term_mapping_from_matrix,
     pauli_terms_from_mapping,
 )
 
@@ -17,5 +18,6 @@ __all__ = [
     "infer_pauli_qubit_count",
     "make_pauli_observable",
     "observable_to_qiskit",
+    "pauli_term_mapping_from_matrix",
     "pauli_terms_from_mapping",
 ]

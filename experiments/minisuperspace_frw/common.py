@@ -18,39 +18,128 @@ DEFAULT_CONFIG_PATH = Path(__file__).with_name("config.yaml")
 
 
 @dataclass(frozen=True)
-class MinisuperspaceFRWParameters:
-    """Effective two-state parameters for the reduced FRW toy model."""
+class FocusBinObservableSpecification:
+    """Optional probability observable for one retained scale-factor bin."""
 
-    scale_factor_small: float
-    scale_factor_large: float
-    diagonal_bias: float
-    tunneling_strength: float
+    index: int
+    name: str
+    physical_meaning: str
+
+
+@dataclass(frozen=True)
+class MinisuperspaceFRWParameters:
+    """Effective parameters for reduced FRW minisuperspace models."""
+
+    scale_factor_bins: tuple[float, ...]
+    model_variant: str = "two_bin_bias"
+    diagonal_bias: float | None = None
+    tunneling_strength: float | None = None
+    nearest_neighbor_tunneling: float | None = None
+    quadratic_potential_strength: float | None = None
+    inverse_square_barrier_strength: float | None = None
+    focus_bin_observable: FocusBinObservableSpecification | None = None
 
     def __post_init__(self) -> None:
-        if self.scale_factor_small <= 0:
-            raise ValueError("scale_factor_small must be strictly positive.")
-        if self.scale_factor_large <= self.scale_factor_small:
+        if len(self.scale_factor_bins) < 2:
+            raise ValueError("At least two scale-factor bins are required.")
+        if len(self.scale_factor_bins) & (len(self.scale_factor_bins) - 1):
             raise ValueError(
-                "scale_factor_large must be greater than scale_factor_small."
+                "The retained scale-factor basis size must be a power of two."
             )
-        if self.tunneling_strength <= 0:
-            raise ValueError("tunneling_strength must be strictly positive.")
+        if any(value <= 0 for value in self.scale_factor_bins):
+            raise ValueError("All retained scale-factor bins must be strictly positive.")
+        if any(
+            upper <= lower
+            for lower, upper in zip(self.scale_factor_bins, self.scale_factor_bins[1:])
+        ):
+            raise ValueError("Scale-factor bins must increase strictly.")
+        if self.model_variant == "two_bin_bias":
+            if len(self.scale_factor_bins) != 2:
+                raise ValueError(
+                    "The two_bin_bias minisuperspace model requires exactly two bins."
+                )
+            if self.tunneling_strength is None or self.tunneling_strength <= 0:
+                raise ValueError(
+                    "two_bin_bias requires a strictly positive tunneling_strength."
+                )
+        elif self.model_variant == "small_scale_factor_barrier":
+            if self.nearest_neighbor_tunneling is None or self.nearest_neighbor_tunneling <= 0:
+                raise ValueError(
+                    "small_scale_factor_barrier requires a strictly positive nearest_neighbor_tunneling."
+                )
+            if self.quadratic_potential_strength is None:
+                raise ValueError(
+                    "small_scale_factor_barrier requires quadratic_potential_strength."
+                )
+            if self.inverse_square_barrier_strength is None or self.inverse_square_barrier_strength < 0:
+                raise ValueError(
+                    "small_scale_factor_barrier requires a non-negative inverse_square_barrier_strength."
+                )
+        else:
+            raise ValueError(f"Unsupported minisuperspace model_variant: {self.model_variant}")
+        if self.focus_bin_observable is not None:
+            if not 0 <= self.focus_bin_observable.index < len(self.scale_factor_bins):
+                raise ValueError(
+                    "Focus-bin observable index must reference a retained basis bin."
+                )
+
+    @property
+    def basis_size(self) -> int:
+        """Return the retained Hilbert-space dimension."""
+
+        return len(self.scale_factor_bins)
+
+    @property
+    def qubit_count(self) -> int:
+        """Return the number of qubits needed for the retained basis."""
+
+        return int(math.log2(self.basis_size))
+
+    @property
+    def scale_factor_small(self) -> float:
+        """Return the smallest retained scale-factor bin."""
+
+        return self.scale_factor_bins[0]
+
+    @property
+    def scale_factor_large(self) -> float:
+        """Return the largest retained scale-factor bin."""
+
+        return self.scale_factor_bins[-1]
 
     @property
     def scale_factor_mean(self) -> float:
+        """Return the mean of the smallest and largest bins."""
+
         return 0.5 * (self.scale_factor_small + self.scale_factor_large)
 
     @property
     def scale_factor_z_coefficient(self) -> float:
+        """Return the Pauli-Z coefficient for the two-bin scale-factor operator."""
+
+        if self.basis_size != 2:
+            raise ValueError(
+                "scale_factor_z_coefficient is defined only for the two-bin truncation."
+            )
         return 0.5 * (self.scale_factor_small - self.scale_factor_large)
 
     @property
     def volume_small(self) -> float:
+        """Return the smallest retained volume-proxy entry."""
+
         return self.scale_factor_small**3
 
     @property
     def volume_large(self) -> float:
+        """Return the largest retained volume-proxy entry."""
+
         return self.scale_factor_large**3
+
+    @property
+    def volume_entries(self) -> tuple[float, ...]:
+        """Return the retained comoving volume-proxy diagonal entries."""
+
+        return tuple(bin_center**3 for bin_center in self.scale_factor_bins)
 
 
 @dataclass(frozen=True)
@@ -116,6 +205,51 @@ def _required_float(mapping: dict[str, Any], key: str) -> float:
     return float(mapping[key])
 
 
+def _optional_float(mapping: dict[str, Any], key: str) -> float | None:
+    """Extract an optional float-valued parameter."""
+
+    if key not in mapping or mapping[key] is None:
+        return None
+    return float(mapping[key])
+
+
+def _scale_factor_bins(configuration: ModelConfiguration) -> tuple[float, ...]:
+    """Resolve the retained scale-factor bins from configuration data."""
+
+    raw_bins = configuration.truncation.get("bin_centers")
+    if raw_bins is not None:
+        return tuple(float(value) for value in raw_bins)
+    if {
+        "scale_factor_small",
+        "scale_factor_large",
+    }.issubset(configuration.parameters):
+        return (
+            float(configuration.parameters["scale_factor_small"]),
+            float(configuration.parameters["scale_factor_large"]),
+        )
+    raise KeyError(
+        "The minisuperspace configuration must declare truncation.bin_centers "
+        "or the legacy scale_factor_small / scale_factor_large parameters."
+    )
+
+
+def _focus_bin_observable_from_metadata(
+    metadata: dict[str, Any],
+) -> FocusBinObservableSpecification | None:
+    """Resolve an optional focus-bin observable declaration."""
+
+    focus_bin_metadata = metadata.get("focus_bin_observable")
+    if focus_bin_metadata is None:
+        return None
+    if not isinstance(focus_bin_metadata, dict):
+        raise TypeError("focus_bin_observable metadata must be a mapping when present.")
+    return FocusBinObservableSpecification(
+        index=int(focus_bin_metadata["index"]),
+        name=str(focus_bin_metadata["name"]),
+        physical_meaning=str(focus_bin_metadata["physical_meaning"]),
+    )
+
+
 def _artifact_paths_from_metadata(metadata: dict[str, Any]) -> MinisuperspaceArtifactPaths:
     """Build artifact paths from configuration metadata."""
 
@@ -160,17 +294,25 @@ def load_experiment_definition(
     """Load the experiment configuration and resolve typed parameters."""
 
     configuration = load_model_configuration(config_path)
+    model_variant = str(configuration.metadata.get("model_variant", "two_bin_bias"))
     parameters = MinisuperspaceFRWParameters(
-        scale_factor_small=_required_float(
-            configuration.parameters, "scale_factor_small"
+        scale_factor_bins=_scale_factor_bins(configuration),
+        model_variant=model_variant,
+        diagonal_bias=_optional_float(configuration.parameters, "diagonal_bias"),
+        tunneling_strength=_optional_float(configuration.parameters, "tunneling_strength"),
+        nearest_neighbor_tunneling=_optional_float(
+            configuration.parameters,
+            "nearest_neighbor_tunneling",
         ),
-        scale_factor_large=_required_float(
-            configuration.parameters, "scale_factor_large"
+        quadratic_potential_strength=_optional_float(
+            configuration.parameters,
+            "quadratic_potential_strength",
         ),
-        diagonal_bias=_required_float(configuration.parameters, "diagonal_bias"),
-        tunneling_strength=_required_float(
-            configuration.parameters, "tunneling_strength"
+        inverse_square_barrier_strength=_optional_float(
+            configuration.parameters,
+            "inverse_square_barrier_strength",
         ),
+        focus_bin_observable=_focus_bin_observable_from_metadata(configuration.metadata),
     )
     noise_metadata = dict(configuration.metadata.get("noise_model", {}))
     noise_model = NoiseModelSpecification(
@@ -191,52 +333,88 @@ def load_experiment_definition(
     )
 
 
+def effective_potential_entries(
+    parameters: MinisuperspaceFRWParameters,
+) -> tuple[float, ...] | None:
+    """Return diagonal effective-potential entries when defined explicitly."""
+
+    if parameters.model_variant == "two_bin_bias":
+        return None
+    return tuple(
+        parameters.quadratic_potential_strength * (bin_center**2)
+        + parameters.inverse_square_barrier_strength / (bin_center**2)
+        for bin_center in parameters.scale_factor_bins
+    )
+
+
 def effective_hamiltonian_matrix(
     parameters: MinisuperspaceFRWParameters,
 ) -> np.ndarray:
-    """Return the two-state effective Hamiltonian matrix.
+    """Return the reduced effective Hamiltonian matrix."""
 
-    The reduced model uses a single-qubit truncation with
+    if parameters.model_variant == "two_bin_bias":
+        return np.array(
+            [
+                [parameters.diagonal_bias, -parameters.tunneling_strength],
+                [-parameters.tunneling_strength, -parameters.diagonal_bias],
+            ],
+            dtype=float,
+        )
 
-    H_eff = diagonal_bias * Z - tunneling_strength * X.
-    """
-
-    return np.array(
-        [
-            [parameters.diagonal_bias, -parameters.tunneling_strength],
-            [-parameters.tunneling_strength, -parameters.diagonal_bias],
-        ],
-        dtype=float,
-    )
+    diagonal_entries = np.array(effective_potential_entries(parameters), dtype=float)
+    dimension = parameters.basis_size
+    hamiltonian = np.diag(diagonal_entries).astype(float)
+    for index in range(dimension - 1):
+        hamiltonian[index, index + 1] = -parameters.nearest_neighbor_tunneling
+        hamiltonian[index + 1, index] = -parameters.nearest_neighbor_tunneling
+    return hamiltonian
 
 
 def scale_factor_matrix(parameters: MinisuperspaceFRWParameters) -> np.ndarray:
     """Return the truncated scale-factor operator."""
 
-    return np.diag([parameters.scale_factor_small, parameters.scale_factor_large]).astype(
-        float
-    )
+    return np.diag(parameters.scale_factor_bins).astype(float)
 
 
 def volume_matrix(parameters: MinisuperspaceFRWParameters) -> np.ndarray:
     """Return the truncated volume proxy operator."""
 
-    return np.diag([parameters.volume_small, parameters.volume_large]).astype(float)
+    return np.diag(parameters.volume_entries).astype(float)
+
+
+def selected_bin_projector(
+    parameters: MinisuperspaceFRWParameters,
+    bin_index: int,
+) -> np.ndarray:
+    """Return the projector onto one retained scale-factor bin."""
+
+    if not 0 <= bin_index < parameters.basis_size:
+        raise ValueError("The requested scale-factor bin index is out of range.")
+    projector = np.zeros((parameters.basis_size, parameters.basis_size), dtype=float)
+    projector[bin_index, bin_index] = 1.0
+    return projector
 
 
 def large_scale_factor_projector(
     parameters: MinisuperspaceFRWParameters,
 ) -> np.ndarray:
-    """Return the projector onto the larger scale-factor bin."""
+    """Return the projector onto the largest retained scale-factor bin."""
 
-    del parameters
-    return np.diag([0.0, 1.0]).astype(float)
+    return selected_bin_projector(parameters, parameters.basis_size - 1)
+
+
+def focus_bin_projector(parameters: MinisuperspaceFRWParameters) -> np.ndarray | None:
+    """Return the configured focus-bin projector when present."""
+
+    if parameters.focus_bin_observable is None:
+        return None
+    return selected_bin_projector(parameters, parameters.focus_bin_observable.index)
 
 
 def canonicalize_real_statevector(statevector: np.ndarray) -> np.ndarray:
-    """Fix the global phase of a real two-state vector for circuit preparation."""
+    """Fix the global phase of a real statevector for circuit preparation."""
 
-    normalized = np.asarray(statevector, dtype=complex).reshape(2)
+    normalized = np.asarray(statevector, dtype=complex).reshape(-1)
     pivot_index = int(np.argmax(np.abs(normalized)))
     pivot = normalized[pivot_index]
     if pivot == 0:
@@ -244,7 +422,7 @@ def canonicalize_real_statevector(statevector: np.ndarray) -> np.ndarray:
     normalized = normalized * np.exp(-1j * np.angle(pivot))
     if np.max(np.abs(normalized.imag)) < 1e-12:
         normalized = normalized.real
-    if float(normalized[pivot_index].real) < 0:
+    if float(np.real(normalized[pivot_index])) < 0:
         normalized = -normalized
     return np.asarray(normalized, dtype=float)
 
@@ -259,9 +437,11 @@ def ground_state_data(
     return float(eigenvalues[0]), ground_state
 
 
-def ground_state_rotation_angle(parameters: MinisuperspaceFRWParameters) -> float:
-    """Return the single-qubit RY angle that prepares the benchmark ground state."""
+def ground_state_rotation_angle(parameters: MinisuperspaceFRWParameters) -> float | None:
+    """Return the one-qubit RY angle when the retained basis has two states."""
 
+    if parameters.basis_size != 2:
+        return None
     _, statevector = ground_state_data(parameters)
     return float(2.0 * math.atan2(statevector[1], statevector[0]))
 
