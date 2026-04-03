@@ -4,9 +4,21 @@ The Quantum Cosmology Lab is a professional research repository for reduced, ben
 
 ## Repository Status
 
-This repository is currently implemented through **Phase 6** of the laboratory roadmap in [PLANS.md](PLANS.md).
+This repository now operates under a conservative **Version 1.1 governance posture**. Its active identity is the scientifically rigorous Quantum Cosmology Lab as presently constituted: benchmarked official experiments, shared exact-local, noisy-local, and IBM Runtime infrastructure, preserved IBM provenance, and repository-level review, replication, citation, and archival documentation.
 
-Completed milestones:
+The Phase 0-6 sequence recorded in [PLANS.md](PLANS.md) remains preserved as the completed founding roadmap and historical build record of Version 1. It no longer serves as the ordinary admission gate for routine future official experiments.
+
+## Active Governance
+
+- [AGENTS.md](AGENTS.md) is the primary active governance document for current and future work.
+- [PLANS.md](PLANS.md) remains the Version 1 charter, historical program record, and control document for genuinely major expansion.
+- Future official experiments may proceed without creation of a new phase when they fit the repository mission and satisfy the official experiment standard, benchmark-before-hardware discipline, and reproducibility requirements.
+- Formal amendment of `PLANS.md` is reserved for major programmatic expansion rather than routine experiment admission.
+- No Phase 7 is created or implied by this Version 1.1 transition.
+
+## Historical Version 1 Build Record
+
+The completed founding milestones remain preserved explicitly:
 
 - Phase 0: repository foundation and project standards.
 - Phase 1: reusable scientific infrastructure for later experiments.
@@ -18,12 +30,11 @@ Completed milestones:
 
 The repository now contains three benchmarked official experiments, spanning reduced quantum cosmology, reduced quantum field theory in curved spacetime, and reduced toy-gauge studies, together with the shared infrastructure, documentation, tests, and hardware-execution policy required to extend the lab further.
 
-No Phase 7 or later work is implemented in this repository state.
-Any future major expansion must be defined explicitly in `PLANS.md` before implementation begins.
+Future scientifically valid experiments may be admitted without phase pre-authorization when they remain within repository mission and standards. Any genuinely major expansion must still be defined explicitly in `PLANS.md` before implementation begins.
 
-## Current Release Artifacts
+## Preserved Version 1 Release Artifacts
 
-The current repository-level Phase 6 archival baseline for the first public stable release is recorded in:
+The current repository-level Phase 6 archival baseline for the first public stable release remains recorded in:
 
 - [v1.0.0-phase6-20260402.md](results/reports/milestones/v1.0.0-phase6-20260402.md)
 - [v1.0.0-phase6-20260402_manifest.json](data/processed/releases/v1.0.0-phase6-20260402_manifest.json)
@@ -31,6 +42,33 @@ The current repository-level Phase 6 archival baseline for the first public stab
 These repository-level release artifacts summarize and package the preserved official experiment and IBM provenance record. They do not replace the experiment-level `model.md`, `results.md`, benchmark artifacts, or per-experiment IBM manifests.
 
 The earlier `v0.1.0` and `v0.2.0` Phase 6 outputs are preserved as internal historical development baselines rather than as the first public release.
+
+## Current Official Experiment Registry
+
+The repository now also supports a phase-neutral current-state reporting layer for official experiments admitted under the active Version 1.1 governance posture.
+
+The current-state scripts are:
+
+- `python scripts/release/build_current_repository_report.py`
+- `python scripts/release/build_current_official_experiment_manifest.py`
+
+For deterministic regeneration of the tracked current-state outputs, use:
+
+- `python scripts/release/build_current_repository_report.py --generated-at-utc 2026-04-03T00:00:00+00:00`
+- `python scripts/release/build_current_official_experiment_manifest.py --generated-at-utc 2026-04-03T00:00:00+00:00`
+- `make current-state GENERATED_AT_UTC=2026-04-03T00:00:00+00:00`
+
+By default, they write:
+
+- `results/reports/repository/current_official_experiments.md`
+- `data/processed/repository/current_official_experiments.json`
+
+These outputs are distinct from the preserved historical Phase 6 archival artifacts. They reflect the current official experiment set discovered from repository metadata and do not redefine the Version 1 founding record.
+
+The current formal Version `1.1.0` repository snapshot is also preserved in versioned form at:
+
+- `results/reports/repository/v1.1.0-current-20260403.md`
+- `data/processed/repository/v1.1.0-current-20260403_manifest.json`
 
 Phase 1 shared infrastructure now includes:
 

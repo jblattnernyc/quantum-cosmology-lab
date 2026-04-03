@@ -8,8 +8,26 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-04-03
+
+### Added
+
+- Added a phase-neutral current official experiment reporting layer under `src/qclab/analysis/repository_state.py`, including dynamic discovery of official experiments from repository metadata rather than from a fixed founding-phase list.
+- Added release scripts under `scripts/release/` for generating a current official experiment report and a machine-readable current official experiment manifest without altering the preserved historical Phase 6 archival baseline.
+- Added tracked current-state baseline outputs under `results/reports/repository/current_official_experiments.md` and `data/processed/repository/current_official_experiments.json`.
+- Added a versioned Version 1.1 current repository snapshot under `results/reports/repository/v1.1.0-current-20260403.md` and `data/processed/repository/v1.1.0-current-20260403_manifest.json`.
+- Added automated tests for the current repository-state layer, including dynamic official-experiment discovery, current-state report rendering, deterministic timestamp normalization, and current-state manifest serialization.
+- Added `Makefile` targets for generating the current-state report and manifest together with an optional deterministic `GENERATED_AT_UTC` override.
+
 ### Changed
 
+- Advanced the live repository package version from `1.0.0` to `1.1.0` while preserving the historical Phase 6 archival baseline as Version `1.0.0`.
+- Updated `CITATION.cff` so the public software citation metadata now reflects the formal `1.1.0` release date and version.
+- Updated repository governance, architecture, methods, operations, and script documentation to distinguish explicitly between the preserved historical Phase 6 Version 1 archival layer and the new phase-neutral current official experiment layer used under the Version 1.1 governance posture.
+- Extended import-integrity and repository-layout validation to include the new current-state reporting surface and the versioned Version 1.1 current snapshot artifacts.
+- Added CI smoke coverage for the phase-neutral current-state report and manifest scripts.
+- Added an explicit `--generated-at-utc` option to the current-state release scripts so tracked current-state outputs can be regenerated deterministically when repository state has not changed substantively.
+- Frozen the historical Phase 6 milestone snapshot package version to `1.0.0` so the preserved Version 1 archival layer remains semantically stable after later package releases.
 - Defaulted repository analysis and plotting entrypoints to a non-interactive Matplotlib `Agg` backend unless `MPLBACKEND` is explicitly set, preventing macOS GUI-backend aborts during headless validation while leaving persisted figure outputs unchanged.
 - Added a shared preflight guard for Aer-backed local execution on macOS arm64 with Python 3.13 and later, after reproducing the native OpenMP shared-memory abort on Python 3.13.12 in addition to the previously documented Python 3.14 environment.
 - Updated the guarded Aer test surface and operational documentation so affected Apple Silicon hosts now skip the unsafe live-Aer subset instead of aborting the interpreter during repository validation.

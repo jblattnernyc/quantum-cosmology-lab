@@ -16,9 +16,9 @@ The governing documents at repository root define mission, standards, and execut
 - `PLANS.md`
 - `README.md`
 
-These materials establish the scientific scope of the lab, the difference between official and exploratory work, and the benchmark-before-hardware policy.
+Within this set, `AGENTS.md` is the primary active governance document, `PLANS.md` preserves the completed Version 1 founding roadmap and major-expansion boundaries, and `README.md` provides the public repository overview.
 
-The Phase 6 governance layer also adds repository-standard citation policy, figure and table presentation policy, review and replication checklists, and archival release workflow documentation under `docs/`.
+The preserved Phase 6 Version 1 governance layer also adds repository-standard citation policy, figure and table presentation policy, review and replication checklists, and archival release workflow documentation under `docs/`.
 
 ### 2. Shared Package Infrastructure
 
@@ -71,10 +71,15 @@ The repository includes dedicated locations for:
 
 These locations support provenance, analysis organization, and exploratory work without allowing notebooks or figures to become the sole scientific record.
 
-Within this structure, repository-level Phase 6 dissemination outputs now use:
+Within this structure, the preserved Phase 6 Version 1 dissemination outputs use:
 
 - `results/reports/milestones/` for versioned milestone reports,
 - `data/processed/releases/` for machine-readable archival release manifests.
+
+The phase-neutral current official experiment layer uses:
+
+- `results/reports/repository/` for current official experiment reports,
+- `data/processed/repository/` for machine-readable current official experiment manifests.
 
 ## Execution Policy
 
@@ -88,14 +93,13 @@ The second and third tiers are subordinate to the benchmarked reference calculat
 
 ## Current State
 
-The repository now contains:
+The active repository baseline now contains:
 
-- Phase 0 repository foundations,
-- Phase 1 shared scientific infrastructure,
-- a first official Phase 2 experiment in `experiments/minisuperspace_frw/`,
-- a second official Phase 3 experiment in `experiments/particle_creation_flrw/`,
-- a Phase 4 shared hardware-and-mitigation framework for IBM Runtime execution, metadata capture, and hardware reporting.
-- a third official Phase 5 experiment in `experiments/gut_toy_gauge/`.
-- a Phase 6 repository-level dissemination and governance layer for citation policy, figure and table policy, internal review, replication, and archival release preparation.
+- three official experiment lines in `experiments/minisuperspace_frw/`, `experiments/particle_creation_flrw/`, and `experiments/gut_toy_gauge/`,
+- shared scientific infrastructure for exact-local, noisy-local, and IBM Runtime execution tiers,
+- preserved IBM provenance capture and reporting pathways,
+- a repository-level governance and dissemination layer for citation policy, figure and table policy, internal review, replication, and archival release preparation.
 
-These implemented lines are deliberately reduced and benchmarked. The `gut_toy_gauge` directory is now an official Track C toy-gauge implementation, but it remains a reduced two-link `Z2` toy model and must not be read as a realistic GUT simulation.
+The historical Phases 0 through 6 recorded in `PLANS.md` explain how this baseline was constructed, but they are no longer the ordinary gate for routine future official experiment admission. Mission-fit future experiments may be added when they satisfy the repository standards without implying a new roadmap phase.
+
+These implemented lines are deliberately reduced and benchmarked. The `gut_toy_gauge` directory is an official Track C toy-gauge implementation, but it remains a reduced two-link `Z2` toy model and must not be read as a realistic GUT simulation.

@@ -4,7 +4,7 @@
 
 This guide explains how to install, validate, and use the Quantum Cosmology Lab repository as it currently exists. It is intended for users who want to reproduce the implemented workflows, inspect generated artifacts, and understand the repository's operating conventions without treating it as a general-purpose quantum-computing sandbox.
 
-At the present repository state, the lab is implemented through Phase 6 of the roadmap. The official experiment lines are `experiments/minisuperspace_frw/`, `experiments/particle_creation_flrw/`, and `experiments/gut_toy_gauge/`.
+The Version 1 founding roadmap was completed through historical Phase 6. Under the current Version 1.1 governance posture, the active official experiment lines are `experiments/minisuperspace_frw/`, `experiments/particle_creation_flrw/`, and `experiments/gut_toy_gauge/`.
 
 ## Scientific Operating Principle
 
@@ -18,6 +18,10 @@ All official work in this repository follows the same methodological order:
 6. consider IBM hardware only after the benchmark, exact-local, and noisy-local tiers are scientifically interpretable.
 
 This ordering is not optional. Hardware execution is a later validation tier rather than the primary source of scientific meaning.
+
+## Governance Context
+
+`AGENTS.md` is the primary active governance document for current and future repository work. `PLANS.md` preserves the completed Version 1 roadmap and should be consulted for major expansion or boundary questions rather than as the ordinary gate for routine experiment admission. Future official experiments may proceed without a new phase when they fit the repository mission and satisfy the official experiment standard.
 
 ## Prerequisites
 
@@ -68,7 +72,7 @@ These checks validate package imports, benchmark helpers, observable constructio
 The principal working locations are:
 
 - `src/qclab/`: reusable shared scientific infrastructure,
-- `experiments/`: official experiment directories and planned experiment lines,
+- `experiments/`: official experiment directories and future mission-fit additions,
 - `tests/`: automated validation of infrastructure and experiment logic,
 - `docs/`: architecture, methods, operations, and references,
 - `data/raw/`: raw execution artifacts when direct outputs require preservation,
@@ -259,13 +263,20 @@ Execution outputs and comparison records should preserve enough metadata to supp
 
 Repository-level guidance for that policy is documented in [results-and-provenance.md](results-and-provenance.md).
 
-Phase 6 dissemination and governance materials are documented in:
+The preserved Version 1 dissemination and governance materials are documented in:
 
 - [internal-review-checklist.md](internal-review-checklist.md),
 - [replication-checklist.md](replication-checklist.md),
 - [archival-release-workflow.md](archival-release-workflow.md),
 - [figure-and-table-style-guide.md](../methods/figure-and-table-style-guide.md),
 - [citation-and-bibliography-policy.md](../references/citation-and-bibliography-policy.md).
+
+The repository also provides a phase-neutral current official experiment registry through:
+
+- `python scripts/release/build_current_repository_report.py`
+- `python scripts/release/build_current_official_experiment_manifest.py`
+
+These commands summarize the current official experiment set discovered from repository metadata. They complement the preserved historical Phase 6 archival layer rather than replacing it.
 
 ## Interpreting Results Carefully
 
@@ -282,7 +293,9 @@ In Version 1 of the repository, scientific credibility depends on modest claims,
 
 New official work should not begin by inventing a circuit theme. It should begin with a model, a truncation or discretization, and a declared observable. Before a new experiment is treated as official, it should satisfy the experiment standard in [experiment-standard.md](../methods/experiment-standard.md).
 
-With the three official scientific lines implemented and the baseline Phase 6 governance layer now added, repository-level dissemination work should proceed through the documented citation, review, replication, and archival-release policies rather than through ad hoc summary files.
+Under the Version 1.1 governance posture, routine new official experiments do not require pre-authorization as new phases when they remain within repository mission and standards. Major programmatic expansion still requires explicit treatment in `PLANS.md`.
+
+With the three founding official scientific lines implemented and the preserved Phase 6 governance layer in place, repository-level dissemination work should proceed through the documented citation, review, replication, and archival-release policies rather than through ad hoc summary files.
 
 ## Related Documents
 
