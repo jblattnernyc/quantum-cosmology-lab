@@ -1,0 +1,34 @@
+[
+  {
+    "absolute_error": 0.00937864139586786,
+    "benchmark_value": 0.3409579452907099,
+    "candidate_value": 0.35033658668657774,
+    "interpretation": "IBM Runtime hardware comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "scale_factor_expectation_value",
+    "relative_error": 0.02750673954194374
+  },
+  {
+    "absolute_error": 0.005964905611596391,
+    "benchmark_value": 0.058451698470842514,
+    "candidate_value": 0.0644166040824389,
+    "interpretation": "IBM Runtime hardware comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "volume_expectation_value",
+    "relative_error": 0.10204845654864704
+  },
+  {
+    "absolute_error": 0.009333435267420864,
+    "benchmark_value": -0.13427869803736275,
+    "candidate_value": -0.12494526276994189,
+    "interpretation": "IBM Runtime hardware comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "effective_hamiltonian_expectation",
+    "relative_error": 0.06950793687933925
+  },
+  {
+    "absolute_error": 0.00347710753112887,
+    "benchmark_value": 0.11421161445833468,
+    "candidate_value": 0.11073450692720581,
+    "interpretation": "IBM Runtime hardware comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "smallest_scale_factor_probability",
+    "relative_error": 0.030444430258862572
+  }
+]
