@@ -46,6 +46,7 @@ class RepositoryLayoutTests(unittest.TestCase):
             root / "scripts" / "release" / "build_archival_release_manifest.py",
             root / "src" / "qclab" / "__init__.py",
             root / "experiments" / "minisuperspace_frw" / "README.md",
+            root / "experiments" / "planck_epoch_minisuperspace" / "README.md",
             root / "experiments" / "particle_creation_flrw" / "README.md",
             root / "experiments" / "gut_toy_gauge" / "README.md",
             root

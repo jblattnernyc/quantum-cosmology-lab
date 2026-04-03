@@ -109,9 +109,10 @@ class _FakeBackend:
 class _FakeRuntimeService:
     channel = "ibm_quantum_platform"
 
-    def __init__(self) -> None:
+    def __init__(self, *, active_account_instance: str | None = "ibm-q/open/saved") -> None:
         self.backend_calls = []
         self.least_busy_calls = []
+        self._active_account_instance = active_account_instance
 
     def backend(self, name, instance=None):
         self.backend_calls.append({"name": name, "instance": instance})
@@ -120,6 +121,12 @@ class _FakeRuntimeService:
     def least_busy(self, **kwargs):
         self.least_busy_calls.append(kwargs)
         return _FakeBackend("ibm_least_busy")
+
+    def active_account(self):
+        return {
+            "channel": self.channel,
+            "instance": self._active_account_instance,
+        }
 
 
 class _FakePassManager:
@@ -332,8 +339,47 @@ class BackendExecutionTests(unittest.TestCase):
             "ibm_quantum_platform",
         )
         self.assertEqual(
+            result.provenance.metadata["service"]["instance"],
+            "ibm-q/open/main",
+        )
+        self.assertEqual(
+            result.provenance.metadata["service"]["instance_source"],
+            "explicit_argument",
+        )
+        self.assertEqual(
             result.provenance.metadata["backend_selection"]["selected_backend_name"],
             "ibm_fake_backend",
+        )
+
+    def test_ibm_executor_records_saved_account_instance_when_no_override_is_given(self) -> None:
+        observable = make_pauli_observable(
+            name="z_expectation",
+            terms={"Z": 1.0},
+            physical_meaning="Infrastructure-only Pauli-Z observable.",
+        )
+        service = _FakeRuntimeService(active_account_instance="ibm-q/open/saved-account")
+        primitive = _FakePrimitive([_FakePubResult(evs=(0.75,), stds=(0.03,))])
+        executor = IBMRuntimeEstimatorExecutor(
+            service_factory=_FactoryRecorder(service),
+            estimator_factory=_FactoryRecorder(primitive),
+        )
+        result = executor.run(
+            "circuit",
+            observable,
+            request=BackendRequest(
+                tier=ExecutionTier.IBM_HARDWARE,
+                backend_name="ibm_fake_backend",
+            ),
+            service=service,
+            transpile_for_backend=False,
+        )
+        self.assertEqual(
+            result.provenance.metadata["service"]["instance"],
+            "ibm-q/open/saved-account",
+        )
+        self.assertEqual(
+            result.provenance.metadata["service"]["instance_source"],
+            "active_account",
         )
 
     def test_ibm_executor_can_select_least_busy_backend(self) -> None:

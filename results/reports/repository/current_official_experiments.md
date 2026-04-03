@@ -7,8 +7,8 @@ This report records the current official experiment state of the repository unde
 ## Repository Status
 
 - Repository package version: `v1.1.0`
-- Report generation timestamp (UTC): `2026-04-03T00:00:00+00:00`
-- Current official experiment lines discovered from repository metadata: `3`
+- Report generation timestamp (UTC): `2026-04-03T21:31:21+00:00`
+- Current official experiment lines discovered from repository metadata: `4`
 
 ## Governance Context
 
@@ -66,6 +66,22 @@ This report records the current official experiment state of the repository unde
 - Latest preserved live IBM run (UTC): `2026-04-02T00:34:15.918194+00:00` on `ibm_fez` with job id `d76risohnndc7385m6j0`
 - Live IBM manifest: `data/raw/particle_creation_flrw/ibm_runtime_runs.jsonl`
 - Canonical IBM report: `results/reports/particle_creation_flrw/ibm_runtime_report.md`
+- Separate `_local_testing` IBM artifacts present: `False`
+
+### planck_epoch_minisuperspace
+
+- Scientific question: In a four-bin positive-scale-factor truncation of an FRW/Wheeler-DeWitt-inspired minisuperspace operator with a phenomenological small-scale-factor barrier, what are the benchmark ground-state values of the retained scale factor, volume proxy, projected Hamiltonian, and smallest-bin occupation probability, and how accurately do exact local and noisy local quantum workflows reproduce them?
+- README: `experiments/planck_epoch_minisuperspace/README.md`
+- Model statement: `experiments/planck_epoch_minisuperspace/model.md`
+- Results interpretation: `experiments/planck_epoch_minisuperspace/results.md`
+- Benchmark artifact: `data/processed/planck_epoch_minisuperspace/benchmark.json`
+- Exact local artifact: `data/processed/planck_epoch_minisuperspace/exact_local.json`
+- Noisy local artifact: `data/processed/planck_epoch_minisuperspace/noisy_local.json`
+- Analysis summary: `results/reports/planck_epoch_minisuperspace/analysis_summary.json`
+- Analysis report: `results/reports/planck_epoch_minisuperspace/analysis_report.md`
+- Latest preserved live IBM run (UTC): `2026-04-03T20:52:08.811948+00:00` on `ibm_kingston` with job id `d782gp9q1efs73d18kng`
+- Live IBM manifest: `data/raw/planck_epoch_minisuperspace/ibm_runtime_runs.jsonl`
+- Canonical IBM report: `results/reports/planck_epoch_minisuperspace/ibm_runtime_report.md`
 - Separate `_local_testing` IBM artifacts present: `False`
 
 ## Boundary

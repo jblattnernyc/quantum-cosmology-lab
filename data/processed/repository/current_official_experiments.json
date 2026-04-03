@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-04-03T00:00:00+00:00",
+  "generated_at_utc": "2026-04-03T21:31:21+00:00",
   "governance_documents": {
     "agents": "AGENTS.md",
     "experiment_standard": "docs/methods/experiment-standard.md",
@@ -148,6 +148,53 @@
       "local_testing_artifacts_present": false,
       "runs_manifest_jsonl": "data/raw/particle_creation_flrw/ibm_runtime_runs.jsonl",
       "scientific_question": "In a two-mode, single-pair truncation of a scalar field on a prescribed expanding FLRW-like background, what particle-number and pair-correlation observables are produced by an explicit stepwise time-dependent evolution, and how accurately do exact local and noisy local estimator workflows reproduce the benchmark?"
+    },
+    {
+      "artifacts": {
+        "analysis_report_markdown": "results/reports/planck_epoch_minisuperspace/analysis_report.md",
+        "analysis_summary_json": "results/reports/planck_epoch_minisuperspace/analysis_summary.json",
+        "benchmark_json": "data/processed/planck_epoch_minisuperspace/benchmark.json",
+        "comparison_figure": "results/figures/planck_epoch_minisuperspace/observable_comparison.png",
+        "exact_local_comparisons_json": "data/processed/planck_epoch_minisuperspace/exact_local_comparisons.json",
+        "exact_local_json": "data/processed/planck_epoch_minisuperspace/exact_local.json",
+        "ibm_runtime_comparisons_json": "data/processed/planck_epoch_minisuperspace/ibm_runtime_comparisons.json",
+        "ibm_runtime_json": "data/processed/planck_epoch_minisuperspace/ibm_runtime.json",
+        "ibm_runtime_metadata_json": "data/raw/planck_epoch_minisuperspace/ibm_runtime_metadata.json",
+        "ibm_runtime_report_markdown": "results/reports/planck_epoch_minisuperspace/ibm_runtime_report.md",
+        "noisy_local_comparisons_json": "data/processed/planck_epoch_minisuperspace/noisy_local_comparisons.json",
+        "noisy_local_json": "data/processed/planck_epoch_minisuperspace/noisy_local.json",
+        "observable_summary_table_markdown": "results/tables/planck_epoch_minisuperspace/observable_summary.md"
+      },
+      "documents": {
+        "config_yaml": "experiments/planck_epoch_minisuperspace/config.yaml",
+        "model_markdown": "experiments/planck_epoch_minisuperspace/model.md",
+        "readme_markdown": "experiments/planck_epoch_minisuperspace/README.md",
+        "results_markdown": "experiments/planck_epoch_minisuperspace/results.md"
+      },
+      "experiment_name": "planck_epoch_minisuperspace",
+      "latest_live_ibm_run": {
+        "archived_artifacts": {
+          "comparison_json": "data/processed/planck_epoch_minisuperspace/ibm_runtime_comparisons_20260403T205208Z_ibm_kingston_d782gp9q1efs73d18kng.json",
+          "execution_json": "data/processed/planck_epoch_minisuperspace/ibm_runtime_20260403T205208Z_ibm_kingston_d782gp9q1efs73d18kng.json",
+          "metadata_json": "data/raw/planck_epoch_minisuperspace/ibm_runtime_metadata_20260403T205208Z_ibm_kingston_d782gp9q1efs73d18kng.json",
+          "report_markdown": "results/reports/planck_epoch_minisuperspace/ibm_runtime_report_20260403T205208Z_ibm_kingston_d782gp9q1efs73d18kng.md"
+        },
+        "backend_name": "ibm_kingston",
+        "canonical_artifacts": {
+          "comparison_json": "data/processed/planck_epoch_minisuperspace/ibm_runtime_comparisons.json",
+          "execution_json": "data/processed/planck_epoch_minisuperspace/ibm_runtime.json",
+          "metadata_json": "data/raw/planck_epoch_minisuperspace/ibm_runtime_metadata.json",
+          "report_markdown": "results/reports/planck_epoch_minisuperspace/ibm_runtime_report.md"
+        },
+        "job_id": "d782gp9q1efs73d18kng",
+        "local_testing_mode": false,
+        "manifest_path": "data/raw/planck_epoch_minisuperspace/ibm_runtime_runs.jsonl",
+        "timestamp_utc": "2026-04-03T20:52:08.811948+00:00"
+      },
+      "live_ibm_run_count": 1,
+      "local_testing_artifacts_present": false,
+      "runs_manifest_jsonl": "data/raw/planck_epoch_minisuperspace/ibm_runtime_runs.jsonl",
+      "scientific_question": "In a four-bin positive-scale-factor truncation of an FRW/Wheeler-DeWitt-inspired minisuperspace operator with a phenomenological small-scale-factor barrier, what are the benchmark ground-state values of the retained scale factor, volume proxy, projected Hamiltonian, and smallest-bin occupation probability, and how accurately do exact local and noisy local quantum workflows reproduce them?"
     }
   ],
   "package_version": "1.1.0",

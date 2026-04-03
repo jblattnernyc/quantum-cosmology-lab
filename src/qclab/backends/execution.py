@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 import json
@@ -66,6 +66,55 @@ def _normalize_parameter_values(
         return None
     normalized = tuple(float(value) for value in parameter_values)
     return normalized
+
+
+def _resolved_runtime_service_account(runtime_service: Any) -> Mapping[str, Any]:
+    """Return the active IBM Runtime account metadata when available.
+
+    Only non-secret fields such as channel and instance are consumed downstream.
+    """
+
+    if runtime_service is None:
+        return {}
+    active_account = getattr(runtime_service, "active_account", None)
+    if not callable(active_account):
+        return {}
+    try:
+        account = active_account()
+    except Exception:
+        return {}
+    if not isinstance(account, Mapping):
+        return {}
+    return account
+
+
+def _build_runtime_service_metadata(
+    runtime_service: Any,
+    *,
+    requested_instance: str | None,
+    local_testing_mode: bool,
+) -> dict[str, Any]:
+    """Normalize non-secret IBM Runtime service provenance metadata."""
+
+    active_account = _resolved_runtime_service_account(runtime_service)
+    channel = getattr(runtime_service, "channel", None)
+    if channel is None:
+        channel = active_account.get("channel")
+
+    resolved_instance = requested_instance
+    instance_source = "explicit_argument" if requested_instance is not None else "unresolved"
+    if resolved_instance is None:
+        active_account_instance = active_account.get("instance")
+        if isinstance(active_account_instance, str) and active_account_instance.strip():
+            resolved_instance = active_account_instance.strip()
+            instance_source = "active_account"
+
+    return {
+        "channel": channel,
+        "instance": resolved_instance,
+        "instance_source": instance_source,
+        "local_testing_mode": local_testing_mode,
+    }
 
 
 def build_estimator_pub(
@@ -557,13 +606,11 @@ class IBMRuntimeEstimatorExecutor:
             optimization_level=request.optimization_level,
             options=dict(request.options),
         )
-        service_metadata = {
-            "channel": getattr(runtime_service, "channel", None),
-            "instance": instance,
-            "local_testing_mode": bool(
-                selection_metadata.get("local_testing_mode", False)
-            ),
-        }
+        service_metadata = _build_runtime_service_metadata(
+            runtime_service,
+            requested_instance=instance,
+            local_testing_mode=bool(selection_metadata.get("local_testing_mode", False)),
+        )
         prepared_circuit = circuit
         prepared_observables = coerce_observable_sequence(observables)
         if transpile_for_backend:

@@ -1,0 +1,50 @@
+{
+  "benchmark_values": {
+    "effective_hamiltonian_expectation": -0.13427869803736275,
+    "scale_factor_expectation_value": 0.3409579452907099,
+    "smallest_scale_factor_probability": 0.11421161445833468,
+    "volume_expectation_value": 0.058451698470842514
+  },
+  "comparison_figure": "results/figures/planck_epoch_minisuperspace/observable_comparison.png",
+  "exact_local_absolute_errors": {
+    "effective_hamiltonian_expectation": 2.7755575615628914e-17,
+    "scale_factor_expectation_value": 1.1102230246251565e-16,
+    "smallest_scale_factor_probability": 2.636779683484747e-16,
+    "volume_expectation_value": 0.0
+  },
+  "exact_local_values": {
+    "effective_hamiltonian_expectation": -0.13427869803736278,
+    "scale_factor_expectation_value": 0.34095794529071,
+    "smallest_scale_factor_probability": 0.11421161445833442,
+    "volume_expectation_value": 0.058451698470842514
+  },
+  "ibm_runtime_absolute_errors": {
+    "effective_hamiltonian_expectation": 0.00028684151563160287,
+    "scale_factor_expectation_value": 0.0007088016652662121,
+    "smallest_scale_factor_probability": 0.0006530721903369591,
+    "volume_expectation_value": 0.0001895077540795681
+  },
+  "ibm_runtime_comparisons_json": "data/processed/planck_epoch_minisuperspace/ibm_runtime_comparisons.json",
+  "ibm_runtime_json": "data/processed/planck_epoch_minisuperspace/ibm_runtime.json",
+  "ibm_runtime_metadata_json": "data/raw/planck_epoch_minisuperspace/ibm_runtime_metadata.json",
+  "ibm_runtime_report_markdown": "results/reports/planck_epoch_minisuperspace/ibm_runtime_report.md",
+  "ibm_runtime_values": {
+    "effective_hamiltonian_expectation": -0.13399185652173115,
+    "scale_factor_expectation_value": 0.3402491436254437,
+    "smallest_scale_factor_probability": 0.11355854226799772,
+    "volume_expectation_value": 0.05864120622492208
+  },
+  "noisy_local_absolute_errors": {
+    "effective_hamiltonian_expectation": 0.009782887741998425,
+    "scale_factor_expectation_value": 0.0008564487418138422,
+    "smallest_scale_factor_probability": 0.010379200956088075,
+    "volume_expectation_value": 0.0013433683196017385
+  },
+  "noisy_local_values": {
+    "effective_hamiltonian_expectation": -0.12449581029536433,
+    "scale_factor_expectation_value": 0.3418143940325237,
+    "smallest_scale_factor_probability": 0.12459081541442275,
+    "volume_expectation_value": 0.05979506679044425
+  },
+  "observable_summary_table_markdown": "results/tables/planck_epoch_minisuperspace/observable_summary.md"
+}

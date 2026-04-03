@@ -1,0 +1,34 @@
+[
+  {
+    "absolute_error": 0.0008564487418138422,
+    "benchmark_value": 0.3409579452907099,
+    "candidate_value": 0.3418143940325237,
+    "interpretation": "Noisy local analytic fallback comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "scale_factor_expectation_value",
+    "relative_error": 0.002511889673324993
+  },
+  {
+    "absolute_error": 0.0013433683196017385,
+    "benchmark_value": 0.058451698470842514,
+    "candidate_value": 0.05979506679044425,
+    "interpretation": "Noisy local analytic fallback comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "volume_expectation_value",
+    "relative_error": 0.022982536944958946
+  },
+  {
+    "absolute_error": 0.009782887741998425,
+    "benchmark_value": -0.13427869803736275,
+    "candidate_value": -0.12449581029536433,
+    "interpretation": "Noisy local analytic fallback comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "effective_hamiltonian_expectation",
+    "relative_error": 0.07285509827684178
+  },
+  {
+    "absolute_error": 0.010379200956088075,
+    "benchmark_value": 0.11421161445833468,
+    "candidate_value": 0.12459081541442275,
+    "interpretation": "Noisy local analytic fallback comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "smallest_scale_factor_probability",
+    "relative_error": 0.09087693055835833
+  }
+]

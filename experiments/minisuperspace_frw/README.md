@@ -57,6 +57,17 @@ The scale factor is the primary cosmological observable in this experiment. The 
 - [analyze.py](analyze.py): comparison analysis and figure generation
 - [results.md](results.md): written interpretation and limitations
 
+## Exploratory Small-Scale-Factor Materials
+
+This experiment line also preserves a conservative exploratory refinement for
+small positive-scale-factor questions. These materials do not constitute a new
+official experiment line and do not imply a literal Planck-Epoch simulation:
+
+- [model_small_scale_factor.md](model_small_scale_factor.md): exploratory four-bin reduced-model statement
+- [config_small_scale_factor.yaml](config_small_scale_factor.yaml): exploratory configuration and separate artifact paths
+- [results_small_scale_factor.md](results_small_scale_factor.md): exploratory interpretation note
+- [planck_epoch_exploratory_design.md](planck_epoch_exploratory_design.md): governance classification and conservative design analysis for Planck-context work
+
 ## Reproducible Workflow
 
 From the repository root with the virtual environment active:

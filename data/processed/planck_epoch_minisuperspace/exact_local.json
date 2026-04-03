@@ -1,0 +1,89 @@
+{
+  "evaluations": [
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "scale_factor_expectation_value",
+      "operator_label": "(0.35+0j)*II + (-0.07499999999999998+0j)*IZ + (-0.15+0j)*ZI + (0.024999999999999988+0j)*ZZ",
+      "physical_meaning": "Expectation value of the retained scale-factor operator in the finite positive-scale-factor truncation.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.34095794529071
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "volume_expectation_value",
+      "operator_label": "(0.07475+0j)*II + (-0.041062499999999995+0j)*IZ + (-0.06524999999999999+0j)*ZI + (0.03493749999999999+0j)*ZZ",
+      "physical_meaning": "Expectation value of the retained comoving volume proxy a^3 within the finite positive-scale-factor truncation.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.058451698470842514
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "effective_hamiltonian_expectation",
+      "operator_label": "(0.03249305555555555+0j)*II + (-0.1+0j)*IX + (0.00197916666666667+0j)*IZ + (-0.05+0j)*XX + (-0.05+0j)*YY + (0.0019791666666666673+0j)*ZI + (0.010243055555555554+0j)*ZZ",
+      "physical_meaning": "Expectation value of the projected effective minisuperspace Hamiltonian used in this toy truncation.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": -0.13427869803736278
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "smallest_scale_factor_probability",
+      "operator_label": "(0.25+0j)*II + (0.25+0j)*IZ + (0.25+0j)*ZI + (0.25+0j)*ZZ",
+      "physical_meaning": "Probability weight in the smallest retained positive-scale-factor bin of the reduced four-bin truncation.\n",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.11421161445833442
+    }
+  ],
+  "job_metadata": {
+    "circuit_metadata": {
+      "experiment": "minisuperspace_frw",
+      "state_preparation": "state_preparation"
+    },
+    "target_precision": 0.0
+  },
+  "provenance": {
+    "backend_name": "statevector_estimator",
+    "job_id": "18bc73de-9f7f-4b77-9d92-441340a71766",
+    "metadata": {},
+    "optimization_level": null,
+    "precision": 0.0,
+    "primitive_name": "qiskit.primitives.StatevectorEstimator",
+    "seed": null,
+    "shots": null,
+    "tier": "exact_local",
+    "timestamp_utc": "2026-04-03T20:32:55.113003+00:00"
+  },
+  "request": {
+    "backend_name": "statevector_estimator",
+    "mitigation_enabled": false,
+    "optimization_level": null,
+    "options": {},
+    "precision": 0.0,
+    "seed": null,
+    "shots": null,
+    "tier": "exact_local"
+  }
+}

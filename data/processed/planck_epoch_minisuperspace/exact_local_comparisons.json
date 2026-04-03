@@ -1,0 +1,34 @@
+[
+  {
+    "absolute_error": 1.1102230246251565e-16,
+    "benchmark_value": 0.3409579452907099,
+    "candidate_value": 0.34095794529071,
+    "interpretation": "Exact local comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "scale_factor_expectation_value",
+    "relative_error": 3.256187573744764e-16
+  },
+  {
+    "absolute_error": 0.0,
+    "benchmark_value": 0.058451698470842514,
+    "candidate_value": 0.058451698470842514,
+    "interpretation": "Exact local comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "volume_expectation_value",
+    "relative_error": 0.0
+  },
+  {
+    "absolute_error": 2.7755575615628914e-17,
+    "benchmark_value": -0.13427869803736275,
+    "candidate_value": -0.13427869803736278,
+    "interpretation": "Exact local comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "effective_hamiltonian_expectation",
+    "relative_error": 2.0670125657538016e-16
+  },
+  {
+    "absolute_error": 2.636779683484747e-16,
+    "benchmark_value": 0.11421161445833468,
+    "candidate_value": 0.11421161445833442,
+    "interpretation": "Exact local comparison against the direct reduced minisuperspace diagonalization benchmark.",
+    "observable_name": "smallest_scale_factor_probability",
+    "relative_error": 2.3086791093796027e-15
+  }
+]

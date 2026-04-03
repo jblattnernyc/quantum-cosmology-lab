@@ -1,0 +1,194 @@
+{
+  "evaluations": [
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "ibm_kingston",
+        "tier": "ibm_hardware"
+      },
+      "observable_name": "scale_factor_expectation_value",
+      "operator_label": "(0.35+0j)*II + (-0.07499999999999998+0j)*IZ + (-0.15+0j)*ZI + (0.024999999999999988+0j)*ZZ",
+      "physical_meaning": "Expectation value of the retained scale-factor operator in the finite positive-scale-factor truncation.",
+      "shots": null,
+      "uncertainty": 0.005739917561251769,
+      "units": "dimensionless",
+      "value": 0.3402491436254437
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "ibm_kingston",
+        "tier": "ibm_hardware"
+      },
+      "observable_name": "volume_expectation_value",
+      "operator_label": "(0.07475+0j)*II + (-0.041062499999999995+0j)*IZ + (-0.06524999999999999+0j)*ZI + (0.03493749999999999+0j)*ZZ",
+      "physical_meaning": "Expectation value of the retained comoving volume proxy a^3 within the finite positive-scale-factor truncation.",
+      "shots": null,
+      "uncertainty": 0.0029022448138484053,
+      "units": "dimensionless",
+      "value": 0.05864120622492208
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "ibm_kingston",
+        "tier": "ibm_hardware"
+      },
+      "observable_name": "effective_hamiltonian_expectation",
+      "operator_label": "(0.03249305555555555+0j)*II + (-0.1+0j)*IX + (0.00197916666666667+0j)*IZ + (-0.05+0j)*XX + (-0.05+0j)*YY + (0.0019791666666666673+0j)*ZI + (0.010243055555555554+0j)*ZZ",
+      "physical_meaning": "Expectation value of the projected effective minisuperspace Hamiltonian used in this toy truncation.",
+      "shots": null,
+      "uncertainty": 0.0033466236601276678,
+      "units": "dimensionless",
+      "value": -0.13399185652173115
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "ibm_kingston",
+        "tier": "ibm_hardware"
+      },
+      "observable_name": "smallest_scale_factor_probability",
+      "operator_label": "(0.25+0j)*II + (0.25+0j)*IZ + (0.25+0j)*ZI + (0.25+0j)*ZZ",
+      "physical_meaning": "Probability weight in the smallest retained positive-scale-factor bin of the reduced four-bin truncation.\n",
+      "shots": null,
+      "uncertainty": 0.015396480125814772,
+      "units": "dimensionless",
+      "value": 0.11355854226799772
+    }
+  ],
+  "job_metadata": {
+    "circuit_metadata": {
+      "experiment": "minisuperspace_frw",
+      "state_preparation": "state_preparation"
+    },
+    "num_randomizations": 10,
+    "resilience": {},
+    "shots": 640,
+    "target_precision": 0.04
+  },
+  "provenance": {
+    "backend_name": "ibm_kingston",
+    "job_id": "d782gp9q1efs73d18kng",
+    "metadata": {
+      "backend_selection": {
+        "instance": null,
+        "local_testing_mode": false,
+        "requested_backend_name": "ibm_kingston",
+        "selected_backend_name": "ibm_kingston",
+        "selection_filters": {
+          "instance": null
+        },
+        "strategy": "explicit"
+      },
+      "backend_summary": {
+        "backend_class": "IBMBackend",
+        "backend_name": "ibm_kingston",
+        "calibration_id": null,
+        "coupling_edge_count": 352,
+        "max_circuits": null,
+        "num_qubits": 156,
+        "operation_names": [
+          "cz",
+          "if_else",
+          "measure",
+          "x",
+          "sx",
+          "measure_2",
+          "id",
+          "reset",
+          "rz",
+          "delay"
+        ],
+        "properties_last_update_date": "2026-04-03T16:15:32-04:00",
+        "status": {
+          "backend_name": "ibm_kingston",
+          "backend_version": "",
+          "operational": true,
+          "pending_jobs": 0,
+          "status_msg": "active"
+        },
+        "version": 2
+      },
+      "mitigation_policy": {
+        "dynamical_decoupling_enable": null,
+        "dynamical_decoupling_sequence_type": null,
+        "measure_mitigation": true,
+        "primitive_options": {
+          "environment": {
+            "job_tags": [
+              "qclab",
+              "official",
+              "planck_epoch_minisuperspace",
+              "ibm_runtime"
+            ]
+          },
+          "resilience": {
+            "measure_mitigation": true
+          },
+          "resilience_level": 1,
+          "twirling": {
+            "enable_measure": true
+          }
+        },
+        "resilience_level": 1,
+        "twirling_enable_gates": null,
+        "twirling_enable_measure": true
+      },
+      "runtime_job_summary": {
+        "creation_date": "2026-04-03T16:51:49.814317-04:00",
+        "job_id": "d782gp9q1efs73d18kng",
+        "primitive_id": "estimator",
+        "session_id": null,
+        "status": "DONE",
+        "usage_estimation": {
+          "quantum_seconds": 11.424942786
+        }
+      },
+      "service": {
+        "channel": "ibm_quantum_platform",
+        "instance": null,
+        "local_testing_mode": false
+      }
+    },
+    "optimization_level": 1,
+    "precision": 0.04,
+    "primitive_name": "qiskit_ibm_runtime.EstimatorV2",
+    "seed": null,
+    "shots": null,
+    "tier": "ibm_hardware",
+    "timestamp_utc": "2026-04-03T20:52:08.811948+00:00"
+  },
+  "request": {
+    "backend_name": "ibm_kingston",
+    "mitigation_enabled": true,
+    "optimization_level": 1,
+    "options": {
+      "mitigation_policy": {
+        "measure_mitigation": true,
+        "resilience_level": 1,
+        "twirling_enable_measure": true
+      },
+      "runtime_options": {
+        "environment": {
+          "job_tags": [
+            "qclab",
+            "official",
+            "planck_epoch_minisuperspace",
+            "ibm_runtime"
+          ]
+        }
+      },
+      "selection_policy": {
+        "min_num_qubits": 2,
+        "operational": true,
+        "simulator": false,
+        "strategy": "explicit"
+      }
+    },
+    "precision": 0.04,
+    "seed": null,
+    "shots": null,
+    "tier": "ibm_hardware"
+  }
+}

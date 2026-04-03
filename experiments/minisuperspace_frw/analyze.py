@@ -42,6 +42,15 @@ def _evaluation_map(execution_payload: dict) -> dict[str, float]:
     }
 
 
+def _evaluation_uncertainty_map(execution_payload: dict) -> dict[str, float]:
+    """Return observable uncertainties from a serialized execution payload."""
+
+    return {
+        evaluation["observable_name"]: float(evaluation.get("uncertainty", 0.0))
+        for evaluation in execution_payload["evaluations"]
+    }
+
+
 def _format_table_value(value: float | None) -> str:
     """Format a scalar value for markdown table output."""
 
@@ -52,6 +61,7 @@ def _format_table_value(value: float | None) -> str:
 
 def _write_observable_summary_table(
     *,
+    title: str,
     benchmark_values: dict[str, float],
     exact_values: dict[str, float],
     noisy_values: dict[str, float],
@@ -75,7 +85,7 @@ def _write_observable_summary_table(
         headers.extend(["IBM Runtime", "IBM abs. error"])
 
     lines = [
-        "# Minisuperspace FRW Observable Summary Table",
+        title,
         "",
         "|" + "|".join(headers) + "|",
         "|" + "|".join(["---"] * len(headers)) + "|",
@@ -109,6 +119,7 @@ def _write_observable_summary_table(
 
 def _plot_observable_comparison(
     *,
+    title: str,
     benchmark_values: dict[str, float],
     candidate_series: dict[str, dict[str, float]],
     output_path: Path,
@@ -140,7 +151,7 @@ def _plot_observable_comparison(
         )
     axis.set_xticks(x_positions, observable_names, rotation=15)
     axis.set_ylabel("Expectation value")
-    axis.set_title("Reduced FRW minisuperspace observable comparison")
+    axis.set_title(title)
     axis.legend()
     output_path.parent.mkdir(parents=True, exist_ok=True)
     figure.savefig(output_path)
@@ -161,12 +172,25 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
         "Exact local": _evaluation_map(exact_payload),
         "Noisy local": _evaluation_map(noisy_payload),
     }
+    analysis_table_title = str(
+        experiment.configuration.metadata.get(
+            "analysis_table_title",
+            "# Minisuperspace FRW Observable Summary Table",
+        )
+    )
+    analysis_figure_title = str(
+        experiment.configuration.metadata.get(
+            "analysis_figure_title",
+            "Reduced FRW minisuperspace observable comparison",
+        )
+    )
     ibm_payload = None
     if experiment.artifacts.ibm_runtime_json.exists():
         ibm_payload = _load_json(experiment.artifacts.ibm_runtime_json)
         series["IBM Runtime"] = _evaluation_map(ibm_payload)
 
     figure_path = _plot_observable_comparison(
+        title=analysis_figure_title,
         benchmark_values=benchmark_values,
         candidate_series=series,
         output_path=experiment.artifacts.comparison_figure,
@@ -256,6 +280,7 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
         ibm_comparisons = None
 
     summary_table_path = _write_observable_summary_table(
+        title=analysis_table_title,
         benchmark_values=benchmark_values,
         exact_values=series["Exact local"],
         noisy_values=series["Noisy local"],
@@ -279,6 +304,25 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
         encoding="utf-8",
     )
 
+    noisy_fallback_mode = noisy_payload.get("provenance", {}).get("metadata", {}).get(
+        "fallback_mode"
+    )
+    if noisy_fallback_mode is None:
+        noisy_local_interpretation = (
+            "The noisy local workflow preserves the ordering and approximate "
+            "magnitude of the benchmark observables under the explicit Aer noise "
+            "model, but it is not interpreted as evidence for full "
+            "quantum-cosmological dynamics beyond the declared truncation."
+        )
+    else:
+        noisy_local_interpretation = (
+            "The noisy local workflow uses a host-safe analytic readout-error "
+            "fallback because live Aer execution is guarded on this host. In "
+            "this experiment the configured Aer gate-noise component is inactive "
+            "for the generated state-preparation circuit, so the fallback remains "
+            "faithful to the declared noisy-local model for the reported observables."
+        )
+
     report_lines = [
         f"# {experiment.configuration.experiment_name} Analysis Report",
         "",
@@ -296,10 +340,6 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
         f"- Exact local absolute scale-factor error: {summary_payload['exact_local_absolute_errors']['scale_factor_expectation_value']:.6e}",
         f"- Noisy local absolute scale-factor error: {summary_payload['noisy_local_absolute_errors']['scale_factor_expectation_value']:.6e}",
         "",
-        "## Interpretation",
-        "",
-        "The exact local workflow reproduces the direct diagonalization benchmark for the reduced minisuperspace model defined by the selected configuration.",
-        "The noisy local workflow preserves the ordering and approximate magnitude of the benchmark observables under the explicit Aer noise model, but it is not interpreted as evidence for full quantum-cosmological dynamics beyond the declared truncation.",
     ]
     if benchmark.focus_bin_probability_name is not None and benchmark.focus_bin_probability is not None:
         report_lines[7:7] = [
@@ -308,6 +348,36 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
                 f"{benchmark.focus_bin_probability:.6f}"
             ),
         ]
+    if ibm_payload is not None:
+        ibm_uncertainties = _evaluation_uncertainty_map(ibm_payload)
+        ibm_backend_name = ibm_payload.get("provenance", {}).get("backend_name")
+        ibm_job_id = ibm_payload.get("provenance", {}).get("job_id")
+        report_lines.extend(
+            [
+                "## IBM Runtime Summary",
+                "",
+                f"- IBM backend: `{ibm_backend_name}`",
+                f"- IBM job id: `{ibm_job_id}`",
+            ]
+        )
+        for observable_name, value in series["IBM Runtime"].items():
+            report_lines.append(
+                (
+                    f"- {observable_name}: {value:.6f} "
+                    f"(abs. error: "
+                    f"{summary_payload['ibm_runtime_absolute_errors'][observable_name]:.6e}, "
+                    f"uncertainty: {ibm_uncertainties.get(observable_name, 0.0):.6e})"
+                )
+            )
+        report_lines.extend(["", "## Interpretation", ""])
+    else:
+        report_lines.extend(["## Interpretation", ""])
+    report_lines.extend(
+        [
+            "The exact local workflow reproduces the direct diagonalization benchmark for the reduced minisuperspace model defined by the selected configuration.",
+            noisy_local_interpretation,
+        ]
+    )
     if ibm_payload is not None:
         report_lines.extend(
             [

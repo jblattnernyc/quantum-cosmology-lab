@@ -17,6 +17,7 @@ class ImportIntegrityTests(unittest.TestCase):
         module_names = (
             "experiments.gut_toy_gauge",
             "experiments.minisuperspace_frw",
+            "experiments.planck_epoch_minisuperspace",
             "experiments.particle_creation_flrw",
             "qclab",
             "qclab.analysis",

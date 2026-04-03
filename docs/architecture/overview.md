@@ -95,11 +95,11 @@ The second and third tiers are subordinate to the benchmarked reference calculat
 
 The active repository baseline now contains:
 
-- three official experiment lines in `experiments/minisuperspace_frw/`, `experiments/particle_creation_flrw/`, and `experiments/gut_toy_gauge/`,
+- four official experiment lines in `experiments/minisuperspace_frw/`, `experiments/planck_epoch_minisuperspace/`, `experiments/particle_creation_flrw/`, and `experiments/gut_toy_gauge/`,
 - shared scientific infrastructure for exact-local, noisy-local, and IBM Runtime execution tiers,
 - preserved IBM provenance capture and reporting pathways,
 - a repository-level governance and dissemination layer for citation policy, figure and table policy, internal review, replication, and archival release preparation.
 
 The historical Phases 0 through 6 recorded in `PLANS.md` explain how this baseline was constructed, but they are no longer the ordinary gate for routine future official experiment admission. Mission-fit future experiments may be added when they satisfy the repository standards without implying a new roadmap phase.
 
-These implemented lines are deliberately reduced and benchmarked. The `gut_toy_gauge` directory is an official Track C toy-gauge implementation, but it remains a reduced two-link `Z2` toy model and must not be read as a realistic GUT simulation.
+These implemented lines are deliberately reduced and benchmarked. The `planck_epoch_minisuperspace` directory is an official Track A reduced small-scale-factor minisuperspace line, but its Planck-Epoch label remains contextual only and must not be read as a literal Planck-Epoch simulation. The `gut_toy_gauge` directory is an official Track C toy-gauge implementation, but it remains a reduced two-link `Z2` toy model and must not be read as a realistic GUT simulation.

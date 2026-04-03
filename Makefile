@@ -3,11 +3,14 @@
 PYTHON ?= python
 PIP := $(PYTHON) -m pip
 MINISUPERSPACE_DIR := experiments/minisuperspace_frw
+PLANCK_EPOCH_MINISUPERSPACE_DIR := experiments/planck_epoch_minisuperspace
 PARTICLE_CREATION_DIR := experiments/particle_creation_flrw
 GUT_TOY_GAUGE_DIR := experiments/gut_toy_gauge
 
 .PHONY: help install test test-unittest compile check \
 	benchmark run-local run-aer analyze minisuperspace \
+	planck-benchmark planck-run-local planck-run-aer planck-analyze planck-epoch-minisuperspace \
+	planck-run-ibm planck-run-ibm-local \
 	run-ibm run-ibm-local particle-benchmark particle-run-local particle-run-aer \
 	particle-analyze particle-creation particle-run-ibm particle-run-ibm-local \
 	gut-benchmark gut-run-local gut-run-aer gut-analyze gut-toy-gauge \
@@ -33,6 +36,13 @@ help:
 		'  minisuperspace  Run benchmark, exact local, noisy local, and analysis for the official Phase 2 experiment.' \
 		'  run-ibm         Run the minisuperspace IBM Runtime workflow. Override BACKEND=<backend-name>.' \
 		'  run-ibm-local   Run the minisuperspace IBM Runtime local-testing workflow. Override LOCAL_TESTING_BACKEND=<fake-backend-class>.' \
+		'  planck-benchmark   Run the Planck-epoch-motivated minisuperspace benchmark.' \
+		'  planck-run-local   Run the Planck-epoch-motivated minisuperspace exact local workflow.' \
+		'  planck-run-aer     Run the Planck-epoch-motivated minisuperspace noisy local workflow.' \
+		'  planck-analyze     Run the Planck-epoch-motivated minisuperspace analysis workflow.' \
+		'  planck-epoch-minisuperspace Run benchmark, exact local, noisy local, and analysis for the Planck-context official minisuperspace experiment.' \
+		'  planck-run-ibm     Run the Planck-epoch-motivated minisuperspace IBM Runtime workflow. Override BACKEND=<backend-name>.' \
+		'  planck-run-ibm-local Run the Planck-epoch-motivated minisuperspace IBM Runtime local-testing workflow. Override LOCAL_TESTING_BACKEND=<fake-backend-class>.' \
 		'  particle-benchmark   Run the particle-creation FLRW benchmark.' \
 		'  particle-run-local   Run the particle-creation exact local workflow.' \
 		'  particle-run-aer     Run the particle-creation noisy local Aer workflow.' \
@@ -103,6 +113,34 @@ run-ibm-local:
 		exit 1; \
 	fi
 	$(PYTHON) $(MINISUPERSPACE_DIR)/run_ibm.py --local-testing-backend $(LOCAL_TESTING_BACKEND)
+
+planck-benchmark:
+	$(PYTHON) $(PLANCK_EPOCH_MINISUPERSPACE_DIR)/benchmark.py
+
+planck-run-local:
+	$(PYTHON) $(PLANCK_EPOCH_MINISUPERSPACE_DIR)/run_local.py
+
+planck-run-aer:
+	$(PYTHON) $(PLANCK_EPOCH_MINISUPERSPACE_DIR)/run_aer.py
+
+planck-analyze:
+	$(PYTHON) $(PLANCK_EPOCH_MINISUPERSPACE_DIR)/analyze.py
+
+planck-epoch-minisuperspace: planck-benchmark planck-run-local planck-run-aer planck-analyze
+
+planck-run-ibm:
+	@if [ -z "$(BACKEND)" ]; then \
+		printf '%s\n' 'BACKEND is required. Usage: make planck-run-ibm BACKEND=<backend-name>'; \
+		exit 1; \
+	fi
+	$(PYTHON) $(PLANCK_EPOCH_MINISUPERSPACE_DIR)/run_ibm.py --backend-name $(BACKEND)
+
+planck-run-ibm-local:
+	@if [ -z "$(LOCAL_TESTING_BACKEND)" ]; then \
+		printf '%s\n' 'LOCAL_TESTING_BACKEND is required. Usage: make planck-run-ibm-local LOCAL_TESTING_BACKEND=<fake-backend-class>'; \
+		exit 1; \
+	fi
+	$(PYTHON) $(PLANCK_EPOCH_MINISUPERSPACE_DIR)/run_ibm.py --local-testing-backend $(LOCAL_TESTING_BACKEND)
 
 particle-benchmark:
 	$(PYTHON) $(PARTICLE_CREATION_DIR)/benchmark.py

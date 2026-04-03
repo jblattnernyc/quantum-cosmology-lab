@@ -28,7 +28,7 @@ The completed founding milestones remain preserved explicitly:
 - Phase 5: the third official `gut_toy_gauge` reduced toy-gauge experiment.
 - Phase 6: repository-level dissemination and governance, including citation policy, figure and table guidance, internal review and replication checklists, archival release workflow, and versioned milestone reporting.
 
-The repository now contains three benchmarked official experiments, spanning reduced quantum cosmology, reduced quantum field theory in curved spacetime, and reduced toy-gauge studies, together with the shared infrastructure, documentation, tests, and hardware-execution policy required to extend the lab further.
+The repository now contains four benchmarked official experiments, spanning two reduced quantum-cosmology lines together with reduced quantum field theory in curved spacetime and reduced toy-gauge studies, together with the shared infrastructure, documentation, tests, and hardware-execution policy required to extend the lab further.
 
 Future scientifically valid experiments may be admitted without phase pre-authorization when they remain within repository mission and standards. Any genuinely major expansion must still be defined explicitly in `PLANS.md` before implementation begins.
 
@@ -145,7 +145,7 @@ The repository's validated CI matrix currently covers Python 3.10 through 3.13. 
 
 A small [Makefile](Makefile) is provided as a convenience interface for routine repository commands. It does not replace the experiment scripts, `pyproject.toml`, or the governing documents.
 
-The `Makefile` now exposes convenience targets for all three implemented official lines, including `minisuperspace`, `particle-creation`, and `gut-toy-gauge`, together with tier-specific benchmark, local, Aer, analysis, and IBM wrapper targets.
+The `Makefile` now exposes convenience targets for all four implemented official lines, including `minisuperspace`, `planck-epoch-minisuperspace`, `particle-creation`, and `gut-toy-gauge`, together with tier-specific benchmark, local, Aer, analysis, and IBM wrapper targets.
 
 ## Testing
 
@@ -188,7 +188,32 @@ For credential-free infrastructure validation of the IBM wrapper itself, the sha
 python experiments/minisuperspace_frw/run_ibm.py --local-testing-backend FakeManilaV2
 ```
 
-The second official experiment line is [experiments/particle_creation_flrw/README.md](experiments/particle_creation_flrw/README.md). From the repository root with the virtual environment active, run:
+An additional official Track A experiment line is [experiments/planck_epoch_minisuperspace/README.md](experiments/planck_epoch_minisuperspace/README.md). From the repository root with the virtual environment active, run:
+
+```bash
+python experiments/planck_epoch_minisuperspace/benchmark.py
+python experiments/planck_epoch_minisuperspace/run_local.py
+python experiments/planck_epoch_minisuperspace/run_aer.py
+python experiments/planck_epoch_minisuperspace/analyze.py
+```
+
+This workflow generates benchmark and execution artifacts under `data/processed/planck_epoch_minisuperspace/`, together with analysis outputs under `results/reports/planck_epoch_minisuperspace/`, `results/tables/planck_epoch_minisuperspace/`, and `results/figures/planck_epoch_minisuperspace/`.
+
+The Planck-Epoch label is contextual only for this experiment. The reduced model is a four-bin minisuperspace truncation and does not constitute a literal Planck-Epoch simulation. On macOS arm64 with Python 3.13 and later, the `run_aer.py` entrypoint uses a host-safe analytic readout-error fallback because live Aer execution is guarded and the configured gate-noise component is inactive for the generated state-preparation circuit.
+
+The IBM Runtime path is implemented separately and should be used only after the exact-local and noisy-local validation artifacts are present:
+
+```bash
+python experiments/planck_epoch_minisuperspace/run_ibm.py --backend-name <backend>
+```
+
+The same local-testing-mode validation path is available for the Planck-context minisuperspace line:
+
+```bash
+python experiments/planck_epoch_minisuperspace/run_ibm.py --local-testing-backend FakeManilaV2
+```
+
+The next official experiment line is [experiments/particle_creation_flrw/README.md](experiments/particle_creation_flrw/README.md). From the repository root with the virtual environment active, run:
 
 ```bash
 python experiments/particle_creation_flrw/benchmark.py
@@ -250,15 +275,16 @@ Operational guidance is documented in:
 - [scripts/release/README.md](scripts/release/README.md)
 - [CHANGELOG.md](CHANGELOG.md)
 
-## Initial Official Experiment Lines
+## Current Official Experiment Lines
 
-The first official experiment lines for this repository are:
+The current official experiment lines for this repository are:
 
 1. `experiments/minisuperspace_frw/` implemented
-2. `experiments/particle_creation_flrw/` implemented
-3. `experiments/gut_toy_gauge/` implemented
+2. `experiments/planck_epoch_minisuperspace/` implemented
+3. `experiments/particle_creation_flrw/` implemented
+4. `experiments/gut_toy_gauge/` implemented
 
-All three experiment directories listed above are now implemented official lines. The `gut_toy_gauge` experiment is a reduced Track C toy-gauge model and must not be described as a realistic GUT simulation.
+All four experiment directories listed above are now implemented official lines. The `planck_epoch_minisuperspace` experiment is a Planck-Epoch-motivated reduced minisuperspace model only and must not be described as a literal Planck-Epoch simulation. The `gut_toy_gauge` experiment is a reduced Track C toy-gauge model and must not be described as a realistic GUT simulation.
 
 ## Security and Credentials
 

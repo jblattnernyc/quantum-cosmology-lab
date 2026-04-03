@@ -22,11 +22,12 @@ from qclab.analysis.repository_state import (
 class CurrentRepositoryStateTests(unittest.TestCase):
     """Verify the current official experiment discovery and reporting helpers."""
 
-    def test_discovery_includes_founding_official_experiments(self) -> None:
+    def test_discovery_includes_current_official_experiments(self) -> None:
         experiment_names = set(discover_current_official_experiment_names())
         self.assertTrue(
             {
                 "minisuperspace_frw",
+                "planck_epoch_minisuperspace",
                 "particle_creation_flrw",
                 "gut_toy_gauge",
             }.issubset(experiment_names)
@@ -42,6 +43,7 @@ class CurrentRepositoryStateTests(unittest.TestCase):
         self.assertTrue(
             {
                 "minisuperspace_frw",
+                "planck_epoch_minisuperspace",
                 "particle_creation_flrw",
                 "gut_toy_gauge",
             }.issubset(experiment_names)
@@ -68,6 +70,7 @@ class CurrentRepositoryStateTests(unittest.TestCase):
         self.assertIn("2026-04-03T00:00:00+00:00", report_text)
         self.assertIn("AGENTS.md", report_text)
         self.assertIn("minisuperspace_frw", report_text)
+        self.assertIn("planck_epoch_minisuperspace", report_text)
         self.assertIn("particle_creation_flrw", report_text)
         self.assertIn("gut_toy_gauge", report_text)
         self.assertIn("does not alter the preserved historical Phase 6", report_text)
@@ -98,6 +101,7 @@ class CurrentRepositoryStateTests(unittest.TestCase):
         self.assertTrue(
             {
                 "minisuperspace_frw",
+                "planck_epoch_minisuperspace",
                 "particle_creation_flrw",
                 "gut_toy_gauge",
             }.issubset(experiment_names)

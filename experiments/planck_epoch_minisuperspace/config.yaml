@@ -1,0 +1,105 @@
+experiment_name: planck_epoch_minisuperspace
+status: official
+official_experiment: true
+scientific_question: >
+  In a four-bin positive-scale-factor truncation of an FRW/Wheeler-DeWitt-inspired
+  minisuperspace operator with a phenomenological small-scale-factor barrier,
+  what are the benchmark ground-state values of the retained scale factor,
+  volume proxy, projected Hamiltonian, and smallest-bin occupation probability,
+  and how accurately do exact local and noisy local quantum workflows reproduce
+  them?
+parameters:
+  nearest_neighbor_tunneling: 0.1
+  quadratic_potential_strength: 0.1
+  inverse_square_barrier_strength: 0.001
+truncation:
+  basis: positive_scale_factor_bin_basis
+  cutoff: 4
+  bin_centers:
+    - 0.15
+    - 0.25
+    - 0.4
+    - 0.6
+  rationale: >
+    The experiment resolves the smallest retained positive-scale-factor sector
+    more explicitly than the baseline two-bin minisuperspace line while
+    remaining finite, exactly diagonalizable, and directly encodable on two
+    qubits.
+observables:
+  - scale_factor_expectation_value
+  - volume_expectation_value
+  - effective_hamiltonian_expectation
+  - smallest_scale_factor_probability
+execution:
+  exact_local:
+    enabled: true
+    backend_name: statevector_estimator
+    precision: 0.0
+  noisy_local:
+    enabled: true
+    backend_name: aer_estimator
+    precision: 0.03
+    seed: 424242
+    options:
+      backend_options:
+        method: density_matrix
+  ibm_hardware:
+    enabled: false
+    backend_name: null
+    precision: 0.04
+    optimization_level: 1
+    options:
+      selection_policy:
+        strategy: explicit
+        operational: true
+        simulator: false
+        min_num_qubits: 2
+      mitigation_policy:
+        resilience_level: 1
+        measure_mitigation: true
+        twirling_enable_measure: true
+      runtime_options:
+        environment:
+          job_tags:
+            - qclab
+            - official
+            - planck_epoch_minisuperspace
+            - ibm_runtime
+model_variant: small_scale_factor_barrier
+analysis_table_title: "# Planck-Epoch-Motivated Minisuperspace Observable Summary Table"
+analysis_figure_title: "Planck-epoch-motivated minisuperspace observable comparison"
+focus_bin_observable:
+  index: 0
+  name: smallest_scale_factor_probability
+  physical_meaning: >
+    Probability weight in the smallest retained positive-scale-factor bin of
+    the reduced four-bin truncation.
+artifacts:
+  benchmark_json: data/processed/planck_epoch_minisuperspace/benchmark.json
+  exact_local_json: data/processed/planck_epoch_minisuperspace/exact_local.json
+  exact_local_comparisons_json: data/processed/planck_epoch_minisuperspace/exact_local_comparisons.json
+  noisy_local_json: data/processed/planck_epoch_minisuperspace/noisy_local.json
+  noisy_local_comparisons_json: data/processed/planck_epoch_minisuperspace/noisy_local_comparisons.json
+  ibm_runtime_json: data/processed/planck_epoch_minisuperspace/ibm_runtime.json
+  ibm_runtime_comparisons_json: data/processed/planck_epoch_minisuperspace/ibm_runtime_comparisons.json
+  ibm_runtime_metadata_json: data/raw/planck_epoch_minisuperspace/ibm_runtime_metadata.json
+  ibm_runtime_report_markdown: results/reports/planck_epoch_minisuperspace/ibm_runtime_report.md
+  analysis_summary_json: results/reports/planck_epoch_minisuperspace/analysis_summary.json
+  analysis_report_markdown: results/reports/planck_epoch_minisuperspace/analysis_report.md
+  observable_summary_table_markdown: results/tables/planck_epoch_minisuperspace/observable_summary.md
+  comparison_figure: results/figures/planck_epoch_minisuperspace/observable_comparison.png
+noise_model:
+  one_qubit_depolarizing_probability: 0.004
+  readout_error_probability: 0.02
+  method: density_matrix
+notes:
+  - >
+    This is an official reduced toy experiment. The Planck-Epoch label is
+    contextual only and does not authorize a literal epoch simulation claim.
+  - >
+    The inverse-square barrier is a phenomenological small-scale-factor term in
+    the declared truncation, not a complete theory of Planck-scale quantum
+    gravity.
+  - >
+    IBM Runtime execution is optional and must follow prior exact-local and
+    noisy-local validation.
