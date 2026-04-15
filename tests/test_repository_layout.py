@@ -49,6 +49,7 @@ class RepositoryLayoutTests(unittest.TestCase):
             root / "experiments" / "planck_epoch_minisuperspace" / "README.md",
             root / "experiments" / "particle_creation_flrw" / "README.md",
             root / "experiments" / "gut_toy_gauge" / "README.md",
+            root / "experiments" / "grand_unification_epoch_toy" / "README.md",
             root
             / "results"
             / "reports"

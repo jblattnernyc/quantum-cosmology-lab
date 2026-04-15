@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-04-03T21:31:21+00:00",
+  "generated_at_utc": "2026-04-15T00:00:00+00:00",
   "governance_documents": {
     "agents": "AGENTS.md",
     "experiment_standard": "docs/methods/experiment-standard.md",
@@ -8,6 +8,53 @@
     "results_and_provenance": "docs/operations/results-and-provenance.md"
   },
   "official_experiments": [
+    {
+      "artifacts": {
+        "analysis_report_markdown": "results/reports/grand_unification_epoch_toy/analysis_report.md",
+        "analysis_summary_json": "results/reports/grand_unification_epoch_toy/analysis_summary.json",
+        "benchmark_json": "data/processed/grand_unification_epoch_toy/benchmark.json",
+        "comparison_figure": "results/figures/grand_unification_epoch_toy/observable_comparison.png",
+        "exact_local_comparisons_json": "data/processed/grand_unification_epoch_toy/exact_local_comparisons.json",
+        "exact_local_json": "data/processed/grand_unification_epoch_toy/exact_local.json",
+        "ibm_runtime_comparisons_json": "data/processed/grand_unification_epoch_toy/ibm_runtime_comparisons.json",
+        "ibm_runtime_json": "data/processed/grand_unification_epoch_toy/ibm_runtime.json",
+        "ibm_runtime_metadata_json": "data/raw/grand_unification_epoch_toy/ibm_runtime_metadata.json",
+        "ibm_runtime_report_markdown": "results/reports/grand_unification_epoch_toy/ibm_runtime_report.md",
+        "noisy_local_comparisons_json": "data/processed/grand_unification_epoch_toy/noisy_local_comparisons.json",
+        "noisy_local_json": "data/processed/grand_unification_epoch_toy/noisy_local.json",
+        "observable_summary_table_markdown": "results/tables/grand_unification_epoch_toy/observable_summary.md"
+      },
+      "documents": {
+        "config_yaml": "experiments/grand_unification_epoch_toy/config.yaml",
+        "model_markdown": "experiments/grand_unification_epoch_toy/model.md",
+        "readme_markdown": "experiments/grand_unification_epoch_toy/README.md",
+        "results_markdown": "experiments/grand_unification_epoch_toy/results.md"
+      },
+      "experiment_name": "grand_unification_epoch_toy",
+      "latest_live_ibm_run": {
+        "archived_artifacts": {
+          "comparison_json": "data/processed/grand_unification_epoch_toy/ibm_runtime_comparisons_20260415T035530Z_ibm_fez_d7fgo7q1u7fs739lvlb0.json",
+          "execution_json": "data/processed/grand_unification_epoch_toy/ibm_runtime_20260415T035530Z_ibm_fez_d7fgo7q1u7fs739lvlb0.json",
+          "metadata_json": "data/raw/grand_unification_epoch_toy/ibm_runtime_metadata_20260415T035530Z_ibm_fez_d7fgo7q1u7fs739lvlb0.json",
+          "report_markdown": "results/reports/grand_unification_epoch_toy/ibm_runtime_report_20260415T035530Z_ibm_fez_d7fgo7q1u7fs739lvlb0.md"
+        },
+        "backend_name": "ibm_fez",
+        "canonical_artifacts": {
+          "comparison_json": "data/processed/grand_unification_epoch_toy/ibm_runtime_comparisons.json",
+          "execution_json": "data/processed/grand_unification_epoch_toy/ibm_runtime.json",
+          "metadata_json": "data/raw/grand_unification_epoch_toy/ibm_runtime_metadata.json",
+          "report_markdown": "results/reports/grand_unification_epoch_toy/ibm_runtime_report.md"
+        },
+        "job_id": "d7fgo7q1u7fs739lvlb0",
+        "local_testing_mode": false,
+        "manifest_path": "data/raw/grand_unification_epoch_toy/ibm_runtime_runs.jsonl",
+        "timestamp_utc": "2026-04-15T03:55:30.621086+00:00"
+      },
+      "live_ibm_run_count": 1,
+      "local_testing_artifacts_present": false,
+      "runs_manifest_jsonl": "data/raw/grand_unification_epoch_toy/ibm_runtime_runs.jsonl",
+      "scientific_question": "In a two-site Z2 symmetry-breaking toy Hamiltonian used as a reduced Grand-Unification-Epoch-context model, what are the benchmark ground-state values of the order-parameter expectation, domain-wall density, transverse-coherence expectation, and effective-Hamiltonian expectation, and how accurately do exact local and noisy local estimator workflows reproduce them?"
+    },
     {
       "artifacts": {
         "analysis_report_markdown": "results/reports/gut_toy_gauge/analysis_report.md",

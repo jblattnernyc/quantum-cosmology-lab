@@ -1,0 +1,50 @@
+{
+  "benchmark_values": {
+    "domain_wall_density": 0.029822206193642085,
+    "effective_hamiltonian_expectation": -0.8204719227933478,
+    "order_parameter_expectation": 0.8941919634759182,
+    "transverse_coherence_expectation": 0.28339891995741684
+  },
+  "comparison_figure": "results/figures/grand_unification_epoch_toy/observable_comparison.png",
+  "exact_local_absolute_errors": {
+    "domain_wall_density": 1.457167719820518e-16,
+    "effective_hamiltonian_expectation": 2.220446049250313e-16,
+    "order_parameter_expectation": 1.1102230246251565e-16,
+    "transverse_coherence_expectation": 5.551115123125783e-16
+  },
+  "exact_local_values": {
+    "domain_wall_density": 0.02982220619364223,
+    "effective_hamiltonian_expectation": -0.820471922793348,
+    "order_parameter_expectation": 0.8941919634759181,
+    "transverse_coherence_expectation": 0.2833989199574174
+  },
+  "ibm_runtime_absolute_errors": {
+    "domain_wall_density": 0.021084606442379784,
+    "effective_hamiltonian_expectation": 0.033903291293767235,
+    "order_parameter_expectation": 0.02331727893325153,
+    "transverse_coherence_expectation": 0.007873312374298447
+  },
+  "ibm_runtime_comparisons_json": "data/processed/grand_unification_epoch_toy/ibm_runtime_comparisons.json",
+  "ibm_runtime_json": "data/processed/grand_unification_epoch_toy/ibm_runtime.json",
+  "ibm_runtime_metadata_json": "data/raw/grand_unification_epoch_toy/ibm_runtime_metadata.json",
+  "ibm_runtime_report_markdown": "results/reports/grand_unification_epoch_toy/ibm_runtime_report.md",
+  "ibm_runtime_values": {
+    "domain_wall_density": 0.05090681263602187,
+    "effective_hamiltonian_expectation": -0.7865686314995806,
+    "order_parameter_expectation": 0.8708746845426667,
+    "transverse_coherence_expectation": 0.2755256075831184
+  },
+  "noisy_local_absolute_errors": {
+    "domain_wall_density": 0.02778750761395591,
+    "effective_hamiltonian_expectation": 0.04376920100347126,
+    "order_parameter_expectation": 0.02682575890427763,
+    "transverse_coherence_expectation": 0.008501967598721905
+  },
+  "noisy_local_values": {
+    "domain_wall_density": 0.057609713807597995,
+    "effective_hamiltonian_expectation": -0.7767027217898765,
+    "order_parameter_expectation": 0.8673662045716406,
+    "transverse_coherence_expectation": 0.27489695235869493
+  },
+  "observable_summary_table_markdown": "results/tables/grand_unification_epoch_toy/observable_summary.md"
+}

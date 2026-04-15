@@ -1,0 +1,34 @@
+[
+  {
+    "absolute_error": 0.02682575890427763,
+    "benchmark_value": 0.8941919634759182,
+    "candidate_value": 0.8673662045716406,
+    "interpretation": "Noisy local analytic fallback comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "order_parameter_expectation",
+    "relative_error": 0.030000000000000093
+  },
+  {
+    "absolute_error": 0.02778750761395591,
+    "benchmark_value": 0.029822206193642085,
+    "candidate_value": 0.057609713807597995,
+    "interpretation": "Noisy local analytic fallback comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "domain_wall_density",
+    "relative_error": 0.9317723656501322
+  },
+  {
+    "absolute_error": 0.008501967598721905,
+    "benchmark_value": 0.28339891995741684,
+    "candidate_value": 0.27489695235869493,
+    "interpretation": "Noisy local analytic fallback comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "transverse_coherence_expectation",
+    "relative_error": 0.02999999999999788
+  },
+  {
+    "absolute_error": 0.04376920100347126,
+    "benchmark_value": -0.8204719227933478,
+    "candidate_value": -0.7767027217898765,
+    "interpretation": "Noisy local analytic fallback comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "effective_hamiltonian_expectation",
+    "relative_error": 0.05334637272468299
+  }
+]

@@ -28,7 +28,7 @@ The completed founding milestones remain preserved explicitly:
 - Phase 5: the third official `gut_toy_gauge` reduced toy-gauge experiment.
 - Phase 6: repository-level dissemination and governance, including citation policy, figure and table guidance, internal review and replication checklists, archival release workflow, and versioned milestone reporting.
 
-The repository now contains four benchmarked official experiments, spanning two reduced quantum-cosmology lines together with reduced quantum field theory in curved spacetime and reduced toy-gauge studies, together with the shared infrastructure, documentation, tests, and hardware-execution policy required to extend the lab further.
+The repository now contains five benchmarked official experiments, spanning two reduced quantum-cosmology lines together with reduced quantum field theory in curved spacetime, reduced toy-gauge studies, and a reduced Grand-Unification-Epoch-context symmetry-breaking toy model, together with the shared infrastructure, documentation, tests, and hardware-execution policy required to extend the lab further.
 
 Future scientifically valid experiments may be admitted without phase pre-authorization when they remain within repository mission and standards. Any genuinely major expansion must still be defined explicitly in `PLANS.md` before implementation begins.
 
@@ -145,7 +145,7 @@ The repository's validated CI matrix currently covers Python 3.10 through 3.13. 
 
 A small [Makefile](Makefile) is provided as a convenience interface for routine repository commands. It does not replace the experiment scripts, `pyproject.toml`, or the governing documents.
 
-The `Makefile` now exposes convenience targets for all four implemented official lines, including `minisuperspace`, `planck-epoch-minisuperspace`, `particle-creation`, and `gut-toy-gauge`, together with tier-specific benchmark, local, Aer, analysis, and IBM wrapper targets.
+The `Makefile` now exposes convenience targets for all five implemented official lines, including `minisuperspace`, `planck-epoch-minisuperspace`, `particle-creation`, `gut-toy-gauge`, and `grand-unification-epoch-toy`, together with tier-specific benchmark, local, Aer, analysis, and IBM wrapper targets.
 
 ## Testing
 
@@ -259,6 +259,31 @@ The same local-testing-mode validation path is available for the toy-gauge line:
 python experiments/gut_toy_gauge/run_ibm.py --local-testing-backend FakeManilaV2
 ```
 
+The Grand-Unification-Epoch-context toy experiment line is [experiments/grand_unification_epoch_toy/README.md](experiments/grand_unification_epoch_toy/README.md). From the repository root with the virtual environment active, run:
+
+```bash
+python experiments/grand_unification_epoch_toy/benchmark.py
+python experiments/grand_unification_epoch_toy/run_local.py
+python experiments/grand_unification_epoch_toy/run_aer.py
+python experiments/grand_unification_epoch_toy/analyze.py
+```
+
+This workflow generates benchmark and execution artifacts under `data/processed/grand_unification_epoch_toy/`, together with analysis outputs under `results/reports/grand_unification_epoch_toy/`, `results/tables/grand_unification_epoch_toy/`, and `results/figures/grand_unification_epoch_toy/`.
+
+The Grand-Unification-Epoch label is contextual only for this experiment. The reduced model is a two-site `Z2` symmetry-breaking toy Hamiltonian and does not constitute a literal Grand-Unification-Epoch simulation or a realistic grand unified gauge theory.
+
+The IBM Runtime path is implemented separately and should be used only after the exact-local and noisy-local validation artifacts are present:
+
+```bash
+python experiments/grand_unification_epoch_toy/run_ibm.py --backend-name <backend>
+```
+
+The same local-testing-mode validation path is available for the Grand-Unification-Epoch-context toy line:
+
+```bash
+python experiments/grand_unification_epoch_toy/run_ibm.py --local-testing-backend FakeManilaV2
+```
+
 ## Operations
 
 Operational guidance is documented in:
@@ -283,8 +308,9 @@ The current official experiment lines for this repository are:
 2. `experiments/planck_epoch_minisuperspace/` implemented
 3. `experiments/particle_creation_flrw/` implemented
 4. `experiments/gut_toy_gauge/` implemented
+5. `experiments/grand_unification_epoch_toy/` implemented
 
-All four experiment directories listed above are now implemented official lines. The `planck_epoch_minisuperspace` experiment is a Planck-Epoch-motivated reduced minisuperspace model only and must not be described as a literal Planck-Epoch simulation. The `gut_toy_gauge` experiment is a reduced Track C toy-gauge model and must not be described as a realistic GUT simulation.
+All five experiment directories listed above are now implemented official lines. The `planck_epoch_minisuperspace` experiment is a Planck-Epoch-motivated reduced minisuperspace model only and must not be described as a literal Planck-Epoch simulation. The `gut_toy_gauge` experiment is a reduced Track C toy-gauge model and must not be described as a realistic GUT simulation. The `grand_unification_epoch_toy` experiment is a reduced Track C symmetry-breaking toy model and must not be described as a literal Grand-Unification-Epoch simulation.
 
 ## Security and Credentials
 

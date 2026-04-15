@@ -96,7 +96,8 @@ When choosing a backend, document:
 - date of execution,
 - shot count or precision target,
 - mitigation settings,
-- any relevant instance or channel context,
+- service channel and whether an account instance was configured, without
+  storing the raw instance identifier or CRN,
 - whether selection was explicit or least-busy,
 - any minimum-qubit or operational filters used.
 

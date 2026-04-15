@@ -15,6 +15,7 @@ class ImportIntegrityTests(unittest.TestCase):
 
     def test_core_modules_import(self) -> None:
         module_names = (
+            "experiments.grand_unification_epoch_toy",
             "experiments.gut_toy_gauge",
             "experiments.minisuperspace_frw",
             "experiments.planck_epoch_minisuperspace",

@@ -16,6 +16,10 @@ from qclab.backends.hardware import (
     summarize_backend,
     summarize_runtime_job,
 )
+from qclab.backends.security import (
+    redact_runtime_instance,
+    runtime_instance_configured,
+)
 from qclab.observables import (
     ObservableDefinition,
     ObservableEvaluation,
@@ -71,7 +75,8 @@ def _normalize_parameter_values(
 def _resolved_runtime_service_account(runtime_service: Any) -> Mapping[str, Any]:
     """Return the active IBM Runtime account metadata when available.
 
-    Only non-secret fields such as channel and instance are consumed downstream.
+    Only non-secret fields such as channel and whether an instance is configured
+    are consumed downstream.
     """
 
     if runtime_service is None:
@@ -111,7 +116,8 @@ def _build_runtime_service_metadata(
 
     return {
         "channel": channel,
-        "instance": resolved_instance,
+        "instance": redact_runtime_instance(resolved_instance),
+        "instance_configured": runtime_instance_configured(resolved_instance),
         "instance_source": instance_source,
         "local_testing_mode": local_testing_mode,
     }

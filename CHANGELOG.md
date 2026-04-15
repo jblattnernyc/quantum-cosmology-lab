@@ -10,6 +10,9 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ### Added
 
+- Added the new official experiment line in `experiments/grand_unification_epoch_toy/`, including a written model statement, configuration, benchmark workflow, circuit interface, observable definitions, exact local execution, noisy local execution, IBM Runtime workflow, analysis pipeline, and written results interpretation for a Grand-Unification-Epoch-context reduced `Z2` symmetry-breaking toy model.
+- Added generated benchmark, exact-local, noisy-local, report, table, and figure artifacts for the default `grand_unification_epoch_toy` workflow.
+- Added automated tests for the implemented `grand_unification_epoch_toy` experiment line, including configuration, benchmark, observable, circuit, exact-local, noisy-local, and analysis checks.
 - Added the new official experiment line in `experiments/planck_epoch_minisuperspace/`, including a written model statement, configuration, benchmark workflow, circuit interface, observable definitions, exact local execution, noisy local execution, IBM Runtime workflow, analysis pipeline, and written results interpretation for a Planck-Epoch-motivated reduced minisuperspace model.
 - Added generated benchmark, exact-local, noisy-local, report, table, and figure artifacts for the default `planck_epoch_minisuperspace` workflow.
 - Added automated tests for the implemented `planck_epoch_minisuperspace` experiment line, including configuration, benchmark, observable, circuit, exact-local, noisy-local, and analysis checks.
@@ -17,12 +20,14 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ### Changed
 
+- Updated `README.md`, `docs/architecture/overview.md`, `Makefile`, import-integrity tests, repository-layout checks, and current repository-state tests so the new `grand_unification_epoch_toy` line is treated as part of the active official experiment surface without creating any new phase structure.
+- Recorded the first live IBM Runtime hardware execution for `grand_unification_epoch_toy` on `ibm_fez`, regenerated the experiment analysis artifacts to include the IBM tier, and aligned the written results interpretation with the archived hardware report.
 - Updated `README.md`, `docs/architecture/overview.md`, `Makefile`, import-integrity tests, repository-layout checks, and current repository-state tests so the new `planck_epoch_minisuperspace` line is treated as part of the active official experiment surface without creating any new phase structure.
 - Updated `.gitignore` so alternate local `.venv*` environments created during guarded validation work remain untracked by default.
 - Added a host-safe noisy-local fallback path for `planck_epoch_minisuperspace` that models the declared symmetric readout error analytically when live Aer execution is guarded on macOS arm64 Python 3.13+, while preserving the full benchmark-before-hardware workflow and recording the fallback explicitly in provenance metadata and analysis outputs.
 - Updated `experiments/minisuperspace_frw/README.md` to surface the existing exploratory small-scale-factor refinement materials and the new Planck-context design note explicitly as non-official, non-phase-creating documents.
 - Recorded the first live IBM Runtime hardware execution for `planck_epoch_minisuperspace` on `ibm_kingston`, regenerated the experiment analysis artifacts to include the IBM tier, and aligned the written results interpretation with the archived hardware report.
-- Refined the shared IBM Runtime provenance capture to record the resolved non-secret service instance from the active account when no explicit instance override is supplied, and expanded the compact Planck experiment analysis report to summarize IBM backend, job, observable values, and benchmark errors directly.
+- Refined the shared IBM Runtime provenance capture to record whether a service instance is configured without storing the account instance identifier, and expanded compact experiment analysis reports to summarize IBM backend, job, observable values, and benchmark errors directly.
 
 ## [1.1.0] - 2026-04-03
 

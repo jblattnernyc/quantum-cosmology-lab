@@ -340,11 +340,25 @@ class BackendExecutionTests(unittest.TestCase):
         )
         self.assertEqual(
             result.provenance.metadata["service"]["instance"],
-            "ibm-q/open/main",
+            "configured-redacted",
+        )
+        self.assertTrue(
+            result.provenance.metadata["service"]["instance_configured"],
         )
         self.assertEqual(
             result.provenance.metadata["service"]["instance_source"],
             "explicit_argument",
+        )
+        self.assertEqual(
+            result.provenance.metadata["backend_selection"]["instance"],
+            "configured-redacted",
+        )
+        self.assertTrue(
+            result.provenance.metadata["backend_selection"]["instance_configured"],
+        )
+        self.assertEqual(
+            result.provenance.metadata["backend_selection"]["selection_filters"]["instance"],
+            "configured-redacted",
         )
         self.assertEqual(
             result.provenance.metadata["backend_selection"]["selected_backend_name"],
@@ -375,7 +389,10 @@ class BackendExecutionTests(unittest.TestCase):
         )
         self.assertEqual(
             result.provenance.metadata["service"]["instance"],
-            "ibm-q/open/saved-account",
+            "configured-redacted",
+        )
+        self.assertTrue(
+            result.provenance.metadata["service"]["instance_configured"],
         )
         self.assertEqual(
             result.provenance.metadata["service"]["instance_source"],

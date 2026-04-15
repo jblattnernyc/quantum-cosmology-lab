@@ -1,0 +1,195 @@
+{
+  "evaluations": [
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "ibm_fez",
+        "tier": "ibm_hardware"
+      },
+      "observable_name": "order_parameter_expectation",
+      "operator_label": "(0.5+0j)*IZ + (0.5+0j)*ZI",
+      "physical_meaning": "Expectation value of the average retained Z2 order-parameter orientation across the two-site toy truncation.",
+      "shots": null,
+      "uncertainty": 0.016889790569189725,
+      "units": "dimensionless",
+      "value": 0.8708746845426667
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "ibm_fez",
+        "tier": "ibm_hardware"
+      },
+      "observable_name": "domain_wall_density",
+      "operator_label": "(0.5+0j)*II + (-0.5+0j)*ZZ",
+      "physical_meaning": "Expectation value of the anti-aligned-sector projector used as a finite two-site domain-wall proxy.",
+      "shots": null,
+      "uncertainty": 0.012942024461402234,
+      "units": "dimensionless",
+      "value": 0.05090681263602187
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "ibm_fez",
+        "tier": "ibm_hardware"
+      },
+      "observable_name": "transverse_coherence_expectation",
+      "operator_label": "(0.5+0j)*IX + (0.5+0j)*XI",
+      "physical_meaning": "Expectation value of the reduced transverse-mixing operator that couples the retained Z2 order-parameter configurations.",
+      "shots": null,
+      "uncertainty": 0.022112692929680492,
+      "units": "dimensionless",
+      "value": 0.2755256075831184
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "ibm_fez",
+        "tier": "ibm_hardware"
+      },
+      "observable_name": "effective_hamiltonian_expectation",
+      "operator_label": "(-0.7+0j)*ZZ + (-0.16+0j)*IX + (-0.16+0j)*XI + (-0.04+0j)*IZ + (-0.04+0j)*ZI",
+      "physical_meaning": "Expectation value of the projected two-site Z2 toy Hamiltonian.",
+      "shots": null,
+      "uncertainty": 0.019498423021069702,
+      "units": "dimensionless",
+      "value": -0.7865686314995806
+    }
+  ],
+  "job_metadata": {
+    "circuit_metadata": {
+      "experiment": "grand_unification_epoch_toy",
+      "state_preparation": "exact_ground_state_preparation"
+    },
+    "num_randomizations": 10,
+    "resilience": {},
+    "shots": 640,
+    "target_precision": 0.04
+  },
+  "provenance": {
+    "backend_name": "ibm_fez",
+    "job_id": "d7fgo7q1u7fs739lvlb0",
+    "metadata": {
+      "backend_selection": {
+        "instance": null,
+        "local_testing_mode": false,
+        "requested_backend_name": "ibm_fez",
+        "selected_backend_name": "ibm_fez",
+        "selection_filters": {
+          "instance": null
+        },
+        "strategy": "explicit"
+      },
+      "backend_summary": {
+        "backend_class": "IBMBackend",
+        "backend_name": "ibm_fez",
+        "calibration_id": null,
+        "coupling_edge_count": 352,
+        "max_circuits": null,
+        "num_qubits": 156,
+        "operation_names": [
+          "cz",
+          "x",
+          "reset",
+          "rz",
+          "sx",
+          "id",
+          "if_else",
+          "delay",
+          "measure"
+        ],
+        "properties_last_update_date": "2026-04-14T23:30:15-04:00",
+        "status": {
+          "backend_name": "ibm_fez",
+          "backend_version": "",
+          "operational": true,
+          "pending_jobs": 0,
+          "status_msg": "active"
+        },
+        "version": 2
+      },
+      "mitigation_policy": {
+        "dynamical_decoupling_enable": null,
+        "dynamical_decoupling_sequence_type": null,
+        "measure_mitigation": true,
+        "primitive_options": {
+          "environment": {
+            "job_tags": [
+              "qclab",
+              "official",
+              "grand_unification_epoch_toy",
+              "ibm_runtime"
+            ]
+          },
+          "resilience": {
+            "measure_mitigation": true
+          },
+          "resilience_level": 1,
+          "twirling": {
+            "enable_measure": true
+          }
+        },
+        "resilience_level": 1,
+        "twirling_enable_gates": null,
+        "twirling_enable_measure": true
+      },
+      "runtime_job_summary": {
+        "creation_date": "2026-04-14T23:55:11.277434-04:00",
+        "job_id": "d7fgo7q1u7fs739lvlb0",
+        "primitive_id": "estimator",
+        "session_id": null,
+        "status": "DONE",
+        "usage_estimation": {
+          "quantum_seconds": 11.415488242
+        }
+      },
+      "service": {
+        "channel": "ibm_quantum_platform",
+        "instance": "configured-redacted",
+        "instance_configured": true,
+        "instance_source": "active_account",
+        "local_testing_mode": false
+      }
+    },
+    "optimization_level": 1,
+    "precision": 0.04,
+    "primitive_name": "qiskit_ibm_runtime.EstimatorV2",
+    "seed": null,
+    "shots": null,
+    "tier": "ibm_hardware",
+    "timestamp_utc": "2026-04-15T03:55:30.621086+00:00"
+  },
+  "request": {
+    "backend_name": "ibm_fez",
+    "mitigation_enabled": true,
+    "optimization_level": 1,
+    "options": {
+      "mitigation_policy": {
+        "measure_mitigation": true,
+        "resilience_level": 1,
+        "twirling_enable_measure": true
+      },
+      "runtime_options": {
+        "environment": {
+          "job_tags": [
+            "qclab",
+            "official",
+            "grand_unification_epoch_toy",
+            "ibm_runtime"
+          ]
+        }
+      },
+      "selection_policy": {
+        "min_num_qubits": 2,
+        "operational": true,
+        "simulator": false,
+        "strategy": "explicit"
+      }
+    },
+    "precision": 0.04,
+    "seed": null,
+    "shots": null,
+    "tier": "ibm_hardware"
+  }
+}

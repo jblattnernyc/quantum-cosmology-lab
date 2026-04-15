@@ -1,0 +1,102 @@
+experiment_name: grand_unification_epoch_toy
+status: official
+official_experiment: true
+scientific_question: >
+  In a two-site Z2 symmetry-breaking toy Hamiltonian used as a reduced
+  Grand-Unification-Epoch-context model, what are the benchmark ground-state
+  values of the order-parameter expectation, domain-wall density,
+  transverse-coherence expectation, and effective-Hamiltonian expectation, and
+  how accurately do exact local and noisy local estimator workflows reproduce
+  them?
+parameters:
+  alignment_coupling: 0.7
+  transverse_mixing: 0.32
+  symmetry_breaking_bias: 0.08
+truncation:
+  basis: two_site_z2_order_parameter_basis
+  site_count: 2
+  local_order_parameter_values:
+    - -1
+    - 1
+  retained_basis:
+    - "|00>"
+    - "|01>"
+    - "|10>"
+    - "|11>"
+  rationale: >
+    The experiment keeps two binary order-parameter sites in order to define
+    the smallest exactly diagonalizable symmetry-breaking toy model that
+    supports a reduced order parameter, a domain-wall diagnostic, and a
+    transverse-coherence observable without claiming realistic grand-unified
+    field-theory dynamics.
+observables:
+  - order_parameter_expectation
+  - domain_wall_density
+  - transverse_coherence_expectation
+  - effective_hamiltonian_expectation
+execution:
+  exact_local:
+    enabled: true
+    backend_name: statevector_estimator
+    precision: 0.0
+  noisy_local:
+    enabled: true
+    backend_name: aer_estimator
+    precision: 0.03
+    seed: 141421
+    options:
+      backend_options:
+        method: density_matrix
+  ibm_hardware:
+    enabled: false
+    backend_name: null
+    precision: 0.04
+    optimization_level: 1
+    options:
+      selection_policy:
+        strategy: explicit
+        operational: true
+        simulator: false
+        min_num_qubits: 2
+      mitigation_policy:
+        resilience_level: 1
+        measure_mitigation: true
+        twirling_enable_measure: true
+      runtime_options:
+        environment:
+          job_tags:
+            - qclab
+            - official
+            - grand_unification_epoch_toy
+            - ibm_runtime
+analysis_table_title: "# Grand-Unification-Epoch Toy Observable Summary Table"
+analysis_figure_title: "Grand-Unification-Epoch-context Z2 toy observable comparison"
+artifacts:
+  benchmark_json: data/processed/grand_unification_epoch_toy/benchmark.json
+  exact_local_json: data/processed/grand_unification_epoch_toy/exact_local.json
+  exact_local_comparisons_json: data/processed/grand_unification_epoch_toy/exact_local_comparisons.json
+  noisy_local_json: data/processed/grand_unification_epoch_toy/noisy_local.json
+  noisy_local_comparisons_json: data/processed/grand_unification_epoch_toy/noisy_local_comparisons.json
+  ibm_runtime_json: data/processed/grand_unification_epoch_toy/ibm_runtime.json
+  ibm_runtime_comparisons_json: data/processed/grand_unification_epoch_toy/ibm_runtime_comparisons.json
+  ibm_runtime_metadata_json: data/raw/grand_unification_epoch_toy/ibm_runtime_metadata.json
+  ibm_runtime_report_markdown: results/reports/grand_unification_epoch_toy/ibm_runtime_report.md
+  analysis_summary_json: results/reports/grand_unification_epoch_toy/analysis_summary.json
+  analysis_report_markdown: results/reports/grand_unification_epoch_toy/analysis_report.md
+  observable_summary_table_markdown: results/tables/grand_unification_epoch_toy/observable_summary.md
+  comparison_figure: results/figures/grand_unification_epoch_toy/observable_comparison.png
+noise_model:
+  readout_error_probability: 0.015
+  method: density_matrix
+notes:
+  - >
+    This is an official reduced toy experiment. The Grand-Unification-Epoch
+    label is contextual only and does not authorize a literal epoch simulation
+    claim.
+  - >
+    The Z2 Hamiltonian is a symmetry-breaking order-parameter toy model, not a
+    realistic grand unified gauge theory.
+  - >
+    IBM Runtime execution is optional and must follow prior exact-local and
+    noisy-local validation.
+
