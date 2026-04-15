@@ -1,0 +1,89 @@
+{
+  "evaluations": [
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "order_parameter_expectation",
+      "operator_label": "(0.5+0j)*IZ + (0.5+0j)*ZI",
+      "physical_meaning": "Expectation value of the average retained Z2 order-parameter orientation across the two-site toy truncation.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.8941919634759181
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "domain_wall_density",
+      "operator_label": "(0.5+0j)*II + (-0.5+0j)*ZZ",
+      "physical_meaning": "Expectation value of the anti-aligned-sector projector used as a finite two-site domain-wall proxy.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.02982220619364223
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "transverse_coherence_expectation",
+      "operator_label": "(0.5+0j)*IX + (0.5+0j)*XI",
+      "physical_meaning": "Expectation value of the reduced transverse-mixing operator that couples the retained Z2 order-parameter configurations.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.2833989199574174
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "statevector_estimator",
+        "tier": "exact_local"
+      },
+      "observable_name": "effective_hamiltonian_expectation",
+      "operator_label": "(-0.7+0j)*ZZ + (-0.16+0j)*IX + (-0.16+0j)*XI + (-0.04+0j)*IZ + (-0.04+0j)*ZI",
+      "physical_meaning": "Expectation value of the projected two-site Z2 toy Hamiltonian.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": -0.820471922793348
+    }
+  ],
+  "job_metadata": {
+    "circuit_metadata": {
+      "experiment": "grand_unification_epoch_toy",
+      "state_preparation": "exact_ground_state_preparation"
+    },
+    "target_precision": 0.0
+  },
+  "provenance": {
+    "backend_name": "statevector_estimator",
+    "job_id": "5225313a-a839-4d41-b075-7cfc99308293",
+    "metadata": {},
+    "optimization_level": null,
+    "precision": 0.0,
+    "primitive_name": "qiskit.primitives.StatevectorEstimator",
+    "seed": null,
+    "shots": null,
+    "tier": "exact_local",
+    "timestamp_utc": "2026-04-15T03:36:20.513925+00:00"
+  },
+  "request": {
+    "backend_name": "statevector_estimator",
+    "mitigation_enabled": false,
+    "optimization_level": null,
+    "options": {},
+    "precision": 0.0,
+    "seed": null,
+    "shots": null,
+    "tier": "exact_local"
+  }
+}

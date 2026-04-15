@@ -6,6 +6,7 @@ MINISUPERSPACE_DIR := experiments/minisuperspace_frw
 PLANCK_EPOCH_MINISUPERSPACE_DIR := experiments/planck_epoch_minisuperspace
 PARTICLE_CREATION_DIR := experiments/particle_creation_flrw
 GUT_TOY_GAUGE_DIR := experiments/gut_toy_gauge
+GRAND_UNIFICATION_EPOCH_TOY_DIR := experiments/grand_unification_epoch_toy
 
 .PHONY: help install test test-unittest compile check \
 	benchmark run-local run-aer analyze minisuperspace \
@@ -15,6 +16,10 @@ GUT_TOY_GAUGE_DIR := experiments/gut_toy_gauge
 	particle-analyze particle-creation particle-run-ibm particle-run-ibm-local \
 	gut-benchmark gut-run-local gut-run-aer gut-analyze gut-toy-gauge \
 	gut-run-ibm gut-run-ibm-local \
+	grand-unification-benchmark grand-unification-run-local \
+	grand-unification-run-aer grand-unification-analyze \
+	grand-unification-epoch-toy grand-unification-run-ibm \
+	grand-unification-run-ibm-local \
 	current-repository-report current-official-experiment-manifest current-state \
 	phase6-milestone-report phase6-release-manifest phase6-release \
 	clean-cache clean-build clean
@@ -57,6 +62,13 @@ help:
 		'  gut-toy-gauge     Run benchmark, exact local, noisy local, and analysis for the official Phase 5 experiment.' \
 		'  gut-run-ibm       Run the toy-gauge IBM Runtime workflow. Override BACKEND=<backend-name>.' \
 		'  gut-run-ibm-local Run the toy-gauge IBM Runtime local-testing workflow. Override LOCAL_TESTING_BACKEND=<fake-backend-class>.' \
+		'  grand-unification-benchmark Run the Grand-Unification-Epoch-context toy benchmark.' \
+		'  grand-unification-run-local Run the Grand-Unification-Epoch-context toy exact local workflow.' \
+		'  grand-unification-run-aer Run the Grand-Unification-Epoch-context toy noisy local workflow.' \
+		'  grand-unification-analyze Run the Grand-Unification-Epoch-context toy analysis workflow.' \
+		'  grand-unification-epoch-toy Run benchmark, exact local, noisy local, and analysis for the Grand-Unification-Epoch-context toy experiment.' \
+		'  grand-unification-run-ibm Run the Grand-Unification-Epoch-context toy IBM Runtime workflow. Override BACKEND=<backend-name>.' \
+		'  grand-unification-run-ibm-local Run the Grand-Unification-Epoch-context toy IBM Runtime local-testing workflow. Override LOCAL_TESTING_BACKEND=<fake-backend-class>.' \
 		'  current-repository-report Generate the phase-neutral current official experiment report. Override GENERATED_AT_UTC=<iso-utc> for deterministic output.' \
 		'  current-official-experiment-manifest Generate the phase-neutral current official experiment manifest. Override GENERATED_AT_UTC=<iso-utc> for deterministic output.' \
 		'  current-state      Generate both current-state repository outputs.' \
@@ -197,6 +209,34 @@ gut-run-ibm-local:
 		exit 1; \
 	fi
 	$(PYTHON) $(GUT_TOY_GAUGE_DIR)/run_ibm.py --local-testing-backend $(LOCAL_TESTING_BACKEND)
+
+grand-unification-benchmark:
+	$(PYTHON) $(GRAND_UNIFICATION_EPOCH_TOY_DIR)/benchmark.py
+
+grand-unification-run-local:
+	$(PYTHON) $(GRAND_UNIFICATION_EPOCH_TOY_DIR)/run_local.py
+
+grand-unification-run-aer:
+	$(PYTHON) $(GRAND_UNIFICATION_EPOCH_TOY_DIR)/run_aer.py
+
+grand-unification-analyze:
+	$(PYTHON) $(GRAND_UNIFICATION_EPOCH_TOY_DIR)/analyze.py
+
+grand-unification-epoch-toy: grand-unification-benchmark grand-unification-run-local grand-unification-run-aer grand-unification-analyze
+
+grand-unification-run-ibm:
+	@if [ -z "$(BACKEND)" ]; then \
+		printf '%s\n' 'BACKEND is required. Usage: make grand-unification-run-ibm BACKEND=<backend-name>'; \
+		exit 1; \
+	fi
+	$(PYTHON) $(GRAND_UNIFICATION_EPOCH_TOY_DIR)/run_ibm.py --backend-name $(BACKEND)
+
+grand-unification-run-ibm-local:
+	@if [ -z "$(LOCAL_TESTING_BACKEND)" ]; then \
+		printf '%s\n' 'LOCAL_TESTING_BACKEND is required. Usage: make grand-unification-run-ibm-local LOCAL_TESTING_BACKEND=<fake-backend-class>'; \
+		exit 1; \
+	fi
+	$(PYTHON) $(GRAND_UNIFICATION_EPOCH_TOY_DIR)/run_ibm.py --local-testing-backend $(LOCAL_TESTING_BACKEND)
 
 current-repository-report:
 	$(PYTHON) scripts/release/build_current_repository_report.py $(if $(GENERATED_AT_UTC),--generated-at-utc $(GENERATED_AT_UTC),)

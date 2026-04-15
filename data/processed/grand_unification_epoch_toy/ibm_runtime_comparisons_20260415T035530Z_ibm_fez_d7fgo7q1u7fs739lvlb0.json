@@ -1,0 +1,34 @@
+[
+  {
+    "absolute_error": 0.02331727893325153,
+    "benchmark_value": 0.8941919634759182,
+    "candidate_value": 0.8708746845426667,
+    "interpretation": "IBM Runtime hardware comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "order_parameter_expectation",
+    "relative_error": 0.02607636825834601
+  },
+  {
+    "absolute_error": 0.021084606442379784,
+    "benchmark_value": 0.029822206193642085,
+    "candidate_value": 0.05090681263602187,
+    "interpretation": "IBM Runtime hardware comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "domain_wall_density",
+    "relative_error": 0.7070102830579615
+  },
+  {
+    "absolute_error": 0.007873312374298447,
+    "benchmark_value": 0.28339891995741684,
+    "candidate_value": 0.2755256075831184,
+    "interpretation": "IBM Runtime hardware comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "transverse_coherence_expectation",
+    "relative_error": 0.027781730344919736
+  },
+  {
+    "absolute_error": 0.033903291293767235,
+    "benchmark_value": -0.8204719227933478,
+    "candidate_value": -0.7865686314995806,
+    "interpretation": "IBM Runtime hardware comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "effective_hamiltonian_expectation",
+    "relative_error": 0.041321695906840254
+  }
+]

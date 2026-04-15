@@ -1,0 +1,34 @@
+[
+  {
+    "absolute_error": 1.1102230246251565e-16,
+    "benchmark_value": 0.8941919634759182,
+    "candidate_value": 0.8941919634759181,
+    "interpretation": "Exact local comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "order_parameter_expectation",
+    "relative_error": 1.2415936062648993e-16
+  },
+  {
+    "absolute_error": 1.457167719820518e-16,
+    "benchmark_value": 0.029822206193642085,
+    "candidate_value": 0.02982220619364223,
+    "interpretation": "Exact local comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "domain_wall_density",
+    "relative_error": 4.886183504864832e-15
+  },
+  {
+    "absolute_error": 5.551115123125783e-16,
+    "benchmark_value": 0.28339891995741684,
+    "candidate_value": 0.2833989199574174,
+    "interpretation": "Exact local comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "transverse_coherence_expectation",
+    "relative_error": 1.9587636833478003e-15
+  },
+  {
+    "absolute_error": 2.220446049250313e-16,
+    "benchmark_value": -0.8204719227933478,
+    "candidate_value": -0.820471922793348,
+    "interpretation": "Exact local comparison against the exact two-site Z2 symmetry-breaking toy benchmark.",
+    "observable_name": "effective_hamiltonian_expectation",
+    "relative_error": 2.706303515775002e-16
+  }
+]

@@ -36,7 +36,8 @@ Execution records should preserve:
 
 IBM hardware metadata records should additionally preserve:
 
-- service channel and instance context,
+- service channel, whether an instance was configured, and the non-secret
+  source of that instance setting,
 - selected backend summary,
 - available backend calibration snapshot or properties payload,
 - runtime job summary and runtime job payload when available,
@@ -66,8 +67,10 @@ For official experiments, the recommended pattern is:
 For the currently implemented official experiment lines, this pattern is realized explicitly in:
 
 - `data/processed/minisuperspace_frw/` and `results/{reports,tables,figures}/minisuperspace_frw/`,
+- `data/processed/planck_epoch_minisuperspace/` and `results/{reports,tables,figures}/planck_epoch_minisuperspace/`,
 - `data/processed/particle_creation_flrw/` and `results/{reports,tables,figures}/particle_creation_flrw/`,
-- `data/processed/gut_toy_gauge/` and `results/{reports,tables,figures}/gut_toy_gauge/`.
+- `data/processed/gut_toy_gauge/` and `results/{reports,tables,figures}/gut_toy_gauge/`,
+- `data/processed/grand_unification_epoch_toy/` and `results/{reports,tables,figures}/grand_unification_epoch_toy/`.
 
 These directory groupings should be preserved as the reference provenance layout for later official experiment lines unless a documented repository-level reason justifies a change.
 
@@ -122,7 +125,9 @@ As a default policy:
   IBM artifact paths so they do not overwrite the canonical live-hardware
   files.
 - IBM metadata artifacts should be reviewed before commit to avoid preserving
-  unnecessary account-specific or environment-specific details.
+  unnecessary account-specific or environment-specific details. Account
+  instance identifiers, including CRNs, must be redacted rather than preserved
+  in tracked provenance artifacts.
 
 This distinction preserves two separate goals:
 

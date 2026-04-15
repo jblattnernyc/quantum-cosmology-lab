@@ -1,0 +1,97 @@
+{
+  "evaluations": [
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "analytic_readout_fallback",
+        "fallback_mode": "analytic_readout_error_model",
+        "tier": "noisy_local"
+      },
+      "observable_name": "order_parameter_expectation",
+      "operator_label": "(0.5+0j)*IZ + (0.5+0j)*ZI",
+      "physical_meaning": "Expectation value of the average retained Z2 order-parameter orientation across the two-site toy truncation.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.8673662045716406
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "analytic_readout_fallback",
+        "fallback_mode": "analytic_readout_error_model",
+        "tier": "noisy_local"
+      },
+      "observable_name": "domain_wall_density",
+      "operator_label": "(0.5+0j)*II + (-0.5+0j)*ZZ",
+      "physical_meaning": "Expectation value of the anti-aligned-sector projector used as a finite two-site domain-wall proxy.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.057609713807597995
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "analytic_readout_fallback",
+        "fallback_mode": "analytic_readout_error_model",
+        "tier": "noisy_local"
+      },
+      "observable_name": "transverse_coherence_expectation",
+      "operator_label": "(0.5+0j)*IX + (0.5+0j)*XI",
+      "physical_meaning": "Expectation value of the reduced transverse-mixing operator that couples the retained Z2 order-parameter configurations.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": 0.27489695235869493
+    },
+    {
+      "measurement_basis": "pauli",
+      "metadata": {
+        "backend_name": "analytic_readout_fallback",
+        "fallback_mode": "analytic_readout_error_model",
+        "tier": "noisy_local"
+      },
+      "observable_name": "effective_hamiltonian_expectation",
+      "operator_label": "(-0.7+0j)*ZZ + (-0.16+0j)*IX + (-0.16+0j)*XI + (-0.04+0j)*IZ + (-0.04+0j)*ZI",
+      "physical_meaning": "Expectation value of the projected two-site Z2 toy Hamiltonian.",
+      "shots": null,
+      "uncertainty": 0.0,
+      "units": "dimensionless",
+      "value": -0.7767027217898765
+    }
+  ],
+  "job_metadata": {},
+  "provenance": {
+    "backend_name": "analytic_readout_fallback",
+    "job_id": null,
+    "metadata": {
+      "configured_backend_name": "aer_estimator",
+      "fallback_mode": "analytic_readout_error_model",
+      "readout_error_probability": 0.015,
+      "reason": "Noisy local Aer execution is guarded on macOS arm64 with Python 3.13+ because the installed qiskit-aer runtime aborts during OpenMP shared-memory initialization (`OMP: Error #178: Function Can't open SHM2 failed`). This repository treats the condition as a local runtime constraint rather than as a scientific failure of the benchmarked workflow. Use Python 3.10-3.12 for local Aer-backed validation on Apple Silicon, or skip Aer-backed validation tiers on this host."
+    },
+    "optimization_level": null,
+    "precision": 0.03,
+    "primitive_name": "analytic_readout_error_model",
+    "seed": 141421,
+    "shots": null,
+    "tier": "noisy_local",
+    "timestamp_utc": "2026-04-15T03:36:24.895129+00:00"
+  },
+  "request": {
+    "backend_name": "analytic_readout_fallback",
+    "mitigation_enabled": false,
+    "optimization_level": null,
+    "options": {
+      "configured_backend_name": "aer_estimator",
+      "fallback_mode": "analytic_readout_error_model",
+      "fallback_reason": "Noisy local Aer execution is guarded on macOS arm64 with Python 3.13+ because the installed qiskit-aer runtime aborts during OpenMP shared-memory initialization (`OMP: Error #178: Function Can't open SHM2 failed`). This repository treats the condition as a local runtime constraint rather than as a scientific failure of the benchmarked workflow. Use Python 3.10-3.12 for local Aer-backed validation on Apple Silicon, or skip Aer-backed validation tiers on this host.",
+      "readout_error_probability": 0.015
+    },
+    "precision": 0.03,
+    "seed": 141421,
+    "shots": null,
+    "tier": "noisy_local"
+  }
+}

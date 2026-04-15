@@ -102,6 +102,10 @@ class _FakeJob:
     def tags():
         return ["qclab", "test"]
 
+    @staticmethod
+    def instance():
+        return "runtime-instance-example"
+
 
 class HardwareProgramTests(unittest.TestCase):
     """Verify Phase 4 hardware policy, metadata capture, and reporting."""
@@ -147,7 +151,9 @@ class HardwareProgramTests(unittest.TestCase):
                 metadata={
                     "service": {
                         "channel": "ibm_quantum_platform",
-                        "instance": "ibm-q/open/main",
+                        "instance": "configured-redacted",
+                        "instance_configured": True,
+                        "instance_source": "explicit_argument",
                         "local_testing_mode": local_testing_mode,
                     },
                     "backend_selection": {
@@ -254,6 +260,8 @@ class HardwareProgramTests(unittest.TestCase):
         self.assertEqual(payload["backend_selection"]["strategy"], "explicit")
         self.assertEqual(payload["backend_calibration"]["summary"]["num_qubits"], 127)
         self.assertEqual(payload["runtime_job_payload"]["job_id"], "job-123")
+        self.assertEqual(payload["runtime_job_payload"]["instance"], "configured-redacted")
+        self.assertTrue(payload["runtime_job_payload"]["instance_configured"])
 
     def test_hardware_report_markdown_includes_policy_and_comparison_table(self) -> None:
         result = self._build_result()
@@ -283,6 +291,8 @@ class HardwareProgramTests(unittest.TestCase):
             report_text = report_path.read_text(encoding="utf-8")
         self.assertIn("# IBM Runtime Hardware Report", report_text)
         self.assertIn("- Strategy: `explicit`", report_text)
+        self.assertIn("- Service instance configured: `True`", report_text)
+        self.assertNotIn("runtime-instance-example", report_text)
         self.assertIn("| toy_observable | 1.000000 | 0.900000 | 0.100000 | 0.100000 | 0.020000 |", report_text)
 
     def test_ibm_runtime_artifacts_archive_completed_live_runs(self) -> None:

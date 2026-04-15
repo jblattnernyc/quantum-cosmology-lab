@@ -57436,7 +57436,7 @@
       "support_qiskit": true,
       "version": 2
     },
-    "instance": "crn:v1:bluemix:public:quantum-computing:us-east:a/a32fc9ff95d54156bb5957204ba791f2:fa729c4b-1778-4cdc-afca-2ce1ad593deb::",
+    "instance": "configured-redacted",
     "job_id": "d76qp1ohnndc7385l6dg",
     "metrics": {
       "bss": {

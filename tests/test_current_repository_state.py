@@ -26,6 +26,7 @@ class CurrentRepositoryStateTests(unittest.TestCase):
         experiment_names = set(discover_current_official_experiment_names())
         self.assertTrue(
             {
+                "grand_unification_epoch_toy",
                 "minisuperspace_frw",
                 "planck_epoch_minisuperspace",
                 "particle_creation_flrw",
@@ -42,6 +43,7 @@ class CurrentRepositoryStateTests(unittest.TestCase):
         experiment_names = {record.experiment_name for record in snapshot.official_experiments}
         self.assertTrue(
             {
+                "grand_unification_epoch_toy",
                 "minisuperspace_frw",
                 "planck_epoch_minisuperspace",
                 "particle_creation_flrw",
@@ -73,6 +75,7 @@ class CurrentRepositoryStateTests(unittest.TestCase):
         self.assertIn("planck_epoch_minisuperspace", report_text)
         self.assertIn("particle_creation_flrw", report_text)
         self.assertIn("gut_toy_gauge", report_text)
+        self.assertIn("grand_unification_epoch_toy", report_text)
         self.assertIn("does not alter the preserved historical Phase 6", report_text)
 
     def test_current_official_experiment_manifest_writer_serializes_records(self) -> None:
@@ -100,6 +103,7 @@ class CurrentRepositoryStateTests(unittest.TestCase):
         experiment_names = {record["experiment_name"] for record in payload["official_experiments"]}
         self.assertTrue(
             {
+                "grand_unification_epoch_toy",
                 "minisuperspace_frw",
                 "planck_epoch_minisuperspace",
                 "particle_creation_flrw",

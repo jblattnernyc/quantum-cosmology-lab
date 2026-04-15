@@ -7,8 +7,8 @@ This report records the current official experiment state of the repository unde
 ## Repository Status
 
 - Repository package version: `v1.1.0`
-- Report generation timestamp (UTC): `2026-04-03T21:31:21+00:00`
-- Current official experiment lines discovered from repository metadata: `4`
+- Report generation timestamp (UTC): `2026-04-15T00:00:00+00:00`
+- Current official experiment lines discovered from repository metadata: `5`
 
 ## Governance Context
 
@@ -19,6 +19,22 @@ This report records the current official experiment state of the repository unde
 - Results and provenance policy: `docs/operations/results-and-provenance.md`
 
 ## Current Official Experiments
+
+### grand_unification_epoch_toy
+
+- Scientific question: In a two-site Z2 symmetry-breaking toy Hamiltonian used as a reduced Grand-Unification-Epoch-context model, what are the benchmark ground-state values of the order-parameter expectation, domain-wall density, transverse-coherence expectation, and effective-Hamiltonian expectation, and how accurately do exact local and noisy local estimator workflows reproduce them?
+- README: `experiments/grand_unification_epoch_toy/README.md`
+- Model statement: `experiments/grand_unification_epoch_toy/model.md`
+- Results interpretation: `experiments/grand_unification_epoch_toy/results.md`
+- Benchmark artifact: `data/processed/grand_unification_epoch_toy/benchmark.json`
+- Exact local artifact: `data/processed/grand_unification_epoch_toy/exact_local.json`
+- Noisy local artifact: `data/processed/grand_unification_epoch_toy/noisy_local.json`
+- Analysis summary: `results/reports/grand_unification_epoch_toy/analysis_summary.json`
+- Analysis report: `results/reports/grand_unification_epoch_toy/analysis_report.md`
+- Latest preserved live IBM run (UTC): `2026-04-15T03:55:30.621086+00:00` on `ibm_fez` with job id `d7fgo7q1u7fs739lvlb0`
+- Live IBM manifest: `data/raw/grand_unification_epoch_toy/ibm_runtime_runs.jsonl`
+- Canonical IBM report: `results/reports/grand_unification_epoch_toy/ibm_runtime_report.md`
+- Separate `_local_testing` IBM artifacts present: `False`
 
 ### gut_toy_gauge
 

@@ -11,6 +11,10 @@ from pathlib import Path
 import re
 from typing import TYPE_CHECKING, Any
 
+from qclab.backends.security import (
+    redact_runtime_instance,
+    runtime_instance_configured,
+)
 from qclab.utils.optional import require_dependency
 from qclab.utils.paths import repository_relative_path
 
@@ -326,13 +330,16 @@ def resolve_ibm_backend(
 ) -> tuple[Any, dict[str, Any]]:
     """Resolve the backend used for an IBM Runtime execution."""
 
+    redacted_instance = redact_runtime_instance(instance)
+    instance_configured = runtime_instance_configured(instance)
     if provided_backend is not None:
         selected_backend_name = _backend_name(provided_backend) or request_backend_name
         return provided_backend, {
             "strategy": policy.strategy.value,
             "requested_backend_name": request_backend_name,
             "selected_backend_name": selected_backend_name,
-            "instance": instance,
+            "instance": redacted_instance,
+            "instance_configured": instance_configured,
             "local_testing_mode": True,
             "selection_filters": backend_selection_policy_to_serializable(policy),
         }
@@ -351,13 +358,16 @@ def resolve_ibm_backend(
         least_busy_kwargs.update(policy.filters)
         backend = service.least_busy(**least_busy_kwargs)
         selected_backend_name = _backend_name(backend) or request_backend_name
+        least_busy_metadata = dict(least_busy_kwargs)
+        least_busy_metadata["instance"] = redacted_instance
         return backend, {
             "strategy": policy.strategy.value,
             "requested_backend_name": request_backend_name,
             "selected_backend_name": selected_backend_name,
-            "instance": instance,
+            "instance": redacted_instance,
+            "instance_configured": instance_configured,
             "local_testing_mode": False,
-            "selection_filters": _json_safe(least_busy_kwargs),
+            "selection_filters": _json_safe(least_busy_metadata),
         }
     explicit_backend_name = request_backend_name.strip()
     if not explicit_backend_name or explicit_backend_name == "ibm_backend_required":
@@ -371,13 +381,16 @@ def resolve_ibm_backend(
         backend_kwargs["calibration_id"] = policy.calibration_id
     backend = service.backend(explicit_backend_name, **backend_kwargs)
     selected_backend_name = _backend_name(backend) or explicit_backend_name
+    backend_metadata = dict(backend_kwargs)
+    backend_metadata["instance"] = redacted_instance
     return backend, {
         "strategy": policy.strategy.value,
         "requested_backend_name": explicit_backend_name,
         "selected_backend_name": selected_backend_name,
-        "instance": instance,
+        "instance": redacted_instance,
+        "instance_configured": instance_configured,
         "local_testing_mode": False,
-        "selection_filters": _json_safe(backend_kwargs),
+        "selection_filters": _json_safe(backend_metadata),
     }
 
 
@@ -477,13 +490,15 @@ def capture_runtime_job_payload(job: Any) -> dict[str, Any]:
     if job is None:
         return {}
     payload = summarize_runtime_job(job)
+    job_instance = _safe_attribute(job, "instance")
     payload.update(
         {
             "usage": _json_safe(_safe_attribute(job, "usage")),
             "metrics": _json_safe(_safe_attribute(job, "metrics")),
             "inputs": _json_safe(_safe_attribute(job, "inputs")),
             "tags": _json_safe(_safe_attribute(job, "tags")),
-            "instance": _json_safe(_safe_attribute(job, "instance")),
+            "instance": redact_runtime_instance(job_instance),
+            "instance_configured": runtime_instance_configured(job_instance),
             "backend": _json_safe(_safe_attribute(job, "backend")),
             "error_message": _json_safe(_safe_attribute(job, "error_message")),
         }
@@ -892,7 +907,8 @@ def hardware_report_markdown(
         f"- Requested backend: `{selection_metadata.get('requested_backend_name', result.request.backend_name)}`",
         f"- Selected backend: `{selection_metadata.get('selected_backend_name', result.provenance.backend_name)}`",
         f"- Service channel: `{service_metadata.get('channel')}`",
-        f"- Service instance: `{service_metadata.get('instance')}`",
+        f"- Service instance configured: `{service_metadata.get('instance_configured', False)}`",
+        f"- Service instance source: `{service_metadata.get('instance_source')}`",
         f"- Local testing mode: `{service_metadata.get('local_testing_mode', False)}`",
         "",
         "## Mitigation Policy",
