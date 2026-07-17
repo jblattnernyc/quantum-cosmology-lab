@@ -983,6 +983,74 @@ def write_independent_validation_artifacts(
     }
 
 
+def _computed_payload_mismatch_details(
+    stored: Any,
+    recomputed: Any,
+    *,
+    path: str,
+    absolute_tolerance: float,
+    relative_tolerance: float,
+) -> list[str]:
+    """Describe non-equivalent computed leaves for reproducibility diagnosis."""
+
+    if type(stored) is not type(recomputed):
+        return [
+            f"{path}: stored type {type(stored).__name__}, "
+            f"fresh type {type(recomputed).__name__}"
+        ]
+    if isinstance(stored, Mapping):
+        details: list[str] = []
+        stored_keys = set(stored)
+        recomputed_keys = set(recomputed)
+        for key in sorted(stored_keys - recomputed_keys):
+            details.append(f"{path}.{key}: unexpected stored key")
+        for key in sorted(recomputed_keys - stored_keys):
+            details.append(f"{path}.{key}: missing stored key")
+        for key in sorted(stored_keys & recomputed_keys):
+            details.extend(
+                _computed_payload_mismatch_details(
+                    stored[key],
+                    recomputed[key],
+                    path=f"{path}.{key}",
+                    absolute_tolerance=absolute_tolerance,
+                    relative_tolerance=relative_tolerance,
+                )
+            )
+        return details
+    if isinstance(stored, (list, tuple)):
+        details = []
+        if len(stored) != len(recomputed):
+            details.append(
+                f"{path}: stored length {len(stored)}, fresh length {len(recomputed)}"
+            )
+        for index, (stored_item, recomputed_item) in enumerate(zip(stored, recomputed)):
+            details.extend(
+                _computed_payload_mismatch_details(
+                    stored_item,
+                    recomputed_item,
+                    path=f"{path}[{index}]",
+                    absolute_tolerance=absolute_tolerance,
+                    relative_tolerance=relative_tolerance,
+                )
+            )
+        return details
+    if isinstance(stored, float):
+        if math.isclose(
+            stored,
+            recomputed,
+            rel_tol=relative_tolerance,
+            abs_tol=absolute_tolerance,
+        ):
+            return []
+        return [
+            f"{path}: stored={stored!r}, fresh={recomputed!r}, "
+            f"absolute_delta={abs(stored - recomputed)!r}"
+        ]
+    if stored != recomputed:
+        return [f"{path}: stored={stored!r}, fresh={recomputed!r}"]
+    return []
+
+
 def independent_validation_record(
     experiment: ParticleCreationFLRWExperiment,
     benchmark: Any,
@@ -1054,23 +1122,36 @@ def independent_validation_record(
         policy.normalization_tolerance,
         policy.continuum_absolute_tolerance,
     )
-    stored_result_matches = all(
-        payload.get(key) == expected_payload[key] for key in exact_keys
-    ) and all(
-        computed_payloads_equivalent(
-            payload.get(key),
-            expected_payload[key],
+    mismatch_details: list[str] = []
+    for key in exact_keys:
+        if payload.get(key) != expected_payload[key]:
+            mismatch_details.append(f"{key}: exact content differs")
+    for key in computed_keys:
+        stored_section = payload.get(key)
+        expected_section = expected_payload[key]
+        if not computed_payloads_equivalent(
+            stored_section,
+            expected_section,
             absolute_tolerance=comparison_absolute_tolerance,
             relative_tolerance=policy.continuum_relative_tolerance,
-        )
-        for key in computed_keys
-    )
+        ):
+            mismatch_details.extend(
+                _computed_payload_mismatch_details(
+                    stored_section,
+                    expected_section,
+                    path=key,
+                    absolute_tolerance=comparison_absolute_tolerance,
+                    relative_tolerance=policy.continuum_relative_tolerance,
+                )
+            )
+    stored_result_matches = not mismatch_details
     errors: list[str] = []
     if lineage.status is not ArtifactLineageStatus.CURRENT:
         errors.append(lineage.reason or "Independent artifact lineage is not current.")
     if not stored_result_matches:
         errors.append(
-            "Stored independent validation content does not match fresh computation."
+            "Stored independent validation content does not match fresh computation. "
+            "Differences: " + "; ".join(mismatch_details[:8])
         )
     if not recomputed.assessment.passed:
         errors.extend(recomputed.assessment.errors)

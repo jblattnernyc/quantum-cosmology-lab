@@ -314,6 +314,10 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
             )
             self.assertFalse(tampered_record["stored_result_matches"])
             self.assertFalse(tampered_assessment.passed)
+            self.assertIn(
+                "convergence[0].time_steps: stored=7, fresh=6",
+                tampered_assessment.errors[0],
+            )
 
 
 if __name__ == "__main__":
