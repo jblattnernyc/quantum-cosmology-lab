@@ -13,11 +13,24 @@
 - Exact local absolute total-particle error: 0.000000e+00
 - Noisy local absolute total-particle error: 5.384495e-02
 
+## Validation Status
+
+- Current lineage: `94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6`
+
+| Tier | Lineage | Assessment mode | Stored assessment matches | Result |
+|---|---|---|---|---|
+| Independent benchmark | current | fresh_matrix_recomputation | True | PASS |
+| Exact local | current | recomputed_current_policy | True | PASS |
+| Noisy local | current | recomputed_current_policy | True | PASS |
+| IBM Runtime | legacy_unbound | retrospective_current_policy | None | FAIL |
+
 ## Interpretation
 
 The exact local workflow reproduces the exact discrete benchmark of the retained two-mode FLRW particle-creation toy model.
+The independent matrix benchmark separately reconstructs the four-dimensional evolution and quantifies time-slice refinement under an explicitly added continuum interpolation.
 The noisy local workflow preserves a nonzero particle-number signal and the sign of the pairing correlator under the explicit Aer noise model, but it is not interpreted as evidence for a full continuum curved-spacetime field theory.
 The IBM Runtime tier, when present, remains subordinate to the benchmark, exact-local, and noisy-local tiers and must be read through the associated hardware report and metadata capture.
+Its validation status above is a current-policy assessment. A legacy-unbound result is retrospective evidence and is not eligible as prerequisite evidence for a new hardware run.
 
 IBM execution JSON: `data/processed/particle_creation_flrw/ibm_runtime.json`
 IBM metadata JSON: `data/raw/particle_creation_flrw/ibm_runtime_metadata.json`
@@ -26,3 +39,9 @@ IBM hardware report: `results/reports/particle_creation_flrw/ibm_runtime_report.
 Table: `results/tables/particle_creation_flrw/observable_summary.md`
 
 Figure: `results/figures/particle_creation_flrw/observable_comparison.png`
+
+Independent validation report: `results/reports/particle_creation_flrw/independent_validation_report.md`
+Convergence table: `results/tables/particle_creation_flrw/convergence_summary.md`
+
+Exploratory hardware-feasibility report: `results/reports/particle_creation_flrw/hardware_feasibility_report.md`
+Hardware-feasibility table: `results/tables/particle_creation_flrw/hardware_feasibility_summary.md`

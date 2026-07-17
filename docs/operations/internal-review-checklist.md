@@ -22,6 +22,12 @@ This checklist defines the minimum repository-level review items for internal re
 - [ ] Benchmark artifacts are present and identifiable.
 - [ ] Exact-local validation artifacts are present and identifiable.
 - [ ] Noisy-local validation artifacts are present and identifiable when required by the official experiment standard.
+- [ ] Where validation lineage is enabled, benchmark and local artifacts share the current lineage and their persisted assessments match fresh recomputation.
+- [ ] For `particle_creation_flrw`, independent matrix reproduction and the
+      declared time-slice refinement criteria pass under the current lineage.
+- [ ] Any particle-creation hardware-feasibility claim distinguishes
+      transpilation structure and calibration-error proxies from execution
+      fidelity and observable validation.
 - [ ] IBM hardware discussion, if present, is subordinate to the benchmarked tiers.
 
 ## IBM Provenance

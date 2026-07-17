@@ -702,6 +702,8 @@ def write_ibm_runtime_artifacts(
     archive_live_runs: bool = True,
     archive_local_testing_mode: bool = False,
     runs_manifest_path: str | Path | None = None,
+    validation_context: Any | None = None,
+    validation_assessment: Any | None = None,
 ) -> dict[str, Path]:
     """Write canonical IBM artifacts and archive completed live hardware runs.
 
@@ -713,7 +715,11 @@ def write_ibm_runtime_artifacts(
     from qclab.analysis import comparison_records_to_serializable
     from qclab.backends.execution import execution_result_to_serializable
 
-    execution_payload = execution_result_to_serializable(result)
+    execution_payload = execution_result_to_serializable(
+        result,
+        validation_context=validation_context,
+        validation_assessment=validation_assessment,
+    )
     comparison_payload = comparison_records_to_serializable(comparison_records)
     metadata_payload = ibm_hardware_metadata_bundle_from_result(result)
     report_text = hardware_report_markdown(
@@ -725,6 +731,8 @@ def write_ibm_runtime_artifacts(
         exact_local_complete=exact_local_complete,
         noisy_local_complete=noisy_local_complete,
         metadata_json_path=metadata_json_path,
+        validation_context=validation_context,
+        validation_assessment=validation_assessment,
     )
 
     execution_path = _write_json_payload(execution_payload, execution_json_path)
@@ -780,6 +788,8 @@ def write_ibm_runtime_artifacts(
         exact_local_complete=exact_local_complete,
         noisy_local_complete=noisy_local_complete,
         metadata_json_path=archive_paths["ibm_runtime_archive_metadata_json"],
+        validation_context=validation_context,
+        validation_assessment=validation_assessment,
     )
     outputs["ibm_runtime_archive_json"] = _write_json_payload(
         execution_payload,
@@ -852,6 +862,21 @@ def _format_float(value: float | None) -> str:
     return f"{value:.6f}"
 
 
+def _validation_record_mapping(value: Any | None) -> dict[str, Any] | None:
+    """Normalize an optional typed or mapping-based validation record."""
+
+    if value is None:
+        return None
+    if isinstance(value, Mapping):
+        return dict(value)
+    to_serializable = getattr(value, "to_serializable", None)
+    if callable(to_serializable):
+        payload = to_serializable()
+        if isinstance(payload, Mapping):
+            return dict(payload)
+    raise TypeError("Validation report records must be mappings or serializable records.")
+
+
 def hardware_report_markdown(
     *,
     experiment_name: str,
@@ -862,6 +887,8 @@ def hardware_report_markdown(
     exact_local_complete: bool,
     noisy_local_complete: bool,
     metadata_json_path: str | Path | None = None,
+    validation_context: Any | None = None,
+    validation_assessment: Any | None = None,
 ) -> str:
     """Render a hardware report in repository-standard Markdown form."""
 
@@ -876,6 +903,8 @@ def hardware_report_markdown(
     evaluation_by_name = {
         evaluation.observable.name: evaluation for evaluation in result.evaluations
     }
+    validation_context_payload = _validation_record_mapping(validation_context)
+    validation_assessment_payload = _validation_record_mapping(validation_assessment)
     lines = [
         "# IBM Runtime Hardware Report",
         "",
@@ -956,6 +985,57 @@ def hardware_report_markdown(
             + f"{_format_float(record.relative_error)} | "
             + f"{_format_float(uncertainty)} |"
         )
+    if validation_context_payload is not None or validation_assessment_payload is not None:
+        lines.extend(["", "## Validation Lineage and Assessment", ""])
+    if validation_context_payload is not None:
+        lines.extend(
+            [
+                f"- Lineage id: `{validation_context_payload.get('lineage_id')}`",
+                (
+                    "- Configuration fingerprint: "
+                    f"`{validation_context_payload.get('configuration_fingerprint')}`"
+                ),
+                (
+                    "- Model fingerprint: "
+                    f"`{validation_context_payload.get('model_fingerprint')}`"
+                ),
+                (
+                    "- Observable fingerprint: "
+                    f"`{validation_context_payload.get('observable_fingerprint')}`"
+                ),
+                (
+                    "- Benchmark fingerprint: "
+                    f"`{validation_context_payload.get('benchmark_fingerprint')}`"
+                ),
+            ]
+        )
+    if validation_assessment_payload is not None:
+        overall_status = (
+            "PASS" if validation_assessment_payload.get("passed") else "FAIL"
+        )
+        lines.extend(
+            [
+                f"- Post-run assessment: `{overall_status}`",
+                "",
+                "| Observable | Allowed error | Standardized residual | Status |",
+                "|---|---:|---:|---|",
+            ]
+        )
+        raw_assessments = validation_assessment_payload.get("observables", [])
+        if isinstance(raw_assessments, Sequence) and not isinstance(
+            raw_assessments, (str, bytes)
+        ):
+            for item in raw_assessments:
+                if not isinstance(item, Mapping):
+                    continue
+                status = "PASS" if item.get("passed") else "FAIL"
+                lines.append(
+                    "| "
+                    + f"{item.get('observable_name')} | "
+                    + f"{_format_float(item.get('allowed_error'))} | "
+                    + f"{_format_float(item.get('standardized_residual'))} | "
+                    + f"{status} |"
+                )
     lines.extend(
         [
             "",
@@ -1009,6 +1089,8 @@ def write_hardware_report_markdown(
     noisy_local_complete: bool,
     path: str | Path,
     metadata_json_path: str | Path | None = None,
+    validation_context: Any | None = None,
+    validation_assessment: Any | None = None,
 ) -> Path:
     """Write a repository-standard IBM Runtime hardware report to disk."""
 
@@ -1024,6 +1106,8 @@ def write_hardware_report_markdown(
             exact_local_complete=exact_local_complete,
             noisy_local_complete=noisy_local_complete,
             metadata_json_path=metadata_json_path,
+            validation_context=validation_context,
+            validation_assessment=validation_assessment,
         ),
         encoding="utf-8",
     )

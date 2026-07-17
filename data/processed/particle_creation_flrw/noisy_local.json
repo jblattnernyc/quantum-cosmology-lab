@@ -54,7 +54,7 @@
   },
   "provenance": {
     "backend_name": "aer_estimator",
-    "job_id": "8f568f4c-81cf-4067-b982-fb692dd0bd6d",
+    "job_id": "d5a4213b-6708-49a3-9850-39922b50637a",
     "metadata": {},
     "optimization_level": null,
     "precision": 0.03,
@@ -62,7 +62,7 @@
     "seed": 271828,
     "shots": null,
     "tier": "noisy_local",
-    "timestamp_utc": "2026-04-01T17:21:56.661710+00:00"
+    "timestamp_utc": "2026-07-17T01:16:14.675802+00:00"
   },
   "request": {
     "backend_name": "aer_estimator",
@@ -83,5 +83,80 @@
     "seed": 271828,
     "shots": null,
     "tier": "noisy_local"
+  },
+  "validation_assessment": {
+    "errors": [],
+    "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
+    "observables": [
+      {
+        "absolute_error": 0.044386957320950715,
+        "allowed_error": 0.27327261535112285,
+        "benchmark_value": -0.3465452307022457,
+        "candidate_value": -0.302158273381295,
+        "checks": {
+          "bounds": true,
+          "finite": true,
+          "sign": true,
+          "standardized_residual": true,
+          "tolerance": true,
+          "uncertainty": true
+        },
+        "observable_name": "pairing_correlator_expectation",
+        "passed": true,
+        "reasons": [],
+        "standardized_residual": null,
+        "uncertainty": 0.02858176493533135
+      },
+      {
+        "absolute_error": 0.029620315418937865,
+        "allowed_error": 0.14845721088874297,
+        "benchmark_value": 0.03422860544437148,
+        "candidate_value": 0.06384892086330934,
+        "checks": {
+          "bounds": true,
+          "finite": true,
+          "sign": true,
+          "standardized_residual": true,
+          "tolerance": true,
+          "uncertainty": true
+        },
+        "observable_name": "single_mode_particle_number_expectation",
+        "passed": true,
+        "reasons": [],
+        "standardized_residual": null,
+        "uncertainty": 0.007331576293155265
+      },
+      {
+        "absolute_error": 0.0538449473846383,
+        "allowed_error": 0.2569144217774859,
+        "benchmark_value": 0.06845721088874296,
+        "candidate_value": 0.12230215827338126,
+        "checks": {
+          "bounds": true,
+          "finite": true,
+          "sign": true,
+          "standardized_residual": true,
+          "tolerance": true,
+          "uncertainty": true
+        },
+        "observable_name": "total_particle_number_expectation",
+        "passed": true,
+        "reasons": [],
+        "standardized_residual": null,
+        "uncertainty": 0.014366717814740698
+      }
+    ],
+    "passed": true,
+    "schema_version": 1,
+    "tier": "noisy_local"
+  },
+  "validation_context": {
+    "benchmark_fingerprint": "ce8aa4a71dc6b6c202024f7209615216da02d1847426b8394bc1fbb47881a464",
+    "configuration_fingerprint": "d49e754e7ff2fd221f4ac4029510c74939051e575484ecbf92f01bcfeb0bb732",
+    "experiment_name": "particle_creation_flrw",
+    "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
+    "model_fingerprint": "e34bd7e6d9389c4ff69bfb1c8ec75b29d38a618c1c071582d069eb9a8c29ed13",
+    "observable_fingerprint": "707fea366a2d04c99a636bd857bfd72cac1f0de446245c9d6fbd3800d29e5c7b",
+    "schema_version": 1
   }
 }

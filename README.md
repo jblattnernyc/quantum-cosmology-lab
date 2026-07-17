@@ -217,23 +217,45 @@ The next official experiment line is [experiments/particle_creation_flrw/README.
 
 ```bash
 python experiments/particle_creation_flrw/benchmark.py
+python experiments/particle_creation_flrw/independent_benchmark.py
 python experiments/particle_creation_flrw/run_local.py
 python experiments/particle_creation_flrw/run_aer.py
 python experiments/particle_creation_flrw/analyze.py
 ```
 
-This workflow generates benchmark and execution artifacts under `data/processed/particle_creation_flrw/`, together with analysis outputs under `results/reports/particle_creation_flrw/`, `results/tables/particle_creation_flrw/`, and `results/figures/particle_creation_flrw/`.
+The optional local hardware-cost study performs fake-backend transpilation
+without circuit execution or submission:
 
-The IBM Runtime path is implemented separately and should be used only after the exact-local and noisy-local validation artifacts are present:
+```bash
+python experiments/particle_creation_flrw/hardware_feasibility.py
+```
+
+This workflow generates benchmark, independent-validation, and execution
+artifacts under `data/processed/particle_creation_flrw/`, together with
+analysis outputs under `results/reports/particle_creation_flrw/`,
+`results/tables/particle_creation_flrw/`, and
+`results/figures/particle_creation_flrw/`.
+
+The IBM Runtime path is implemented separately. For this validation-lineage
+pilot, the independent-benchmark, benchmark, exact-local, and noisy-local
+artifacts must be present, match the current
+configuration/model/observable/benchmark lineage, and pass fresh policy
+assessment before submission:
 
 ```bash
 python experiments/particle_creation_flrw/run_ibm.py --backend-name <backend>
 ```
 
-The same local-testing-mode validation path is available for the particle-creation line:
+The same content gate applies to local-testing mode for the particle-creation line:
 
 ```bash
 python experiments/particle_creation_flrw/run_ibm.py --local-testing-backend FakeManilaV2
+```
+
+The gate can be checked without resolving a backend or submitting a job:
+
+```bash
+python experiments/particle_creation_flrw/run_ibm.py --preflight-only
 ```
 
 The third official experiment line is [experiments/gut_toy_gauge/README.md](experiments/gut_toy_gauge/README.md). From the repository root with the virtual environment active, run:

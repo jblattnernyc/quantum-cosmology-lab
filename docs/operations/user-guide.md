@@ -119,10 +119,22 @@ The standard execution sequence from the repository root is:
 
 ```bash
 python experiments/particle_creation_flrw/benchmark.py
+python experiments/particle_creation_flrw/independent_benchmark.py
 python experiments/particle_creation_flrw/run_local.py
 python experiments/particle_creation_flrw/run_aer.py
 python experiments/particle_creation_flrw/analyze.py
 ```
+
+For a credential-free structural assessment before any hardware decision, run:
+
+```bash
+python experiments/particle_creation_flrw/hardware_feasibility.py
+```
+
+This entry point uses a fixed fake-backend calibration snapshot and performs
+transpilation only. Its depth, gate-count, layout, duration, and accumulated
+instruction-error metrics are feasibility indicators rather than hardware
+fidelity predictions. It does not create a Runtime service or submit a job.
 
 The corresponding IBM Runtime path is:
 
@@ -130,7 +142,9 @@ The corresponding IBM Runtime path is:
 python experiments/particle_creation_flrw/run_ibm.py --backend-name <backend>
 ```
 
-This command should likewise be used only after the exact-local and noisy-local validation artifacts have been completed and reviewed.
+This command should likewise be used only after the independent-benchmark,
+exact-local, and noisy-local validation artifacts have been completed and
+reviewed.
 
 The third is the reduced toy-gauge line in `experiments/gut_toy_gauge/`. Its purpose is to provide a benchmarked and interpretable Track C gauge toy model for a minimal two-link `Z2` system, not to claim a realistic grand unified gauge simulation.
 
@@ -194,12 +208,30 @@ Users should treat these generated files as supporting evidence for the implemen
 
 IBM Runtime execution is supported by the repository but intentionally constrained by the lab's benchmark-before-hardware rule and by the requirement that both the exact-local and noisy-local validation artifacts already exist.
 
+For `particle_creation_flrw`, existence is no longer sufficient. The hardware
+entry point requires the independent benchmark, benchmark, and both local
+artifacts to share the current validation lineage. It freshly recomputes the
+independent matrix evidence and both local observable assessments and rejects
+stale, incomplete, tampered, or failing evidence before backend resolution or
+job submission.
+
+To inspect that readiness state without credentials or submission:
+
+```bash
+python experiments/particle_creation_flrw/run_ibm.py --preflight-only
+```
+
 Before using the IBM workflow:
 
 1. confirm that the benchmark is reproducible,
-2. confirm that exact local execution reproduces the benchmark within the expected numerical tolerance,
-3. confirm that noisy local execution remains scientifically interpretable,
-4. review [ibm-runtime-setup.md](ibm-runtime-setup.md).
+2. confirm that the independent matrix benchmark reproduces the declared
+   discrete model and passes the refinement study,
+3. confirm that exact local execution reproduces the benchmark within the expected numerical tolerance,
+4. confirm that noisy local execution remains scientifically interpretable,
+5. review [ibm-runtime-setup.md](ibm-runtime-setup.md).
+6. review the transpilation-feasibility report and confirm that any real
+   backend assessment uses current calibration evidence rather than the fixed
+   fake-backend snapshot.
 
 For infrastructure validation when credentials or hardware access are unavailable, the Phase 4 wrapper also supports IBM Runtime local testing mode through fake backends:
 
@@ -234,6 +266,7 @@ From the repository root with the virtual environment active:
 python scripts/ibm_runtime/check_account.py
 python experiments/<experiment>/benchmark.py
 python experiments/<experiment>/run_local.py
+python experiments/<experiment>/run_aer.py
 python experiments/<experiment>/run_ibm.py --backend-name <backend>
 ```
 
@@ -243,6 +276,7 @@ For example, a conservative live submission for the reduced toy-gauge line is:
 python scripts/ibm_runtime/check_account.py
 python experiments/gut_toy_gauge/benchmark.py
 python experiments/gut_toy_gauge/run_local.py
+python experiments/gut_toy_gauge/run_aer.py
 python experiments/gut_toy_gauge/run_ibm.py --backend-name ibm_fez
 ```
 
@@ -251,9 +285,16 @@ This procedure has the following interpretation:
 1. `check_account.py` confirms that the saved IBM Runtime account is still valid before submission.
 2. `benchmark.py` regenerates the benchmark reference used to interpret later tiers.
 3. `run_local.py` regenerates the exact-local reference artifacts for the same experiment.
-4. `run_ibm.py` submits the live IBM Runtime job only after the account and prior interpretive tiers are in place.
+4. `run_aer.py` regenerates the noisy-local evidence under the declared noise model.
+5. `run_ibm.py` submits the live IBM Runtime job only after the account and prior interpretive tiers are in place.
 
 Noisy-local validation remains part of the repository's scientific standard even when it is not rerun immediately before every hardware submission on every host. When a platform-specific Aer environment is stable and convenient, rerunning `run_aer.py` before hardware is still methodologically appropriate.
+
+For the particle-creation validation-lineage pilot, a preserved noisy artifact
+may be reused only while its content and lineage still match the current
+configuration and policy. Any relevant configuration, model, operator,
+benchmark, or policy change makes that artifact stale and requires
+regeneration.
 
 Successful live IBM runs now preserve both canonical latest-result files and immutable archive copies automatically, and append a manifest entry under `data/raw/<experiment>/ibm_runtime_runs.jsonl`. Local-testing-mode runs remain separate operational artifacts and write to `_local_testing` output paths.
 

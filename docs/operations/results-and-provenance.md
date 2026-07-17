@@ -14,6 +14,9 @@ The shared package now provides JSON serialization helpers for execution and com
 - `qclab.analysis.write_comparison_records_json`
 - `qclab.backends.hardware.write_ibm_hardware_metadata_json`
 - `qclab.backends.hardware.write_hardware_report_markdown`
+- `qclab.validation.build_validation_context`
+- `qclab.validation.assess_observable_values`
+- `qclab.validation.validate_hardware_prerequisites`
 
 These helpers produce formatted JSON records suitable for storage in `data/processed/` or `results/reports/`, depending on the experiment workflow.
 
@@ -51,6 +54,29 @@ Comparison records should preserve:
 - absolute error,
 - relative error when defined,
 - a written interpretation string.
+
+Where validation lineage is enabled, benchmark and execution records should
+also preserve the schema version, configuration/model/observable/benchmark
+fingerprints, combined lineage identifier, tier policy assessment, individual
+observable checks, and aggregate pass/fail status. The particle-creation FLRW
+line additionally preserves a freshly reproducible independent matrix result,
+an explicit discretization-refinement assessment, and its convergence table.
+Its separate hardware-feasibility artifact records fake-backend transpilation
+metrics, deterministic seeds, calibration context, proxy limitations, and the
+exact-file SHA-256 digest of its required independent-validation input while
+remaining explicitly advisory and outside the hardware-validation gate.
+It is the initial pilot for this schema. Other official experiment lines
+retain their existing provenance behavior until they are deliberately migrated
+and tested; their file existence must not be misrepresented as equivalent to a
+content-based validation gate.
+
+Computed benchmark numbers are canonicalized to fourteen decimal places before
+their benchmark fingerprint is formed. Fresh reproduction checks require exact
+nonnumeric structure and compare computed floating-point fields within
+`1.0e-12`, matching the declared statevector and observable reproduction
+tolerances. This portability rule removes last-bit variation across supported
+numerical runtimes; it does not relax observable acceptance policies or permit
+structural changes.
 
 ## Recommended Storage Pattern
 

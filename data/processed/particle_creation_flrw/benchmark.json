@@ -123,5 +123,14 @@
       "|00>",
       "|11>"
     ]
+  },
+  "validation_context": {
+    "benchmark_fingerprint": "ce8aa4a71dc6b6c202024f7209615216da02d1847426b8394bc1fbb47881a464",
+    "configuration_fingerprint": "d49e754e7ff2fd221f4ac4029510c74939051e575484ecbf92f01bcfeb0bb732",
+    "experiment_name": "particle_creation_flrw",
+    "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
+    "model_fingerprint": "e34bd7e6d9389c4ff69bfb1c8ec75b29d38a618c1c071582d069eb9a8c29ed13",
+    "observable_fingerprint": "707fea366a2d04c99a636bd857bfd72cac1f0de446245c9d6fbd3800d29e5c7b",
+    "schema_version": 1
   }
 }

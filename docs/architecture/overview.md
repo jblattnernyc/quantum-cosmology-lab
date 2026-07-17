@@ -31,6 +31,7 @@ The `src/qclab/` package contains reusable scientific infrastructure:
 - `benchmarks/`: reference-result interfaces and callable scalar benchmark helpers,
 - `backends/`: execution-tier policy, availability helpers, and estimator-based wrappers for exact local, Aer, and IBM Runtime workflows,
 - `analysis/`: benchmark comparison, tolerance checks, and provenance-aware reporting helpers,
+- `validation/`: deterministic scientific fingerprints, observable acceptance policies, persisted assessments, and content-based hardware progression gates,
 - `plotting/`: common figure style and scalar-comparison plotting helpers,
 - `utils/`: configuration loading, optional-dependency helpers, and smoke examples.
 
@@ -90,6 +91,25 @@ Official experiments must be structured around three execution tiers:
 3. IBM hardware execution.
 
 The second and third tiers are subordinate to the benchmarked reference calculation. Hardware execution is an optional final tier, not the starting point of a scientific workflow.
+
+The `particle_creation_flrw` line is the initial validation-lineage pilot. Its
+hardware entry point requires a current independent matrix benchmark together
+with current benchmark, exact-local, and noisy-local artifacts. The entry point
+freshly recomputes the independent evidence and local assessments and requires
+matching configuration/model/observable/benchmark lineage. This refinement is
+intentionally scoped to one official experiment before any repository-wide
+migration.
+
+Computed benchmark floats are canonicalized before lineage hashing so
+machine-precision differences between supported platforms do not create false
+lineage changes. Reproduction checks retain exact schema and policy matching
+and permit only `1.0e-12`-scale variation in computed numeric fields.
+
+The same experiment also includes a separate exploratory hardware-feasibility
+layer. It runs backend-aware local transpilation over declared discretizations
+and seeds but never executes a primitive. Its structural and calibration-proxy
+metrics inform hardware decisions; they are not prerequisite validation tiers
+and do not alter the scientific lineage.
 
 ## Current State
 

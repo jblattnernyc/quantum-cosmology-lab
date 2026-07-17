@@ -38,6 +38,87 @@ Relative to the benchmark, the noisy local absolute errors were:
 
 Within this explicit noise model, the noisy tier preserves the sign of the anomalous pair correlator and retains a particle-number signal of the same order of magnitude as the benchmark.
 
+Under the acceptance policies declared in [config.yaml](config.yaml), the
+current exact-local and noisy-local observable values pass. This is an
+experiment-specific workflow result: it establishes consistency with the
+declared finite-dimensional benchmark and robustness under the declared local
+noise model, not validation of an untruncated continuum calculation.
+
+## Independent Reproduction and Discretization Refinement
+
+The independent validator reconstructs the declared evolution as explicit
+four-dimensional phase and pairing generators and applies SciPy matrix
+exponentials without using the experiment's benchmark-evolution, circuit, or
+observable-construction helpers. Its first responsibility is to reproduce the
+official `N = 6` discrete statevector and observables to the configured
+floating-point tolerances while preserving normalization and even parity.
+
+Separately, it evaluates `N = 6, 12, 24, 48, 96` against an ODE reference built
+from a linear interpolation of the prescribed scale factor. This refinement
+study measures sensitivity to the time discretization. The interpolated ODE is
+an additional assumption and is not treated as the official benchmark or as a
+continuum-exact curved-spacetime field calculation. Agreement with the
+discrete `N = 6` benchmark and convergence toward the interpolated ODE answer
+different questions: implementation reproduction and discretization
+sensitivity, respectively.
+
+For the default configuration, the independent discrete result passes with a
+maximum observable deviation of approximately `5.55e-17`, a phase-aligned
+maximum amplitude error of approximately `5.17e-17`, and zero odd-parity
+probability. At `N = 96`, the maximum observable deviation from the added ODE
+reference is approximately `2.24e-3`, the state infidelity is approximately
+`1.05e-5`, and the final observed convergence order is approximately `0.978`.
+These values satisfy the acceptance policy recorded in
+[config.yaml](config.yaml).
+
+## Exploratory Hardware-Feasibility Study
+
+The transpilation-only study compares `N = 6, 12, 24` against the fixed
+`FakeManilaV2` calibration snapshot at optimization level `1` across five
+deterministic transpiler seeds. It performs no estimator execution and makes no
+IBM service connection. For the configured historical fake-backend snapshot,
+the aggregate results are:
+
+- `N = 6`: median depth `72`, median CX count `24`, median two-qubit
+  calibration-error proxy approximately `0.191687`;
+- `N = 12`: median depth `144`, median CX count `48`, median two-qubit
+  calibration-error proxy approximately `0.346630`;
+- `N = 24`: median depth `288`, median CX count `96`, median two-qubit
+  calibration-error proxy approximately `0.573108`.
+
+Every seed selected the adjacent physical pair `[0, 1]`, and no SWAP
+instruction survived ISA translation. Routing is therefore not the dominant
+structural burden in this study; decomposition of the repeated pairing
+rotations is. The proxy is not fidelity and omits readout, idling, crosstalk,
+coherent accumulation, observable synthesis, and mitigation. `N = 6` remains
+the least costly hardware candidate among the compared discretizations, but
+live hardware remains deferred because the snapshot is historical and the
+structural proxies do not establish observable accuracy.
+
+The generated feasibility report is available at
+[hardware_feasibility_report.md](../../results/reports/particle_creation_flrw/hardware_feasibility_report.md).
+
+## Preserved IBM Result and Current Acceptance Status
+
+The repository contains a preserved IBM Runtime result generated before the
+validation-lineage schema was introduced. Its reported central values are
+approximately:
+
+- single-mode particle number: `0.303708` with uncertainty `0.0154`,
+- total particle number: `0.591349` with uncertainty `0.025845`,
+- pairing correlator: `-0.206725` with uncertainty `0.03324`.
+
+A retrospective assessment against the current benchmark and policy classifies
+all three observables as failing. The single-mode and total particle numbers
+exceed their combined absolute/relative error tolerances and have standardized
+residuals of approximately `17.5` and `20.2`, respectively. The pairing
+correlator satisfies its broad numerical tolerance and sign/bound checks, but
+its standardized residual is approximately `4.2`, above the configured maximum
+of `3.0`. The preserved artifact also lacks the current lineage record and is
+therefore ineligible as prerequisite evidence for a new hardware submission.
+This classification is a statement about agreement with the declared reduced
+model, not a claim about cosmological structure in the hardware deviations.
+
 ## What the Outputs Do Not Establish
 
 The experiment does not establish:
@@ -55,8 +136,12 @@ The present result is a benchmarked reduced QFT-in-curved-spacetime toy model on
 This experiment should be reviewed by checking:
 
 - whether the benchmark values are reproduced exactly in the local exact tier,
-- whether the noisy local tier preserves an interpretable particle-number signal,
+- whether the independent matrix implementation reproduces the official
+  discrete benchmark and passes its declared refinement criteria,
+- whether the noisy local tier passes its declared observable policies,
 - whether any later IBM Runtime output is compared against both prior tiers rather than treated in isolation,
+- whether independent-benchmark, benchmark, exact-local, and noisy-local
+  artifacts share the current validation lineage,
 - whether any IBM Runtime run is accompanied by its metadata JSON and hardware report.
 
 The detailed generated outputs are written to the configured JSON and report paths under `data/processed/particle_creation_flrw/` and `results/reports/particle_creation_flrw/`.
