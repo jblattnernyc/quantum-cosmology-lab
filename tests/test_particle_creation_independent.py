@@ -208,6 +208,19 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
                     encoding="utf-8"
                 )
             )
+            payload["convergence"][0]["maximum_observable_absolute_error"] += 5.0e-13
+            experiment.artifacts.independent_validation_json.write_text(
+                json.dumps(payload, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            perturbed_record, perturbed_assessment = independent_validation_record(
+                experiment,
+                benchmark,
+                context,
+            )
+            self.assertTrue(perturbed_record["stored_result_matches"])
+            self.assertTrue(perturbed_assessment.passed)
+
             payload["convergence"][0]["time_steps"] = 7
             experiment.artifacts.independent_validation_json.write_text(
                 json.dumps(payload, indent=2) + "\n",

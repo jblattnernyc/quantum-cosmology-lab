@@ -19,6 +19,7 @@ from qclab.validation import (
     TierAssessment,
     assess_observable_values,
     classify_artifact_lineage,
+    computed_payloads_equivalent,
 )
 
 from experiments.particle_creation_flrw.benchmark import (
@@ -91,7 +92,10 @@ def _validation_record(
     stored_assessment_matches = (
         None
         if stored_assessment is None
-        else stored_assessment == assessment.to_serializable()
+        else computed_payloads_equivalent(
+            stored_assessment,
+            assessment.to_serializable(),
+        )
     )
     assessment_mode = (
         "recomputed_current_policy"

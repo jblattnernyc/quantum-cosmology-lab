@@ -100,6 +100,11 @@ matching configuration/model/observable/benchmark lineage. This refinement is
 intentionally scoped to one official experiment before any repository-wide
 migration.
 
+Computed benchmark floats are canonicalized before lineage hashing so
+machine-precision differences between supported platforms do not create false
+lineage changes. Reproduction checks retain exact schema and policy matching
+and permit only `1.0e-12`-scale variation in computed numeric fields.
+
 The same experiment also includes a separate exploratory hardware-feasibility
 layer. It runs backend-aware local transpilation over declared discretizations
 and seeds but never executes a primitive. Its structural and calibration-proxy

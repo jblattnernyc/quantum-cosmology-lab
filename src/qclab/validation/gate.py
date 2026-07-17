@@ -8,7 +8,10 @@ from pathlib import Path
 from typing import Any
 
 from qclab.validation.assessment import assess_observable_values
-from qclab.validation.fingerprints import benchmark_fingerprint
+from qclab.validation.fingerprints import (
+    benchmark_fingerprint,
+    computed_payloads_equivalent,
+)
 from qclab.validation.records import (
     HardwarePreflightResult,
     HardwareValidationGateError,
@@ -117,7 +120,10 @@ def _assess_execution_artifact(
             f"{label} artifact could not be assessed under the current policy."
         ) from exc
     stored_assessment = payload.get("validation_assessment")
-    if stored_assessment != assessment.to_serializable():
+    if not computed_payloads_equivalent(
+        stored_assessment,
+        assessment.to_serializable(),
+    ):
         raise HardwareValidationGateError(
             f"{label} stored assessment is missing or does not match a fresh assessment."
         )

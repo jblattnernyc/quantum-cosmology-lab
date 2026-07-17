@@ -33,6 +33,7 @@ from qclab.validation import (
     TierAssessment,
     ValidationContext,
     classify_artifact_lineage,
+    computed_payloads_equivalent,
 )
 
 from experiments.particle_creation_flrw.common import (
@@ -860,20 +861,36 @@ def independent_validation_record(
         policy,
         validation_context,
     )
-    comparable_keys = (
+    exact_keys = (
         "experiment_name",
         "parameters",
         "truncation",
         "method",
         "policy",
+    )
+    computed_keys = (
         "official_reference",
         "independent_discrete_result",
         "continuum_reference",
         "convergence",
         "assessment",
     )
+    comparison_absolute_tolerance = max(
+        policy.statevector_tolerance,
+        policy.observable_tolerance,
+        policy.normalization_tolerance,
+        policy.continuum_absolute_tolerance,
+    )
     stored_result_matches = all(
-        payload.get(key) == expected_payload[key] for key in comparable_keys
+        payload.get(key) == expected_payload[key] for key in exact_keys
+    ) and all(
+        computed_payloads_equivalent(
+            payload.get(key),
+            expected_payload[key],
+            absolute_tolerance=comparison_absolute_tolerance,
+            relative_tolerance=policy.continuum_relative_tolerance,
+        )
+        for key in computed_keys
     )
     errors: list[str] = []
     if lineage.status is not ArtifactLineageStatus.CURRENT:

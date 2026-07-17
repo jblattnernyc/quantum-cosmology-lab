@@ -70,6 +70,14 @@ retain their existing provenance behavior until they are deliberately migrated
 and tested; their file existence must not be misrepresented as equivalent to a
 content-based validation gate.
 
+Computed benchmark numbers are canonicalized to fourteen decimal places before
+their benchmark fingerprint is formed. Fresh reproduction checks require exact
+nonnumeric structure and compare computed floating-point fields within
+`1.0e-12`, matching the declared statevector and observable reproduction
+tolerances. This portability rule removes last-bit variation across supported
+numerical runtimes; it does not relax observable acceptance policies or permit
+structural changes.
+
 ## Recommended Storage Pattern
 
 For official experiments, the recommended pattern is:

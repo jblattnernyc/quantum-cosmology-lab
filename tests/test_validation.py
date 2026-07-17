@@ -30,6 +30,7 @@ from qclab.validation import (
     assess_observable_values,
     benchmark_fingerprint,
     classify_artifact_lineage,
+    computed_payloads_equivalent,
     configuration_fingerprint,
     model_fingerprint,
     observable_fingerprint,
@@ -61,6 +62,21 @@ class ValidationLineageTests(unittest.TestCase):
             benchmark_fingerprint(reordered_payload),
         )
 
+        platform_perturbed_payload = deepcopy(self.benchmark_payload)
+        platform_perturbed_payload["benchmark"]["final_statevector"][0]["real"] += (
+            2.0e-16
+        )
+        platform_perturbed_payload["benchmark"]["final_statevector"][0]["imag"] += (
+            3.0e-17
+        )
+        platform_perturbed_payload["benchmark"][
+            "single_mode_particle_number_expectation"
+        ] += 5.0e-17
+        self.assertEqual(
+            benchmark_fingerprint(self.benchmark_payload),
+            benchmark_fingerprint(platform_perturbed_payload),
+        )
+
         metadata = dict(self.experiment.configuration.metadata)
         metadata["artifacts"] = {"benchmark_json": "/tmp/moved-benchmark.json"}
         relocated_configuration = replace(
@@ -71,6 +87,27 @@ class ValidationLineageTests(unittest.TestCase):
             configuration_fingerprint(self.experiment.configuration),
             configuration_fingerprint(relocated_configuration),
         )
+
+    def test_computed_payload_equivalence_is_numeric_only_and_tolerance_bounded(
+        self,
+    ) -> None:
+        stored = {
+            "schema": "validation",
+            "passed": True,
+            "values": [0.25, {"error": 1.0e-5}],
+        }
+        platform_perturbed = deepcopy(stored)
+        platform_perturbed["values"][0] += 5.0e-13
+        platform_perturbed["values"][1]["error"] += 5.0e-13
+        self.assertTrue(computed_payloads_equivalent(stored, platform_perturbed))
+
+        meaningful_change = deepcopy(stored)
+        meaningful_change["values"][0] += 1.0e-8
+        self.assertFalse(computed_payloads_equivalent(stored, meaningful_change))
+
+        structural_change = deepcopy(stored)
+        structural_change["passed"] = False
+        self.assertFalse(computed_payloads_equivalent(stored, structural_change))
 
     def test_parameter_operator_and_benchmark_changes_break_lineage(self) -> None:
         parameters = dict(self.experiment.configuration.parameters)
@@ -161,9 +198,11 @@ class ValidationLineageTests(unittest.TestCase):
                     payload["validation_context"],
                     self.context.to_serializable(),
                 )
-                self.assertEqual(
-                    payload["validation_assessment"],
-                    assessments[tier].to_serializable(),
+                self.assertTrue(
+                    computed_payloads_equivalent(
+                        payload["validation_assessment"],
+                        assessments[tier].to_serializable(),
+                    )
                 )
 
         self.assertTrue(assessments["exact_local"].passed)
@@ -259,6 +298,9 @@ class HardwareValidationGateTests(unittest.TestCase):
     def test_gate_accepts_matching_passing_evidence(self) -> None:
         exact_payload = self._execution_payload("exact_local", self.expected_values)
         noisy_payload = self._execution_payload("noisy_local", self.expected_values)
+        exact_payload["validation_assessment"]["observables"][0]["benchmark_value"] += (
+            5.0e-13
+        )
         with tempfile.TemporaryDirectory() as temp_dir:
             paths = self._write_artifacts(
                 Path(temp_dir),

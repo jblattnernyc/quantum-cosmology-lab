@@ -32,6 +32,11 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ### Changed
 
+- Made validation-lineage fingerprints and persisted-evidence reproduction
+  portable across supported operating systems and Python versions by
+  canonicalizing computed benchmark floats more strictly than the declared
+  acceptance tolerance and using tolerance-bounded numeric comparison with
+  exact nonnumeric structure.
 - Made current, freshly reproducible, passing independent-benchmark evidence a
   content-checked prerequisite for the particle-creation IBM hardware path.
 - Clarified the phase-then-pairing slice order in the particle-creation model

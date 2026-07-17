@@ -5,10 +5,100 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 import hashlib
 import json
+import math
 from typing import Any
 
 from qclab.observables import ObservableDefinition
 from qclab.utils.configuration import ModelConfiguration
+
+
+BENCHMARK_FLOAT_DECIMAL_PLACES = 14
+COMPUTED_EVIDENCE_ABSOLUTE_TOLERANCE = 1.0e-12
+COMPUTED_EVIDENCE_RELATIVE_TOLERANCE = 1.0e-12
+
+
+def canonicalize_computed_numbers(
+    value: Any,
+    *,
+    decimal_places: int = BENCHMARK_FLOAT_DECIMAL_PLACES,
+) -> Any:
+    """Normalize computed floats before deterministic scientific hashing.
+
+    The retained precision is stricter than the repository's declared
+    independent-validation tolerance. This removes platform-level libm and
+    linear-algebra variation without concealing scientifically meaningful
+    changes. Non-numeric structure is preserved exactly.
+    """
+
+    if isinstance(value, Mapping):
+        return {
+            key: canonicalize_computed_numbers(
+                item,
+                decimal_places=decimal_places,
+            )
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [
+            canonicalize_computed_numbers(item, decimal_places=decimal_places)
+            for item in value
+        ]
+    if isinstance(value, tuple):
+        return tuple(
+            canonicalize_computed_numbers(item, decimal_places=decimal_places)
+            for item in value
+        )
+    if isinstance(value, float):
+        if not math.isfinite(value):
+            return value
+        normalized = round(value, decimal_places)
+        return 0.0 if normalized == 0.0 else normalized
+    return value
+
+
+def computed_payloads_equivalent(
+    stored: Any,
+    recomputed: Any,
+    *,
+    absolute_tolerance: float = COMPUTED_EVIDENCE_ABSOLUTE_TOLERANCE,
+    relative_tolerance: float = COMPUTED_EVIDENCE_RELATIVE_TOLERANCE,
+) -> bool:
+    """Compare equal-structure payloads with tolerance only for floats."""
+
+    if type(stored) is not type(recomputed):
+        return False
+    if isinstance(stored, Mapping):
+        if stored.keys() != recomputed.keys():
+            return False
+        return all(
+            computed_payloads_equivalent(
+                stored[key],
+                recomputed[key],
+                absolute_tolerance=absolute_tolerance,
+                relative_tolerance=relative_tolerance,
+            )
+            for key in stored
+        )
+    if isinstance(stored, (list, tuple)):
+        if len(stored) != len(recomputed):
+            return False
+        return all(
+            computed_payloads_equivalent(
+                stored_item,
+                recomputed_item,
+                absolute_tolerance=absolute_tolerance,
+                relative_tolerance=relative_tolerance,
+            )
+            for stored_item, recomputed_item in zip(stored, recomputed)
+        )
+    if isinstance(stored, float):
+        return math.isclose(
+            stored,
+            recomputed,
+            rel_tol=relative_tolerance,
+            abs_tol=absolute_tolerance,
+        )
+    return stored == recomputed
 
 
 def canonical_json(value: Any) -> str:
@@ -131,11 +221,11 @@ def observable_fingerprint(
 
 
 def benchmark_fingerprint(benchmark_payload: Mapping[str, Any]) -> str:
-    """Fingerprint the complete benchmark payload before lineage is attached."""
+    """Fingerprint a platform-canonical benchmark before lineage is attached."""
 
     sanitized_payload = dict(benchmark_payload)
     sanitized_payload.pop("validation_context", None)
-    return sha256_fingerprint(sanitized_payload)
+    return sha256_fingerprint(canonicalize_computed_numbers(sanitized_payload))
 
 
 def lineage_fingerprint(
