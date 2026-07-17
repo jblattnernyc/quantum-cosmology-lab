@@ -223,6 +223,59 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
             perturbed_payload["factor_ordering_comparison"],
         )
 
+    def test_convergence_order_diagnostics_are_platform_stable(self) -> None:
+        payload = independent_validation_to_serializable(
+            self.experiment,
+            self.result,
+            self.policy,
+            self.context,
+        )
+        final_order = self.result.assessment.metrics[
+            "final_observable_convergence_order"
+        ]
+        self.assertEqual(
+            payload["assessment"]["metrics"]["final_observable_convergence_order"],
+            round(final_order, 8),
+        )
+        self.assertEqual(
+            payload["method"]["convergence_order_canonical_decimal_places"],
+            8,
+        )
+
+        perturbed_records = tuple(
+            replace(
+                record,
+                observable_convergence_order=(
+                    record.observable_convergence_order
+                    if record.observable_convergence_order is None or index < 3
+                    else record.observable_convergence_order + 1.0e-10
+                ),
+            )
+            for index, record in enumerate(self.result.convergence_records)
+        )
+        perturbed_metrics = dict(self.result.assessment.metrics)
+        perturbed_metrics["final_observable_convergence_order"] += 1.0e-10
+        perturbed_payload = independent_validation_to_serializable(
+            self.experiment,
+            replace(
+                self.result,
+                convergence_records=perturbed_records,
+                assessment=replace(
+                    self.result.assessment,
+                    metrics=perturbed_metrics,
+                ),
+            ),
+            self.policy,
+            self.context,
+        )
+        self.assertEqual(payload["convergence"], perturbed_payload["convergence"])
+        self.assertEqual(
+            payload["assessment"]["metrics"]["final_observable_convergence_order"],
+            perturbed_payload["assessment"]["metrics"][
+                "final_observable_convergence_order"
+            ],
+        )
+
     def test_independent_module_does_not_call_primary_evolution_helpers(self) -> None:
         module_path = Path(
             "experiments/particle_creation_flrw/independent_benchmark.py"

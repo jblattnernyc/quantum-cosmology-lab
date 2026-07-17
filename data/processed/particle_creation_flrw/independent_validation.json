@@ -19,7 +19,7 @@
       "continuum_reference_normalization_error": 2.2881696537524476e-13,
       "even_parity_probability": 1.0000000000000007,
       "final_maximum_observable_absolute_error": 2.4906779561462145e-05,
-      "final_observable_convergence_order": 2.0001090069395584,
+      "final_observable_convergence_order": 2.00010901,
       "final_state_infidelity": 1.9176682464205896e-10,
       "independent_normalization_error": 6.661338147750939e-16,
       "monotone_observable_error": true,
@@ -73,7 +73,7 @@
     },
     {
       "maximum_observable_absolute_error": 0.0015965724628989597,
-      "observable_convergence_order": 2.0070811437383127,
+      "observable_convergence_order": 2.00708114,
       "observables": {
         "pairing_correlator_expectation": -0.32069537803206355,
         "single_mode_particle_number_expectation": 0.038306720350351174,
@@ -85,7 +85,7 @@
     },
     {
       "maximum_observable_absolute_error": 0.00039865914204484376,
-      "observable_convergence_order": 2.00175037487487,
+      "observable_convergence_order": 2.00175037,
       "observables": {
         "pairing_correlator_expectation": -0.31949746471120943,
         "single_mode_particle_number_expectation": 0.038156362937895205,
@@ -97,7 +97,7 @@
     },
     {
       "maximum_observable_absolute_error": 9.963464614137774e-05,
-      "observable_convergence_order": 2.000436347654028,
+      "observable_convergence_order": 2.00043635,
       "observables": {
         "pairing_correlator_expectation": -0.31919844021530597,
         "single_mode_particle_number_expectation": 0.038118965077164786,
@@ -109,7 +109,7 @@
     },
     {
       "maximum_observable_absolute_error": 2.4906779561462145e-05,
-      "observable_convergence_order": 2.0001090069395584,
+      "observable_convergence_order": 2.00010901,
       "observables": {
         "pairing_correlator_expectation": -0.31912371234872605,
         "single_mode_particle_number_expectation": 0.038109627523219065,
@@ -164,6 +164,7 @@
       "|11>"
     ],
     "continuum_interpolation_assumption": "a(eta) is linear between the declared endpoints and the continuous Hamiltonian is omega(eta) G_phase + 0.5 d(log omega)/deta G_pairing.",
+    "convergence_order_canonical_decimal_places": 8,
     "factor_ordering": "symmetric_strang",
     "factor_ordering_comparison_canonical_decimal_places": 10,
     "factor_ordering_improvement_canonical_decimal_places": 8,

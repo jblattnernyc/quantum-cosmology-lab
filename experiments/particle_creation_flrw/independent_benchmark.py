@@ -48,6 +48,7 @@ from experiments.particle_creation_flrw.common import (
 INDEPENDENT_TIER = "independent_benchmark"
 FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES = 10
 FACTOR_ORDERING_IMPROVEMENT_DECIMAL_PLACES = 8
+CONVERGENCE_ORDER_DECIMAL_PLACES = 8
 OBSERVABLE_NAMES = (
     "single_mode_particle_number_expectation",
     "total_particle_number_expectation",
@@ -172,6 +173,12 @@ class ConvergenceRecord:
     def to_serializable(self) -> dict[str, Any]:
         """Return the refinement record as a JSON-safe mapping."""
 
+        canonical_order = self.observable_convergence_order
+        if canonical_order is not None:
+            canonical_order = round(
+                float(canonical_order),
+                CONVERGENCE_ORDER_DECIMAL_PLACES,
+            )
         return {
             "time_steps": self.time_steps,
             "observables": dict(self.observables),
@@ -182,7 +189,7 @@ class ConvergenceRecord:
             "phase_aligned_maximum_amplitude_error": (
                 self.phase_aligned_maximum_amplitude_error
             ),
-            "observable_convergence_order": self.observable_convergence_order,
+            "observable_convergence_order": canonical_order,
         }
 
 
@@ -252,12 +259,19 @@ class IndependentValidationAssessment:
     def to_serializable(self) -> dict[str, Any]:
         """Return the assessment as a JSON-safe mapping."""
 
+        metrics = dict(self.metrics)
+        final_order = metrics.get("final_observable_convergence_order")
+        if isinstance(final_order, float):
+            metrics["final_observable_convergence_order"] = round(
+                final_order,
+                CONVERGENCE_ORDER_DECIMAL_PLACES,
+            )
         return {
             "schema_version": self.schema_version,
             "tier": INDEPENDENT_TIER,
             "passed": self.passed,
             "checks": dict(self.checks),
-            "metrics": dict(self.metrics),
+            "metrics": metrics,
             "errors": list(self.errors),
         }
 
@@ -748,6 +762,9 @@ def independent_validation_to_serializable(
             ),
             "factor_ordering_improvement_canonical_decimal_places": (
                 FACTOR_ORDERING_IMPROVEMENT_DECIMAL_PLACES
+            ),
+            "convergence_order_canonical_decimal_places": (
+                CONVERGENCE_ORDER_DECIMAL_PLACES
             ),
             "matrix_exponential": "scipy.linalg.expm",
             "shared_evolution_helpers_used": False,

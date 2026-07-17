@@ -250,7 +250,7 @@
           "continuum_reference_normalization_error": 2.2881696537524476e-13,
           "even_parity_probability": 1.0000000000000007,
           "final_maximum_observable_absolute_error": 2.4906779561462145e-05,
-          "final_observable_convergence_order": 2.0001090069395584,
+          "final_observable_convergence_order": 2.00010901,
           "final_state_infidelity": 1.9176682464205896e-10,
           "independent_normalization_error": 6.661338147750939e-16,
           "monotone_observable_error": true,
