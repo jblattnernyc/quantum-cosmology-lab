@@ -46,6 +46,8 @@ from experiments.particle_creation_flrw.common import (
 
 
 INDEPENDENT_TIER = "independent_benchmark"
+FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES = 10
+FACTOR_ORDERING_IMPROVEMENT_DECIMAL_PLACES = 8
 OBSERVABLE_NAMES = (
     "single_mode_particle_number_expectation",
     "total_particle_number_expectation",
@@ -196,24 +198,43 @@ class FactorOrderingComparison:
     legacy_first_order_state_infidelity: float
 
     def to_serializable(self) -> dict[str, Any]:
-        """Return the factor-ordering comparison as a JSON-safe mapping."""
+        """Return a platform-stable diagnostic comparison mapping."""
+
+        def canonicalize(value: float, decimal_places: int) -> float:
+            canonical = round(float(value), decimal_places)
+            return 0.0 if canonical == 0.0 else canonical
 
         return {
             "time_steps": self.time_steps,
             "symmetric_ordering": "U_phase_half @ U_pairing @ U_phase_half",
             "legacy_first_ordering": "U_pairing @ U_phase",
             "symmetric_maximum_observable_error": (
-                self.symmetric_maximum_observable_error
+                canonicalize(
+                    self.symmetric_maximum_observable_error,
+                    FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES,
+                )
             ),
             "legacy_first_order_maximum_observable_error": (
-                self.legacy_first_order_maximum_observable_error
+                canonicalize(
+                    self.legacy_first_order_maximum_observable_error,
+                    FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES,
+                )
             ),
             "observable_error_improvement_factor": (
-                self.observable_error_improvement_factor
+                canonicalize(
+                    self.observable_error_improvement_factor,
+                    FACTOR_ORDERING_IMPROVEMENT_DECIMAL_PLACES,
+                )
             ),
-            "symmetric_state_infidelity": self.symmetric_state_infidelity,
+            "symmetric_state_infidelity": canonicalize(
+                self.symmetric_state_infidelity,
+                FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES,
+            ),
             "legacy_first_order_state_infidelity": (
-                self.legacy_first_order_state_infidelity
+                canonicalize(
+                    self.legacy_first_order_state_infidelity,
+                    FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES,
+                )
             ),
         }
 
@@ -667,7 +688,6 @@ def compute_independent_validation(
             "continuum_reference_normalization_error": (continuum_normalization_error),
             "odd_parity_probability": odd_parity_probability,
             "even_parity_probability": even_parity_probability,
-            "official_step_factor_ordering_improvement": (factor_ordering_improvement),
             "monotone_observable_error": monotone_observable_error,
             "final_maximum_observable_absolute_error": (
                 final_record.maximum_observable_absolute_error
@@ -723,6 +743,12 @@ def independent_validation_to_serializable(
             "slice_action_order": "phase_half_then_pairing_then_phase_half",
             "slice_unitary": "U_phase_half @ U_pairing @ U_phase_half",
             "factor_ordering": experiment.parameters.factor_ordering,
+            "factor_ordering_comparison_canonical_decimal_places": (
+                FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES
+            ),
+            "factor_ordering_improvement_canonical_decimal_places": (
+                FACTOR_ORDERING_IMPROVEMENT_DECIMAL_PLACES
+            ),
             "matrix_exponential": "scipy.linalg.expm",
             "shared_evolution_helpers_used": False,
             "continuum_interpolation_assumption": (

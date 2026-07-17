@@ -26,8 +26,7 @@
       "odd_parity_probability": 0.0,
       "official_maximum_observable_absolute_error": 5.551115123125783e-17,
       "official_phase_aligned_maximum_amplitude_error": 1.1102312492854563e-16,
-      "official_state_infidelity": 2.220446049250313e-16,
-      "official_step_factor_ordering_improvement": 4.27666786793897
+      "official_state_infidelity": 2.220446049250313e-16
     },
     "passed": true,
     "schema_version": 1,
@@ -123,13 +122,13 @@
   ],
   "experiment_name": "particle_creation_flrw",
   "factor_ordering_comparison": {
-    "legacy_first_order_maximum_observable_error": 0.027446425133081043,
-    "legacy_first_order_state_infidelity": 0.0027783462323185404,
+    "legacy_first_order_maximum_observable_error": 0.0274464251,
+    "legacy_first_order_state_infidelity": 0.0027783462,
     "legacy_first_ordering": "U_pairing @ U_phase",
-    "observable_error_improvement_factor": 4.27666786793897,
-    "symmetric_maximum_observable_error": 0.006417712569834921,
+    "observable_error_improvement_factor": 4.27666787,
+    "symmetric_maximum_observable_error": 0.0064177126,
     "symmetric_ordering": "U_phase_half @ U_pairing @ U_phase_half",
-    "symmetric_state_infidelity": 1.2768183026090618e-05,
+    "symmetric_state_infidelity": 1.27682e-05,
     "time_steps": 6
   },
   "independent_discrete_result": {
@@ -166,6 +165,8 @@
     ],
     "continuum_interpolation_assumption": "a(eta) is linear between the declared endpoints and the continuous Hamiltonian is omega(eta) G_phase + 0.5 d(log omega)/deta G_pairing.",
     "factor_ordering": "symmetric_strang",
+    "factor_ordering_comparison_canonical_decimal_places": 10,
+    "factor_ordering_improvement_canonical_decimal_places": 8,
     "matrix_exponential": "scipy.linalg.expm",
     "pairing_generator": "(XX - YY) / 2",
     "phase_generator": "-(IZ + ZI) / 2",

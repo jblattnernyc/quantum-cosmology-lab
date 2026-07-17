@@ -257,8 +257,7 @@
           "odd_parity_probability": 0.0,
           "official_maximum_observable_absolute_error": 5.551115123125783e-17,
           "official_phase_aligned_maximum_amplitude_error": 1.1102312492854563e-16,
-          "official_state_infidelity": 2.220446049250313e-16,
-          "official_step_factor_ordering_improvement": 4.27666786793897
+          "official_state_infidelity": 2.220446049250313e-16
         },
         "passed": true,
         "schema_version": 1,

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 import json
 import math
 from pathlib import Path
@@ -31,6 +32,7 @@ from experiments.particle_creation_flrw.independent_benchmark import (
     independent_slice_unitary,
     independent_validation_policy,
     independent_validation_record,
+    independent_validation_to_serializable,
     write_independent_validation_artifacts,
 )
 
@@ -161,6 +163,64 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
         )
         self.assertTrue(
             self.result.assessment.checks["official_step_factor_ordering_improvement"]
+        )
+
+    def test_factor_ordering_diagnostics_are_platform_stable(self) -> None:
+        payload = independent_validation_to_serializable(
+            self.experiment,
+            self.result,
+            self.policy,
+            self.context,
+        )
+        comparison = self.result.factor_ordering_comparison
+        serialized = payload["factor_ordering_comparison"]
+        self.assertEqual(
+            serialized["observable_error_improvement_factor"],
+            round(comparison.observable_error_improvement_factor, 8),
+        )
+        self.assertNotIn(
+            "official_step_factor_ordering_improvement",
+            payload["assessment"]["metrics"],
+        )
+        self.assertEqual(
+            payload["method"]["factor_ordering_comparison_canonical_decimal_places"],
+            10,
+        )
+        self.assertEqual(
+            payload["method"]["factor_ordering_improvement_canonical_decimal_places"],
+            8,
+        )
+
+        perturbed_comparison = replace(
+            comparison,
+            symmetric_maximum_observable_error=(
+                comparison.symmetric_maximum_observable_error + 5.0e-12
+            ),
+            legacy_first_order_maximum_observable_error=(
+                comparison.legacy_first_order_maximum_observable_error + 5.0e-12
+            ),
+            observable_error_improvement_factor=(
+                comparison.observable_error_improvement_factor + 5.0e-10
+            ),
+            symmetric_state_infidelity=(
+                comparison.symmetric_state_infidelity + 5.0e-12
+            ),
+            legacy_first_order_state_infidelity=(
+                comparison.legacy_first_order_state_infidelity + 5.0e-12
+            ),
+        )
+        perturbed_payload = independent_validation_to_serializable(
+            self.experiment,
+            replace(
+                self.result,
+                factor_ordering_comparison=perturbed_comparison,
+            ),
+            self.policy,
+            self.context,
+        )
+        self.assertEqual(
+            serialized,
+            perturbed_payload["factor_ordering_comparison"],
         )
 
     def test_independent_module_does_not_call_primary_evolution_helpers(self) -> None:

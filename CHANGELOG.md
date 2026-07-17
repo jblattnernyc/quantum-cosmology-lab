@@ -36,6 +36,9 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
   slice product with a lineage-bound symmetric
   phase-half/pairing/phase-half composition, and strengthened the independent
   refinement policy to require approximately second-order convergence.
+- Canonicalized only the condition-sensitive factor-ordering comparison
+  summaries so persisted independent evidence reproduces across supported
+  platforms without loosening benchmark or acceptance-policy tolerances.
 - Made validation-lineage fingerprints and persisted-evidence reproduction
   portable across supported operating systems and Python versions by
   canonicalizing computed benchmark floats more strictly than the declared

@@ -154,6 +154,14 @@ to a model parameter, truncation, operator, execution setting, noise model,
 benchmark, or acceptance policy therefore requires the independent benchmark,
 benchmark, exact-local, and noisy-local artifacts to be regenerated.
 
+The factor-ordering comparison is a diagnostic summary rather than a policy
+input. Its persisted error and infidelity fields are canonicalized to ten
+decimal places, and its derived improvement ratio is canonicalized to eight
+decimal places, so machine-scale ODE-solver differences do not invalidate the
+artifact. Full-precision values remain in memory for the declared acceptance
+checks; benchmark, statevector, observable, policy, and structural matching
+retain their stricter contracts.
+
 For each observable, the principal numerical test is
 
 ```text
