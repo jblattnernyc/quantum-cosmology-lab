@@ -21,6 +21,9 @@ This checklist defines the minimum steps for reproducing an official experiment 
 - [ ] For `particle_creation_flrw`, the independent matrix evidence is freshly
       reproducible, current-lineage, and passing before hardware readiness is
       accepted.
+- [ ] Particle-creation hardware-feasibility artifacts reproduce the declared
+      fake backend, optimization level, time-step counts, and transpiler seeds
+      without creating a Runtime service or submitting a job.
 - [ ] The analysis workflow is run or the preserved analysis report, table, and figure artifacts are verified.
 
 ## IBM Hardware Reproduction or Verification

@@ -125,6 +125,17 @@ python experiments/particle_creation_flrw/run_aer.py
 python experiments/particle_creation_flrw/analyze.py
 ```
 
+For a credential-free structural assessment before any hardware decision, run:
+
+```bash
+python experiments/particle_creation_flrw/hardware_feasibility.py
+```
+
+This entry point uses a fixed fake-backend calibration snapshot and performs
+transpilation only. Its depth, gate-count, layout, duration, and accumulated
+instruction-error metrics are feasibility indicators rather than hardware
+fidelity predictions. It does not create a Runtime service or submit a job.
+
 The corresponding IBM Runtime path is:
 
 ```bash
@@ -218,6 +229,9 @@ Before using the IBM workflow:
 3. confirm that exact local execution reproduces the benchmark within the expected numerical tolerance,
 4. confirm that noisy local execution remains scientifically interpretable,
 5. review [ibm-runtime-setup.md](ibm-runtime-setup.md).
+6. review the transpilation-feasibility report and confirm that any real
+   backend assessment uses current calibration evidence rather than the fixed
+   fake-backend snapshot.
 
 For infrastructure validation when credentials or hardware access are unavailable, the Phase 4 wrapper also supports IBM Runtime local testing mode through fake backends:
 

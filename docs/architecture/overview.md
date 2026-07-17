@@ -100,6 +100,12 @@ matching configuration/model/observable/benchmark lineage. This refinement is
 intentionally scoped to one official experiment before any repository-wide
 migration.
 
+The same experiment also includes a separate exploratory hardware-feasibility
+layer. It runs backend-aware local transpilation over declared discretizations
+and seeds but never executes a primitive. Its structural and calibration-proxy
+metrics inform hardware decisions; they are not prerequisite validation tiers
+and do not alter the scientific lineage.
+
 ## Current State
 
 The active repository baseline now contains:

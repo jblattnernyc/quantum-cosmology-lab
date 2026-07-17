@@ -74,8 +74,14 @@ class NoiseModelSpecification:
 
     def __post_init__(self) -> None:
         for name, value in (
-            ("one_qubit_depolarizing_probability", self.one_qubit_depolarizing_probability),
-            ("two_qubit_depolarizing_probability", self.two_qubit_depolarizing_probability),
+            (
+                "one_qubit_depolarizing_probability",
+                self.one_qubit_depolarizing_probability,
+            ),
+            (
+                "two_qubit_depolarizing_probability",
+                self.two_qubit_depolarizing_probability,
+            ),
             ("readout_error_probability", self.readout_error_probability),
         ):
             if not 0 <= value < 1:
@@ -90,6 +96,9 @@ class ParticleCreationArtifactPaths:
     independent_validation_json: Path
     independent_validation_report_markdown: Path
     convergence_summary_table_markdown: Path
+    hardware_feasibility_json: Path
+    hardware_feasibility_report_markdown: Path
+    hardware_feasibility_table_markdown: Path
     exact_local_json: Path
     exact_local_comparisons_json: Path
     noisy_local_json: Path
@@ -139,7 +148,9 @@ def _required_int(mapping: dict[str, Any], key: str) -> int:
     return int(mapping[key])
 
 
-def _artifact_paths_from_metadata(metadata: dict[str, Any]) -> ParticleCreationArtifactPaths:
+def _artifact_paths_from_metadata(
+    metadata: dict[str, Any],
+) -> ParticleCreationArtifactPaths:
     """Build artifact paths from configuration metadata."""
 
     raw_paths = dict(metadata.get("artifacts", {}))
@@ -153,6 +164,15 @@ def _artifact_paths_from_metadata(metadata: dict[str, Any]) -> ParticleCreationA
         ),
         "convergence_summary_table_markdown": (
             "results/tables/particle_creation_flrw/convergence_summary.md"
+        ),
+        "hardware_feasibility_json": (
+            "data/processed/particle_creation_flrw/hardware_feasibility.json"
+        ),
+        "hardware_feasibility_report_markdown": (
+            "results/reports/particle_creation_flrw/hardware_feasibility_report.md"
+        ),
+        "hardware_feasibility_table_markdown": (
+            "results/tables/particle_creation_flrw/hardware_feasibility_summary.md"
         ),
         "exact_local_json": "data/processed/particle_creation_flrw/exact_local.json",
         "exact_local_comparisons_json": (
@@ -195,7 +215,9 @@ def load_experiment_definition(
 
     configuration = load_model_configuration(config_path)
     parameters = ParticleCreationFLRWParameters(
-        comoving_momentum=_required_float(configuration.parameters, "comoving_momentum"),
+        comoving_momentum=_required_float(
+            configuration.parameters, "comoving_momentum"
+        ),
         mass=_required_float(configuration.parameters, "mass"),
         scale_factor_initial=_required_float(
             configuration.parameters, "scale_factor_initial"
@@ -267,7 +289,10 @@ def mode_frequency_edges(parameters: ParticleCreationFLRWParameters) -> np.ndarr
     """Return the discrete mode-frequency samples."""
 
     return np.array(
-        [mode_frequency(scale_factor, parameters) for scale_factor in scale_factor_edges(parameters)],
+        [
+            mode_frequency(scale_factor, parameters)
+            for scale_factor in scale_factor_edges(parameters)
+        ],
         dtype=float,
     )
 

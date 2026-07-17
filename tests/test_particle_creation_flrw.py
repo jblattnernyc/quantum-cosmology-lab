@@ -62,6 +62,10 @@ class ParticleCreationFLRWTests(unittest.TestCase):
             validation["independent_benchmark"]["convergence_time_steps"],
             [6, 12, 24, 48, 96],
         )
+        feasibility = experiment.configuration.metadata["hardware_feasibility"]
+        self.assertEqual(feasibility["status"], "exploratory")
+        self.assertEqual(feasibility["time_steps"], [6, 12, 24])
+        self.assertEqual(feasibility["live_hardware_recommendation"], "defer")
 
     def test_evolution_slices_are_monotone_and_match_time_steps(self) -> None:
         experiment = load_experiment_definition()
@@ -149,6 +153,9 @@ class ParticleCreationFLRWTests(unittest.TestCase):
         )
         self.assertTrue(validation["independent_benchmark"]["stored_result_matches"])
         self.assertTrue(validation["independent_benchmark"]["assessment"]["passed"])
+        self.assertIn("hardware_feasibility_json", summary_payload)
+        self.assertIn("hardware_feasibility_report_markdown", summary_payload)
+        self.assertIn("hardware_feasibility_table_markdown", summary_payload)
         self.assertEqual(validation["exact_local"]["lineage_status"], "current")
         self.assertTrue(validation["exact_local"]["assessment"]["passed"])
         self.assertTrue(validation["exact_local"]["stored_assessment_matches"])

@@ -394,6 +394,21 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
     else:
         ibm_comparisons = None
 
+    if experiment.artifacts.hardware_feasibility_json.exists():
+        summary_payload["hardware_feasibility_json"] = repository_relative_path(
+            experiment.artifacts.hardware_feasibility_json
+        )
+        summary_payload["hardware_feasibility_report_markdown"] = (
+            repository_relative_path(
+                experiment.artifacts.hardware_feasibility_report_markdown
+            )
+        )
+        summary_payload["hardware_feasibility_table_markdown"] = (
+            repository_relative_path(
+                experiment.artifacts.hardware_feasibility_table_markdown
+            )
+        )
+
     summary_table_path = _write_observable_summary_table(
         benchmark_values=benchmark_values,
         exact_values=series["Exact local"],
@@ -567,6 +582,20 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
             ),
         ]
     )
+    if experiment.artifacts.hardware_feasibility_json.exists():
+        report_lines.extend(
+            [
+                "",
+                (
+                    "Exploratory hardware-feasibility report: "
+                    f"`{repository_relative_path(experiment.artifacts.hardware_feasibility_report_markdown)}`"
+                ),
+                (
+                    "Hardware-feasibility table: "
+                    f"`{repository_relative_path(experiment.artifacts.hardware_feasibility_table_markdown)}`"
+                ),
+            ]
+        )
     experiment.artifacts.analysis_report_markdown.write_text(
         "\n".join(report_lines) + "\n",
         encoding="utf-8",
@@ -607,6 +636,16 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
             outputs["ibm_runtime_report_markdown"] = repository_relative_path(
                 experiment.artifacts.ibm_runtime_report_markdown
             )
+    if experiment.artifacts.hardware_feasibility_json.exists():
+        outputs["hardware_feasibility_json"] = repository_relative_path(
+            experiment.artifacts.hardware_feasibility_json
+        )
+        outputs["hardware_feasibility_report_markdown"] = repository_relative_path(
+            experiment.artifacts.hardware_feasibility_report_markdown
+        )
+        outputs["hardware_feasibility_table_markdown"] = repository_relative_path(
+            experiment.artifacts.hardware_feasibility_table_markdown
+        )
     return outputs
 
 

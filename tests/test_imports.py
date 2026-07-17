@@ -20,6 +20,7 @@ class ImportIntegrityTests(unittest.TestCase):
             "experiments.minisuperspace_frw",
             "experiments.planck_epoch_minisuperspace",
             "experiments.particle_creation_flrw",
+            "experiments.particle_creation_flrw.hardware_feasibility",
             "experiments.particle_creation_flrw.independent_benchmark",
             "qclab",
             "qclab.analysis",

@@ -14,7 +14,7 @@ GRAND_UNIFICATION_EPOCH_TOY_DIR := experiments/grand_unification_epoch_toy
 	planck-run-ibm planck-run-ibm-local \
 	run-ibm run-ibm-local particle-benchmark particle-run-local particle-run-aer \
 	particle-independent-benchmark particle-analyze particle-creation particle-preflight \
-	particle-run-ibm particle-run-ibm-local \
+	particle-hardware-feasibility particle-run-ibm particle-run-ibm-local \
 	gut-benchmark gut-run-local gut-run-aer gut-analyze gut-toy-gauge \
 	gut-run-ibm gut-run-ibm-local \
 	grand-unification-benchmark grand-unification-run-local \
@@ -51,6 +51,7 @@ help:
 		'  planck-run-ibm-local Run the Planck-epoch-motivated minisuperspace IBM Runtime local-testing workflow. Override LOCAL_TESTING_BACKEND=<fake-backend-class>.' \
 		'  particle-benchmark   Run the particle-creation FLRW benchmark.' \
 		'  particle-independent-benchmark Run the independent matrix benchmark and convergence study.' \
+		'  particle-hardware-feasibility Run the exploratory fake-backend transpilation study without execution.' \
 		'  particle-run-local   Run the particle-creation exact local workflow.' \
 		'  particle-run-aer     Run the particle-creation noisy local Aer workflow.' \
 		'  particle-analyze     Run the particle-creation analysis workflow.' \
@@ -162,6 +163,9 @@ particle-benchmark:
 
 particle-independent-benchmark:
 	$(PYTHON) $(PARTICLE_CREATION_DIR)/independent_benchmark.py
+
+particle-hardware-feasibility:
+	$(PYTHON) $(PARTICLE_CREATION_DIR)/hardware_feasibility.py
 
 particle-run-local:
 	$(PYTHON) $(PARTICLE_CREATION_DIR)/run_local.py

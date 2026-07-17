@@ -72,6 +72,7 @@ The primary observable is the particle number in the retained mode pair. The pai
 - [common.py](common.py): typed experiment configuration and time-slice construction helpers
 - [benchmark.py](benchmark.py): exact benchmark for the declared discrete model
 - [independent_benchmark.py](independent_benchmark.py): independent 4 x 4 matrix reproduction and time-slice convergence study
+- [hardware_feasibility.py](hardware_feasibility.py): exploratory fake-backend transpilation study with no execution or submission
 - [circuit.py](circuit.py): two-qubit stepwise evolution circuit
 - [observables.py](observables.py): Pauli-decomposed particle-number and pairing observables
 - [run_local.py](run_local.py): exact local estimator workflow
@@ -91,6 +92,24 @@ python experiments/particle_creation_flrw/run_local.py
 python experiments/particle_creation_flrw/run_aer.py
 python experiments/particle_creation_flrw/analyze.py
 ```
+
+An exploratory hardware-cost study can be run separately:
+
+```bash
+python experiments/particle_creation_flrw/hardware_feasibility.py
+# or: make particle-hardware-feasibility
+```
+
+This command transpiles `N = 6, 12, 24` circuits against the configured fake
+backend over deterministic seeds. It records depth, one- and two-qubit gate
+counts, layouts, surviving SWAP instructions, calibration-based error proxies,
+and the independent continuum-refinement errors. It first requires current,
+passing independent-validation evidence and records the exact source-artifact
+digest. It does not execute a circuit, create an IBM Runtime service, or submit
+a job. The error proxy assumes
+independent calibrated instruction errors and omits readout, idling, crosstalk,
+coherent error, observable synthesis, and mitigation; it is not circuit
+fidelity.
 
 For the current Apple Silicon Aer runtime note, including the macOS arm64 Python 3.13+ guard status, see the repository [user guide](../../docs/operations/user-guide.md).
 

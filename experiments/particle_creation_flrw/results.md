@@ -71,6 +71,33 @@ reference is approximately `2.24e-3`, the state infidelity is approximately
 These values satisfy the acceptance policy recorded in
 [config.yaml](config.yaml).
 
+## Exploratory Hardware-Feasibility Study
+
+The transpilation-only study compares `N = 6, 12, 24` against the fixed
+`FakeManilaV2` calibration snapshot at optimization level `1` across five
+deterministic transpiler seeds. It performs no estimator execution and makes no
+IBM service connection. For the configured historical fake-backend snapshot,
+the aggregate results are:
+
+- `N = 6`: median depth `72`, median CX count `24`, median two-qubit
+  calibration-error proxy approximately `0.191687`;
+- `N = 12`: median depth `144`, median CX count `48`, median two-qubit
+  calibration-error proxy approximately `0.346630`;
+- `N = 24`: median depth `288`, median CX count `96`, median two-qubit
+  calibration-error proxy approximately `0.573108`.
+
+Every seed selected the adjacent physical pair `[0, 1]`, and no SWAP
+instruction survived ISA translation. Routing is therefore not the dominant
+structural burden in this study; decomposition of the repeated pairing
+rotations is. The proxy is not fidelity and omits readout, idling, crosstalk,
+coherent accumulation, observable synthesis, and mitigation. `N = 6` remains
+the least costly hardware candidate among the compared discretizations, but
+live hardware remains deferred because the snapshot is historical and the
+structural proxies do not establish observable accuracy.
+
+The generated feasibility report is available at
+[hardware_feasibility_report.md](../../results/reports/particle_creation_flrw/hardware_feasibility_report.md).
+
 ## Preserved IBM Result and Current Acceptance Status
 
 The repository contains a preserved IBM Runtime result generated before the

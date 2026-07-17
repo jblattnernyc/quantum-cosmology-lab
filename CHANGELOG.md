@@ -10,6 +10,10 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ### Added
 
+- Added an exploratory, transpilation-only particle-creation hardware-
+  feasibility study comparing `N = 6, 12, 24` across deterministic seeds on a
+  fixed fake-backend calibration snapshot, with JSON, report, and table
+  artifacts and an explicit no-execution guarantee.
 - Added an independent four-dimensional matrix benchmark, persisted validation
   evidence, and explicit time-slice convergence study for the reduced FLRW
   particle-creation experiment.

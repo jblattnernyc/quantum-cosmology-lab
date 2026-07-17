@@ -223,6 +223,13 @@ python experiments/particle_creation_flrw/run_aer.py
 python experiments/particle_creation_flrw/analyze.py
 ```
 
+The optional local hardware-cost study performs fake-backend transpilation
+without circuit execution or submission:
+
+```bash
+python experiments/particle_creation_flrw/hardware_feasibility.py
+```
+
 This workflow generates benchmark, independent-validation, and execution
 artifacts under `data/processed/particle_creation_flrw/`, together with
 analysis outputs under `results/reports/particle_creation_flrw/`,

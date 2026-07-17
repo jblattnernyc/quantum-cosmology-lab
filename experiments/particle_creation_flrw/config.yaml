@@ -122,11 +122,26 @@ validation:
           relative_tolerance: 0.5
           bounds: [-1.0, 1.0]
           required_sign: negative
+hardware_feasibility:
+  status: exploratory
+  backend_class: FakeManilaV2
+  time_steps: [6, 12, 24]
+  transpiler_seeds: [11, 29, 47, 71, 101]
+  optimization_level: 1
+  translation_method: translator
+  live_hardware_recommendation: defer
+  rationale: >
+    The study compares structural transpilation cost under a fixed fake-backend
+    calibration snapshot. It does not execute a primitive, predict full
+    hardware fidelity, or authorize an IBM submission.
 artifacts:
   benchmark_json: data/processed/particle_creation_flrw/benchmark.json
   independent_validation_json: data/processed/particle_creation_flrw/independent_validation.json
   independent_validation_report_markdown: results/reports/particle_creation_flrw/independent_validation_report.md
   convergence_summary_table_markdown: results/tables/particle_creation_flrw/convergence_summary.md
+  hardware_feasibility_json: data/processed/particle_creation_flrw/hardware_feasibility.json
+  hardware_feasibility_report_markdown: results/reports/particle_creation_flrw/hardware_feasibility_report.md
+  hardware_feasibility_table_markdown: results/tables/particle_creation_flrw/hardware_feasibility_summary.md
   exact_local_json: data/processed/particle_creation_flrw/exact_local.json
   exact_local_comparisons_json: data/processed/particle_creation_flrw/exact_local_comparisons.json
   noisy_local_json: data/processed/particle_creation_flrw/noisy_local.json

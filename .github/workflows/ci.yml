@@ -39,6 +39,10 @@ jobs:
       - name: Run particle-creation independent benchmark smoke path
         run: python experiments/particle_creation_flrw/independent_benchmark.py
 
+      - name: Run particle-creation transpilation-feasibility smoke path
+        if: matrix.python-version == '3.11'
+        run: python experiments/particle_creation_flrw/hardware_feasibility.py
+
       - name: Run particle-creation exact-local smoke path
         run: python experiments/particle_creation_flrw/run_local.py
 

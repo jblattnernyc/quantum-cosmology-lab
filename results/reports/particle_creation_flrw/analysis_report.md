@@ -42,3 +42,6 @@ Figure: `results/figures/particle_creation_flrw/observable_comparison.png`
 
 Independent validation report: `results/reports/particle_creation_flrw/independent_validation_report.md`
 Convergence table: `results/tables/particle_creation_flrw/convergence_summary.md`
+
+Exploratory hardware-feasibility report: `results/reports/particle_creation_flrw/hardware_feasibility_report.md`
+Hardware-feasibility table: `results/tables/particle_creation_flrw/hardware_feasibility_summary.md`

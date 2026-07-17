@@ -61,6 +61,10 @@ fingerprints, combined lineage identifier, tier policy assessment, individual
 observable checks, and aggregate pass/fail status. The particle-creation FLRW
 line additionally preserves a freshly reproducible independent matrix result,
 an explicit discretization-refinement assessment, and its convergence table.
+Its separate hardware-feasibility artifact records fake-backend transpilation
+metrics, deterministic seeds, calibration context, proxy limitations, and the
+exact-file SHA-256 digest of its required independent-validation input while
+remaining explicitly advisory and outside the hardware-validation gate.
 It is the initial pilot for this schema. Other official experiment lines
 retain their existing provenance behavior until they are deliberately migrated
 and tested; their file existence must not be misrepresented as equivalent to a
