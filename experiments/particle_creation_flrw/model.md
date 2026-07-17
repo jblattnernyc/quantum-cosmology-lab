@@ -82,19 +82,19 @@ theta_j     = (1 / 2) log(omega_{j+1} / omega_j)
 phi_j       = omega_mid,j * Delta eta
 ```
 
-Define the phase and pairing factors
+Define the symmetric phase-half factor and the pairing factor
 
 ```text
-U_phase,j = exp[-i phi_j (N_k + N_-k - I)]
-U_pair,j  = exp[-i theta_j (a_k^dagger a_-k^dagger + a_k a_-k)]
+U_phase_half,j = exp[-i (phi_j / 2) (N_k + N_-k - I)]
+U_pair,j       = exp[-i theta_j (a_k^dagger a_-k^dagger + a_k a_-k)]
 ```
 
-The experiment applies the phase factor first and the pairing factor second.
-With the conventional right-to-left action of operators, the ordered slice
-unitary is therefore
+The experiment uses a Strang-type symmetric factor ordering: a phase half-step,
+the full pairing step, and a second phase half-step. With the conventional
+right-to-left action of operators, the slice unitary is
 
 ```text
-U_j = U_pair,j U_phase,j .
+U_j = U_phase_half,j U_pair,j U_phase_half,j .
 ```
 
 The full discrete evolution is
@@ -103,7 +103,15 @@ The full discrete evolution is
 U = U_{N-1} ... U_1 U_0 .
 ```
 
-This is the model actually benchmarked in code. The repository does not claim that this discrete ordered product is a continuum-exact FLRW solution. It is an explicit, finite-dimensional, Bogoliubov-inspired toy evolution chosen because it is small enough to benchmark exactly and evaluate with estimator primitives.
+This is the model actually benchmarked in code. The symmetric composition
+reduces noncommuting factor-ordering error relative to the earlier first-order
+phase-then-pairing product. Against the experiment's separately declared
+linear-interpolation ODE diagnostic, the `N = 6, 12, 24, 48, 96` sequence shows
+approximately second-order observable convergence. That numerical behavior is
+a discretization result for the added interpolant, not evidence that the
+discrete product is a continuum-exact FLRW solution. The evolution remains an
+explicit, finite-dimensional, Bogoliubov-inspired toy model chosen because it
+is small enough to benchmark exactly and evaluate with estimator primitives.
 
 ## Qubit Encoding
 
@@ -156,10 +164,10 @@ This is a squeezing-related anomalous correlator for the retained mode pair. Wit
 
 For the default repository parameter set, the exact benchmark of the declared discrete model gives:
 
-- `single_mode_particle_number_expectation = 0.03422860544437149`
-- `total_particle_number_expectation = 0.06845721088874299`
-- `pairing_correlator_expectation = -0.3465452307022458`
-- `pair_occupation_probability = 0.03422860544437149`
+- `single_mode_particle_number_expectation = 0.03892064274087119`
+- `total_particle_number_expectation = 0.07784128548174238`
+- `pairing_correlator_expectation = -0.3255165181389995`
+- `pair_occupation_probability = 0.03892064274087119`
 - `even_parity_probability = 1.0`
 
 The final benchmark state in the retained even-parity sector is:

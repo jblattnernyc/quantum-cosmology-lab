@@ -2,20 +2,20 @@
 
 ## Benchmark
 
-- Single-mode particle number expectation: 0.034229
-- Total particle number expectation: 0.068457
-- Pairing correlator expectation: -0.346545
+- Single-mode particle number expectation: 0.038921
+- Total particle number expectation: 0.077841
+- Pairing correlator expectation: -0.325517
 
 ## Execution Comparison
 
-- Exact local total particle number: 0.068457
-- Noisy local total particle number: 0.122302
-- Exact local absolute total-particle error: 0.000000e+00
-- Noisy local absolute total-particle error: 5.384495e-02
+- Exact local total particle number: 0.077841
+- Noisy local total particle number: 0.135791
+- Exact local absolute total-particle error: 2.498002e-16
+- Noisy local absolute total-particle error: 5.795008e-02
 
 ## Validation Status
 
-- Current lineage: `94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6`
+- Current lineage: `55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8`
 
 | Tier | Lineage | Assessment mode | Stored assessment matches | Result |
 |---|---|---|---|---|

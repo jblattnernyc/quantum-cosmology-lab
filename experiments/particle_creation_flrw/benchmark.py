@@ -115,6 +115,8 @@ def benchmark_to_serializable(
         "parameters": dict(experiment.configuration.parameters),
         "truncation": dict(experiment.configuration.truncation),
         "benchmark": {
+            "factor_ordering": experiment.parameters.factor_ordering,
+            "slice_unitary": "U_phase_half @ U_pairing @ U_phase_half",
             "final_statevector": [
                 _complex_record(value) for value in benchmark.final_statevector
             ],

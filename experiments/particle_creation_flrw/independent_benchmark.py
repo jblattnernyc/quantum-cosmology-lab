@@ -75,6 +75,7 @@ class IndependentValidationPolicy:
     normalization_tolerance: float
     parity_tolerance: float
     convergence_time_steps: tuple[int, ...]
+    minimum_official_step_factor_ordering_improvement: float
     maximum_final_observable_error: float
     maximum_final_state_infidelity: float
     minimum_final_observable_convergence_order: float
@@ -89,6 +90,9 @@ class IndependentValidationPolicy:
             "observable_tolerance": self.observable_tolerance,
             "normalization_tolerance": self.normalization_tolerance,
             "parity_tolerance": self.parity_tolerance,
+            "minimum_official_step_factor_ordering_improvement": (
+                self.minimum_official_step_factor_ordering_improvement
+            ),
             "maximum_final_observable_error": self.maximum_final_observable_error,
             "maximum_final_state_infidelity": self.maximum_final_state_infidelity,
             "minimum_final_observable_convergence_order": (
@@ -98,6 +102,11 @@ class IndependentValidationPolicy:
         for name, value in nonnegative.items():
             if not math.isfinite(value) or value < 0.0:
                 raise ValueError(f"{name} must be finite and non-negative.")
+        if self.minimum_official_step_factor_ordering_improvement <= 1.0:
+            raise ValueError(
+                "minimum_official_step_factor_ordering_improvement must be "
+                "greater than 1."
+            )
         if len(self.convergence_time_steps) < 2:
             raise ValueError("At least two convergence time-step counts are required.")
         if any(value <= 0 for value in self.convergence_time_steps):
@@ -128,6 +137,9 @@ class IndependentValidationPolicy:
             "normalization_tolerance": self.normalization_tolerance,
             "parity_tolerance": self.parity_tolerance,
             "convergence_time_steps": list(self.convergence_time_steps),
+            "minimum_official_step_factor_ordering_improvement": (
+                self.minimum_official_step_factor_ordering_improvement
+            ),
             "maximum_final_observable_error": (self.maximum_final_observable_error),
             "maximum_final_state_infidelity": self.maximum_final_state_infidelity,
             "minimum_final_observable_convergence_order": (
@@ -173,6 +185,40 @@ class ConvergenceRecord:
 
 
 @dataclass(frozen=True)
+class FactorOrderingComparison:
+    """Official-step comparison of symmetric and legacy first-order products."""
+
+    time_steps: int
+    symmetric_maximum_observable_error: float
+    legacy_first_order_maximum_observable_error: float
+    observable_error_improvement_factor: float
+    symmetric_state_infidelity: float
+    legacy_first_order_state_infidelity: float
+
+    def to_serializable(self) -> dict[str, Any]:
+        """Return the factor-ordering comparison as a JSON-safe mapping."""
+
+        return {
+            "time_steps": self.time_steps,
+            "symmetric_ordering": "U_phase_half @ U_pairing @ U_phase_half",
+            "legacy_first_ordering": "U_pairing @ U_phase",
+            "symmetric_maximum_observable_error": (
+                self.symmetric_maximum_observable_error
+            ),
+            "legacy_first_order_maximum_observable_error": (
+                self.legacy_first_order_maximum_observable_error
+            ),
+            "observable_error_improvement_factor": (
+                self.observable_error_improvement_factor
+            ),
+            "symmetric_state_infidelity": self.symmetric_state_infidelity,
+            "legacy_first_order_state_infidelity": (
+                self.legacy_first_order_state_infidelity
+            ),
+        }
+
+
+@dataclass(frozen=True)
 class IndependentValidationAssessment:
     """Numerical checks governing the independent validation result."""
 
@@ -205,6 +251,7 @@ class IndependentValidationResult:
     independent_observables: dict[str, float]
     continuum_reference_statevector: tuple[complex, ...]
     continuum_reference_observables: dict[str, float]
+    factor_ordering_comparison: FactorOrderingComparison
     convergence_records: tuple[ConvergenceRecord, ...]
     assessment: IndependentValidationAssessment
 
@@ -235,6 +282,9 @@ def independent_validation_policy(
         normalization_tolerance=float(raw_policy["normalization_tolerance"]),
         parity_tolerance=float(raw_policy["parity_tolerance"]),
         convergence_time_steps=tuple(int(value) for value in raw_steps),
+        minimum_official_step_factor_ordering_improvement=float(
+            raw_policy["minimum_official_step_factor_ordering_improvement"]
+        ),
         maximum_final_observable_error=float(
             raw_policy["maximum_final_observable_error"]
         ),
@@ -266,17 +316,30 @@ def independent_operator_matrices() -> dict[str, np.ndarray]:
 
 
 def independent_slice_unitary(phase_angle: float, squeezing_angle: float) -> np.ndarray:
-    """Return one phase-then-pairing slice as an explicit matrix exponential."""
+    """Return one symmetric slice as explicit matrix exponentials."""
+
+    phase_half_unitary = expm(-0.5j * phase_angle * _PHASE_GENERATOR)
+    pairing_unitary = expm(-1.0j * squeezing_angle * _PAIRING_GENERATOR)
+    return phase_half_unitary @ pairing_unitary @ phase_half_unitary
+
+
+def independent_legacy_first_order_slice_unitary(
+    phase_angle: float,
+    squeezing_angle: float,
+) -> np.ndarray:
+    """Return the superseded first-order slice for comparison only."""
 
     phase_unitary = expm(-1.0j * phase_angle * _PHASE_GENERATOR)
     pairing_unitary = expm(-1.0j * squeezing_angle * _PAIRING_GENERATOR)
     return pairing_unitary @ phase_unitary
 
 
-def independent_discrete_state(
+def _independent_discrete_state(
     parameters: ParticleCreationFLRWParameters,
+    *,
+    use_legacy_first_ordering: bool,
 ) -> np.ndarray:
-    """Evolve the vacuum without using experiment evolution or circuit helpers."""
+    """Evolve the vacuum with one independently constructed slice rule."""
 
     scale_factors = np.linspace(
         parameters.scale_factor_initial,
@@ -297,8 +360,40 @@ def independent_discrete_state(
             * (parameters.time_extent / parameters.time_steps)
         )
         squeezing_angle = 0.5 * math.log(frequency_end / frequency_start)
-        state = independent_slice_unitary(phase_angle, squeezing_angle) @ state
+        if use_legacy_first_ordering:
+            slice_unitary = independent_legacy_first_order_slice_unitary(
+                phase_angle,
+                squeezing_angle,
+            )
+        else:
+            slice_unitary = independent_slice_unitary(
+                phase_angle,
+                squeezing_angle,
+            )
+        state = slice_unitary @ state
     return state
+
+
+def independent_discrete_state(
+    parameters: ParticleCreationFLRWParameters,
+) -> np.ndarray:
+    """Evolve the vacuum with the declared symmetric slice rule."""
+
+    return _independent_discrete_state(
+        parameters,
+        use_legacy_first_ordering=False,
+    )
+
+
+def independent_legacy_first_order_state(
+    parameters: ParticleCreationFLRWParameters,
+) -> np.ndarray:
+    """Evolve the vacuum with the superseded slice for comparison only."""
+
+    return _independent_discrete_state(
+        parameters,
+        use_legacy_first_ordering=True,
+    )
 
 
 def independent_observable_values(statevector: np.ndarray) -> dict[str, float]:
@@ -455,6 +550,10 @@ def compute_independent_validation(
     independent_observables = independent_observable_values(independent_state)
     continuum_state = continuum_reference_state(parameters, policy)
     continuum_observables = independent_observable_values(continuum_state)
+    legacy_first_order_state = independent_legacy_first_order_state(parameters)
+    legacy_first_order_observables = independent_observable_values(
+        legacy_first_order_state
+    )
     convergence_records = _convergence_records(
         parameters,
         policy,
@@ -468,6 +567,33 @@ def compute_independent_validation(
     official_observable_error = _maximum_observable_error(
         independent_observables,
         official_observables,
+    )
+    symmetric_continuum_observable_error = _maximum_observable_error(
+        independent_observables,
+        continuum_observables,
+    )
+    legacy_continuum_observable_error = _maximum_observable_error(
+        legacy_first_order_observables,
+        continuum_observables,
+    )
+    symmetric_continuum_infidelity, _ = _state_comparison(
+        independent_state,
+        continuum_state,
+    )
+    legacy_continuum_infidelity, _ = _state_comparison(
+        legacy_first_order_state,
+        continuum_state,
+    )
+    factor_ordering_improvement = (
+        legacy_continuum_observable_error / symmetric_continuum_observable_error
+    )
+    factor_ordering_comparison = FactorOrderingComparison(
+        time_steps=parameters.time_steps,
+        symmetric_maximum_observable_error=symmetric_continuum_observable_error,
+        legacy_first_order_maximum_observable_error=(legacy_continuum_observable_error),
+        observable_error_improvement_factor=factor_ordering_improvement,
+        symmetric_state_infidelity=symmetric_continuum_infidelity,
+        legacy_first_order_state_infidelity=legacy_continuum_infidelity,
     )
     normalization_error = abs(
         float(np.vdot(independent_state, independent_state).real) - 1.0
@@ -506,6 +632,10 @@ def compute_independent_validation(
         "odd_parity_suppression": odd_parity_probability <= policy.parity_tolerance,
         "even_parity_preservation": abs(even_parity_probability - 1.0)
         <= policy.parity_tolerance,
+        "official_step_factor_ordering_improvement": (
+            factor_ordering_improvement
+            >= policy.minimum_official_step_factor_ordering_improvement
+        ),
         "monotone_observable_refinement": (
             monotone_observable_error
             if policy.require_monotone_observable_error
@@ -537,6 +667,7 @@ def compute_independent_validation(
             "continuum_reference_normalization_error": (continuum_normalization_error),
             "odd_parity_probability": odd_parity_probability,
             "even_parity_probability": even_parity_probability,
+            "official_step_factor_ordering_improvement": (factor_ordering_improvement),
             "monotone_observable_error": monotone_observable_error,
             "final_maximum_observable_absolute_error": (
                 final_record.maximum_observable_absolute_error
@@ -559,6 +690,7 @@ def compute_independent_validation(
             complex(value) for value in continuum_state
         ),
         continuum_reference_observables=continuum_observables,
+        factor_ordering_comparison=factor_ordering_comparison,
         convergence_records=convergence_records,
         assessment=assessment,
     )
@@ -588,8 +720,9 @@ def independent_validation_to_serializable(
             "basis_order": ["|00>", "|01>", "|10>", "|11>"],
             "phase_generator": "-(IZ + ZI) / 2",
             "pairing_generator": "(XX - YY) / 2",
-            "slice_action_order": "phase_then_pairing",
-            "slice_unitary": "U_pairing @ U_phase",
+            "slice_action_order": "phase_half_then_pairing_then_phase_half",
+            "slice_unitary": "U_phase_half @ U_pairing @ U_phase_half",
+            "factor_ordering": experiment.parameters.factor_ordering,
             "matrix_exponential": "scipy.linalg.expm",
             "shared_evolution_helpers_used": False,
             "continuum_interpolation_assumption": (
@@ -625,6 +758,9 @@ def independent_validation_to_serializable(
             ],
             "observables": dict(result.continuum_reference_observables),
         },
+        "factor_ordering_comparison": (
+            result.factor_ordering_comparison.to_serializable()
+        ),
         "convergence": [
             record.to_serializable() for record in result.convergence_records
         ],
@@ -714,8 +850,8 @@ def _write_independent_report(
         "## Refinement study",
         "",
         (
-            "The refinement study compares the discrete ordered product with an "
-            "ODE obtained by linearly interpolating the prescribed scale factor. "
+            "The refinement study compares the symmetric discrete product with "
+            "an ODE obtained by linearly interpolating the prescribed scale factor. "
             "This is an added discretization diagnostic; it is not a claim of a "
             "continuum-exact quantum field calculation."
         ),
@@ -731,6 +867,16 @@ def _write_independent_report(
         (
             "- Final observed convergence order: "
             f"{assessment.metrics['final_observable_convergence_order']:.6f}"
+        ),
+        "",
+        "## Factor-ordering comparison",
+        "",
+        (
+            f"At the official `N = {result.factor_ordering_comparison.time_steps}`, "
+            "the symmetric product reduces the maximum observable error by a "
+            f"factor of `{result.factor_ordering_comparison.observable_error_improvement_factor:.6f}` "
+            "relative to the superseded phase-then-pairing product under the same "
+            "ODE diagnostic."
         ),
         "",
         "## Interpretation",
@@ -872,6 +1018,7 @@ def independent_validation_record(
         "official_reference",
         "independent_discrete_result",
         "continuum_reference",
+        "factor_ordering_comparison",
         "convergence",
         "assessment",
     )

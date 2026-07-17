@@ -744,8 +744,9 @@ def _write_report(
         (
             "A current real-backend transpilation assessment and an acceptable "
             "noisy or local-testing observable assessment remain required. If the "
-            "noise-versus-discretization tradeoff remains unacceptable, investigate "
-            "a symmetric splitting refinement before increasing the slice count."
+            "noise-versus-discretization tradeoff remains unacceptable after the "
+            "current symmetric splitting refinement, reassess the slice count and "
+            "backend mapping before considering live execution."
         ),
         "",
         "## Artifacts",

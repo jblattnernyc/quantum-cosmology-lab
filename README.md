@@ -236,6 +236,12 @@ analysis outputs under `results/reports/particle_creation_flrw/`,
 `results/tables/particle_creation_flrw/`, and
 `results/figures/particle_creation_flrw/`.
 
+The declared slice evolution uses a symmetric
+phase-half/pairing/phase-half factor ordering. Its refinement assessment is
+benchmarked independently against an explicitly added linear-interpolation ODE
+diagnostic; this is a discretization comparison, not a continuum-exact field
+calculation.
+
 The IBM Runtime path is implemented separately. For this validation-lineage
 pilot, the independent-benchmark, benchmark, exact-local, and noisy-local
 artifacts must be present, match the current

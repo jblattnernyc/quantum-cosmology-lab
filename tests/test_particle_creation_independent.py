@@ -54,7 +54,7 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
             cls.policy,
         )
 
-    def test_matrix_implementation_is_hermitian_unitary_and_ordered(self) -> None:
+    def test_matrix_implementation_is_hermitian_unitary_and_symmetric(self) -> None:
         matrices = independent_operator_matrices()
         for name, matrix in matrices.items():
             with self.subTest(operator=name):
@@ -88,15 +88,16 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
             atol=1.0e-14,
         )
 
-        phase_unitary = expm(-1.0j * phase_angle * matrices["phase_generator"])
+        phase_half_unitary = expm(-0.5j * phase_angle * matrices["phase_generator"])
         pairing_unitary = expm(-1.0j * squeezing_angle * matrices["pairing_generator"])
         np.testing.assert_allclose(
             unitary,
-            pairing_unitary @ phase_unitary,
+            phase_half_unitary @ pairing_unitary @ phase_half_unitary,
             atol=1.0e-14,
         )
+        phase_unitary = phase_half_unitary @ phase_half_unitary
         self.assertGreater(
-            float(np.max(np.abs(unitary - phase_unitary @ pairing_unitary))),
+            float(np.max(np.abs(unitary - pairing_unitary @ phase_unitary))),
             1.0e-4,
         )
 
@@ -140,6 +141,26 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
         self.assertGreaterEqual(
             records[-1].observable_convergence_order,
             self.policy.minimum_final_observable_convergence_order,
+        )
+        self.assertGreater(records[-1].observable_convergence_order, 1.99)
+
+    def test_symmetric_ordering_improves_official_step_error(self) -> None:
+        comparison = self.result.factor_ordering_comparison
+        self.assertEqual(comparison.time_steps, 6)
+        self.assertAlmostEqual(
+            comparison.symmetric_maximum_observable_error,
+            0.006417712569834921,
+        )
+        self.assertAlmostEqual(
+            comparison.legacy_first_order_maximum_observable_error,
+            0.027446425133081764,
+        )
+        self.assertGreater(
+            comparison.observable_error_improvement_factor,
+            self.policy.minimum_official_step_factor_ordering_improvement,
+        )
+        self.assertTrue(
+            self.result.assessment.checks["official_step_factor_ordering_improvement"]
         )
 
     def test_independent_module_does_not_call_primary_evolution_helpers(self) -> None:

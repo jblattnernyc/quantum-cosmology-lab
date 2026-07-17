@@ -15,6 +15,7 @@ from qclab.utils.configuration import ModelConfiguration, load_model_configurati
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CONFIG_PATH = Path(__file__).with_name("config.yaml")
+SYMMETRIC_FACTOR_ORDERING = "symmetric_strang"
 
 
 @dataclass(frozen=True)
@@ -27,6 +28,7 @@ class ParticleCreationFLRWParameters:
     scale_factor_final: float
     time_extent: float
     time_steps: int
+    factor_ordering: str
 
     def __post_init__(self) -> None:
         if self.comoving_momentum <= 0:
@@ -43,6 +45,11 @@ class ParticleCreationFLRWParameters:
             raise ValueError("time_extent must be strictly positive.")
         if self.time_steps <= 0:
             raise ValueError("time_steps must be a positive integer.")
+        if self.factor_ordering != SYMMETRIC_FACTOR_ORDERING:
+            raise ValueError(
+                "factor_ordering must be 'symmetric_strang' for the declared "
+                "particle-creation model."
+            )
 
     @property
     def delta_eta(self) -> float:
@@ -148,6 +155,17 @@ def _required_int(mapping: dict[str, Any], key: str) -> int:
     return int(mapping[key])
 
 
+def _required_str(mapping: dict[str, Any], key: str) -> str:
+    """Extract a required non-empty string parameter."""
+
+    if key not in mapping:
+        raise KeyError(f"Missing required experiment parameter: {key}")
+    value = str(mapping[key]).strip()
+    if not value:
+        raise ValueError(f"Experiment parameter {key} must be non-empty.")
+    return value
+
+
 def _artifact_paths_from_metadata(
     metadata: dict[str, Any],
 ) -> ParticleCreationArtifactPaths:
@@ -227,6 +245,10 @@ def load_experiment_definition(
         ),
         time_extent=_required_float(configuration.parameters, "time_extent"),
         time_steps=_required_int(configuration.parameters, "time_steps"),
+        factor_ordering=_required_str(
+            configuration.parameters,
+            "factor_ordering",
+        ),
     )
     noise_metadata = dict(configuration.metadata.get("noise_model", {}))
     noise_model = NoiseModelSpecification(
@@ -335,18 +357,21 @@ def apply_evolution_slice(
 
     state = np.asarray(even_state, dtype=complex).reshape(2)
     c00, c11 = state
-    phase = evolution_slice.phase_angle
-    c00 *= np.exp(1j * phase)
-    c11 *= np.exp(-1j * phase)
+    half_phase = 0.5 * evolution_slice.phase_angle
+    c00 *= np.exp(1j * half_phase)
+    c11 *= np.exp(-1j * half_phase)
     cosine = math.cos(evolution_slice.squeezing_angle)
     sine = math.sin(evolution_slice.squeezing_angle)
-    return np.array(
+    paired_state = np.array(
         [
             cosine * c00 - 1j * sine * c11,
             -1j * sine * c00 + cosine * c11,
         ],
         dtype=complex,
     )
+    paired_state[0] *= np.exp(1j * half_phase)
+    paired_state[1] *= np.exp(-1j * half_phase)
+    return paired_state
 
 
 def evolve_even_subspace_state(
