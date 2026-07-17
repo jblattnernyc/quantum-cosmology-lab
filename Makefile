@@ -13,7 +13,8 @@ GRAND_UNIFICATION_EPOCH_TOY_DIR := experiments/grand_unification_epoch_toy
 	planck-benchmark planck-run-local planck-run-aer planck-analyze planck-epoch-minisuperspace \
 	planck-run-ibm planck-run-ibm-local \
 	run-ibm run-ibm-local particle-benchmark particle-run-local particle-run-aer \
-	particle-analyze particle-creation particle-run-ibm particle-run-ibm-local \
+	particle-independent-benchmark particle-analyze particle-creation particle-preflight \
+	particle-run-ibm particle-run-ibm-local \
 	gut-benchmark gut-run-local gut-run-aer gut-analyze gut-toy-gauge \
 	gut-run-ibm gut-run-ibm-local \
 	grand-unification-benchmark grand-unification-run-local \
@@ -49,10 +50,12 @@ help:
 		'  planck-run-ibm     Run the Planck-epoch-motivated minisuperspace IBM Runtime workflow. Override BACKEND=<backend-name>.' \
 		'  planck-run-ibm-local Run the Planck-epoch-motivated minisuperspace IBM Runtime local-testing workflow. Override LOCAL_TESTING_BACKEND=<fake-backend-class>.' \
 		'  particle-benchmark   Run the particle-creation FLRW benchmark.' \
+		'  particle-independent-benchmark Run the independent matrix benchmark and convergence study.' \
 		'  particle-run-local   Run the particle-creation exact local workflow.' \
 		'  particle-run-aer     Run the particle-creation noisy local Aer workflow.' \
 		'  particle-analyze     Run the particle-creation analysis workflow.' \
 		'  particle-creation    Run benchmark, exact local, noisy local, and analysis for the official Phase 3 experiment.' \
+		'  particle-preflight   Validate particle-creation hardware prerequisites without resolving a backend or submitting a job.' \
 		'  particle-run-ibm     Run the particle-creation IBM Runtime workflow. Override BACKEND=<backend-name>.' \
 		'  particle-run-ibm-local Run the particle-creation IBM Runtime local-testing workflow. Override LOCAL_TESTING_BACKEND=<fake-backend-class>.' \
 		'  gut-benchmark     Run the toy-gauge benchmark.' \
@@ -157,6 +160,9 @@ planck-run-ibm-local:
 particle-benchmark:
 	$(PYTHON) $(PARTICLE_CREATION_DIR)/benchmark.py
 
+particle-independent-benchmark:
+	$(PYTHON) $(PARTICLE_CREATION_DIR)/independent_benchmark.py
+
 particle-run-local:
 	$(PYTHON) $(PARTICLE_CREATION_DIR)/run_local.py
 
@@ -166,7 +172,10 @@ particle-run-aer:
 particle-analyze:
 	$(PYTHON) $(PARTICLE_CREATION_DIR)/analyze.py
 
-particle-creation: particle-benchmark particle-run-local particle-run-aer particle-analyze
+particle-creation: particle-benchmark particle-independent-benchmark particle-run-local particle-run-aer particle-analyze
+
+particle-preflight:
+	$(PYTHON) $(PARTICLE_CREATION_DIR)/run_ibm.py --preflight-only
 
 particle-run-ibm:
 	@if [ -z "$(BACKEND)" ]; then \

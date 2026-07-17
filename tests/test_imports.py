@@ -20,6 +20,7 @@ class ImportIntegrityTests(unittest.TestCase):
             "experiments.minisuperspace_frw",
             "experiments.planck_epoch_minisuperspace",
             "experiments.particle_creation_flrw",
+            "experiments.particle_creation_flrw.independent_benchmark",
             "qclab",
             "qclab.analysis",
             "qclab.analysis.milestones",
@@ -41,6 +42,11 @@ class ImportIntegrityTests(unittest.TestCase):
             "qclab.utils",
             "qclab.utils.paths",
             "qclab.utils.runtime",
+            "qclab.validation",
+            "qclab.validation.assessment",
+            "qclab.validation.fingerprints",
+            "qclab.validation.gate",
+            "qclab.validation.lineage",
         )
         for module_name in module_names:
             with self.subTest(module=module_name):

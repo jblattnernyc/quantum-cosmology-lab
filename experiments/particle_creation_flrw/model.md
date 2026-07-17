@@ -82,14 +82,22 @@ theta_j     = (1 / 2) log(omega_{j+1} / omega_j)
 phi_j       = omega_mid,j * Delta eta
 ```
 
-The experiment uses the ordered slice unitary
+Define the phase and pairing factors
 
 ```text
-U_j = exp[-i phi_j (N_k + N_-k - I)]
-      exp[-i theta_j (a_k^dagger a_-k^dagger + a_k a_-k)]
+U_phase,j = exp[-i phi_j (N_k + N_-k - I)]
+U_pair,j  = exp[-i theta_j (a_k^dagger a_-k^dagger + a_k a_-k)]
 ```
 
-and the full discrete evolution is
+The experiment applies the phase factor first and the pairing factor second.
+With the conventional right-to-left action of operators, the ordered slice
+unitary is therefore
+
+```text
+U_j = U_pair,j U_phase,j .
+```
+
+The full discrete evolution is
 
 ```text
 U = U_{N-1} ... U_1 U_0 .

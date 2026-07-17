@@ -17,6 +17,10 @@ This checklist defines the minimum steps for reproducing an official experiment 
 - [ ] The benchmark script is run or the preserved benchmark artifact is verified.
 - [ ] The exact-local workflow is run or the preserved exact-local artifact is verified.
 - [ ] The noisy-local workflow is run or the preserved noisy-local artifact is verified.
+- [ ] Where validation lineage is enabled, the configuration/model/observable/benchmark fingerprints and tier assessments are verified rather than relying on file existence.
+- [ ] For `particle_creation_flrw`, the independent matrix evidence is freshly
+      reproducible, current-lineage, and passing before hardware readiness is
+      accepted.
 - [ ] The analysis workflow is run or the preserved analysis report, table, and figure artifacts are verified.
 
 ## IBM Hardware Reproduction or Verification

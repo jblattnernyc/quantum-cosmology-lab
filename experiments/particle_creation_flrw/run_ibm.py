@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
 from pathlib import Path
 import sys
+from typing import Any
 
 if __package__ in {None, ""}:
     repository_root = Path(__file__).resolve().parents[2]
@@ -19,19 +21,83 @@ from qclab.backends import (
     write_ibm_runtime_artifacts,
 )
 from qclab.backends.base import ExecutionTier, validate_execution_progression
+from qclab.validation import (
+    HardwarePreflightResult,
+    ValidationContext,
+    assess_observable_values,
+    validate_hardware_prerequisites,
+)
 
 from experiments.particle_creation_flrw.benchmark import (
+    ParticleCreationFLRWBenchmark,
     comparison_records_for_result,
     compute_benchmark,
-    write_benchmark_json,
+    validation_context_for_benchmark,
 )
 from experiments.particle_creation_flrw.circuit import build_particle_creation_circuit
 from experiments.particle_creation_flrw.common import (
     DEFAULT_CONFIG_PATH,
+    ParticleCreationFLRWExperiment,
     default_backend_request_kwargs,
     load_experiment_definition,
+    validation_configuration_for_experiment,
+)
+from experiments.particle_creation_flrw.independent_benchmark import (
+    INDEPENDENT_TIER,
+    require_independent_validation_artifact,
 )
 from experiments.particle_creation_flrw.observables import build_observables
+
+
+@dataclass(frozen=True)
+class _HardwareValidationPreparation:
+    """Resolved scientific evidence used before any IBM backend operation."""
+
+    experiment: ParticleCreationFLRWExperiment
+    benchmark: ParticleCreationFLRWBenchmark
+    validation_context: ValidationContext
+    validation_configuration: dict[str, Any]
+    preflight: HardwarePreflightResult
+
+
+def _prepare_hardware_validation(
+    config_path: str,
+) -> _HardwareValidationPreparation:
+    """Resolve and validate all content required before hardware execution."""
+
+    experiment = load_experiment_definition(config_path)
+    benchmark = compute_benchmark(experiment.parameters)
+    validation_context = validation_context_for_benchmark(experiment, benchmark)
+    validation_configuration = validation_configuration_for_experiment(experiment)
+    independent_assessment = require_independent_validation_artifact(
+        experiment,
+        benchmark,
+        validation_context,
+    )
+    preflight = validate_hardware_prerequisites(
+        current_context=validation_context,
+        benchmark_values=benchmark.expected_observable_values(),
+        validation_configuration=validation_configuration,
+        benchmark_path=experiment.artifacts.benchmark_json,
+        exact_local_path=experiment.artifacts.exact_local_json,
+        noisy_local_path=experiment.artifacts.noisy_local_json,
+        additional_assessments=(independent_assessment,),
+    )
+    return _HardwareValidationPreparation(
+        experiment=experiment,
+        benchmark=benchmark,
+        validation_context=validation_context,
+        validation_configuration=validation_configuration,
+        preflight=preflight,
+    )
+
+
+def run_hardware_preflight(
+    config_path: str = str(DEFAULT_CONFIG_PATH),
+) -> HardwarePreflightResult:
+    """Validate hardware prerequisites without resolving or running a backend."""
+
+    return _prepare_hardware_validation(config_path).preflight
 
 
 def run_ibm_hardware(
@@ -46,19 +112,22 @@ def run_ibm_hardware(
 ) -> dict[str, str]:
     """Execute the IBM Runtime path after exact-local and noisy-local validation."""
 
-    experiment = load_experiment_definition(config_path)
-    exact_validation_available = experiment.artifacts.exact_local_json.exists()
-    noisy_validation_available = experiment.artifacts.noisy_local_json.exists()
-    benchmark = compute_benchmark(experiment.parameters)
-    write_benchmark_json(experiment, benchmark)
+    preparation = _prepare_hardware_validation(config_path)
+    experiment = preparation.experiment
+    benchmark = preparation.benchmark
+    validation_context = preparation.validation_context
+    validation_configuration = preparation.validation_configuration
+    preflight = preparation.preflight
     validate_execution_progression(
         ExecutionTier.IBM_HARDWARE,
         benchmark_complete=True,
-        exact_local_complete=exact_validation_available,
-        noisy_local_complete=noisy_validation_available,
+        exact_local_complete=preflight.exact_local_assessment.passed,
+        noisy_local_complete=preflight.noisy_local_assessment.passed,
     )
 
-    request_kwargs = default_backend_request_kwargs(experiment, ExecutionTier.IBM_HARDWARE)
+    request_kwargs = default_backend_request_kwargs(
+        experiment, ExecutionTier.IBM_HARDWARE
+    )
     request_options = dict(request_kwargs["options"])
     mitigation_policy = dict(request_options.get("mitigation_policy", {}))
     if resilience_level is not None:
@@ -68,7 +137,9 @@ def run_ibm_hardware(
     request_kwargs["options"] = request_options
     request_kwargs["mitigation_enabled"] = mitigation_enabled
 
-    selected_backend_name = local_testing_backend or backend_name or request_kwargs["backend_name"]
+    selected_backend_name = (
+        local_testing_backend or backend_name or request_kwargs["backend_name"]
+    )
     selection_policy = dict(request_options.get("selection_policy", {}))
     selection_strategy = str(selection_policy.get("strategy", "explicit"))
     if (
@@ -98,13 +169,21 @@ def run_ibm_hardware(
         local_testing_mode=local_testing_backend is not None,
     )
 
+    observables = build_observables(experiment.parameters)
     result = IBMRuntimeEstimatorExecutor().run(
         build_particle_creation_circuit(experiment.parameters),
-        build_observables(experiment.parameters),
+        observables,
         request=request,
         service_kwargs=service_kwargs,
         backend=backend,
         transpile_for_backend=True,
+    )
+    validation_assessment = assess_observable_values(
+        tier=ExecutionTier.IBM_HARDWARE.value,
+        lineage_id=validation_context.lineage_id,
+        evaluations=result.evaluations,
+        benchmark_values=benchmark.expected_observable_values(),
+        validation_configuration=validation_configuration,
     )
     comparison_records = comparison_records_for_result(
         result,
@@ -117,12 +196,14 @@ def run_ibm_hardware(
         result=result,
         comparison_records=comparison_records,
         benchmark_complete=True,
-        exact_local_complete=exact_validation_available,
-        noisy_local_complete=noisy_validation_available,
+        exact_local_complete=preflight.exact_local_assessment.passed,
+        noisy_local_complete=preflight.noisy_local_assessment.passed,
         execution_json_path=artifact_paths["execution_json_path"],
         comparison_json_path=artifact_paths["comparison_json_path"],
         metadata_json_path=artifact_paths["metadata_json_path"],
         report_markdown_path=artifact_paths["report_markdown_path"],
+        validation_context=validation_context,
+        validation_assessment=validation_assessment,
     )
     outputs = {
         "benchmark_json": str(experiment.artifacts.benchmark_json),
@@ -161,7 +242,34 @@ def main(argv: list[str] | None = None) -> int:
             "credential-free IBM Runtime local testing mode."
         ),
     )
+    parser.add_argument(
+        "--preflight-only",
+        action="store_true",
+        help=(
+            "Validate current independent-benchmark, exact-local, and noisy-local "
+            "evidence without resolving an IBM backend or submitting a job."
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.preflight_only:
+        preflight = run_hardware_preflight(args.config)
+        print(f"validation_preflight: {'PASS' if preflight.passed else 'FAIL'}")
+        print(f"experiment_name: {preflight.experiment_name}")
+        print(f"lineage_id: {preflight.lineage_id}")
+        independent_assessment = preflight.assessment_for(INDEPENDENT_TIER)
+        print(
+            "independent_benchmark: "
+            f"{'PASS' if independent_assessment.passed else 'FAIL'}"
+        )
+        print(
+            "exact_local: "
+            f"{'PASS' if preflight.exact_local_assessment.passed else 'FAIL'}"
+        )
+        print(
+            "noisy_local: "
+            f"{'PASS' if preflight.noisy_local_assessment.passed else 'FAIL'}"
+        )
+        return 0
     outputs = run_ibm_hardware(
         config_path=args.config,
         backend_name=args.backend_name,

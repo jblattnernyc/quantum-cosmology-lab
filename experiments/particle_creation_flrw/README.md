@@ -71,6 +71,7 @@ The primary observable is the particle number in the retained mode pair. The pai
 - [config.yaml](config.yaml): parameter choices, execution settings, and artifact paths
 - [common.py](common.py): typed experiment configuration and time-slice construction helpers
 - [benchmark.py](benchmark.py): exact benchmark for the declared discrete model
+- [independent_benchmark.py](independent_benchmark.py): independent 4 x 4 matrix reproduction and time-slice convergence study
 - [circuit.py](circuit.py): two-qubit stepwise evolution circuit
 - [observables.py](observables.py): Pauli-decomposed particle-number and pairing observables
 - [run_local.py](run_local.py): exact local estimator workflow
@@ -85,6 +86,7 @@ From the repository root with the virtual environment active:
 
 ```bash
 python experiments/particle_creation_flrw/benchmark.py
+python experiments/particle_creation_flrw/independent_benchmark.py
 python experiments/particle_creation_flrw/run_local.py
 python experiments/particle_creation_flrw/run_aer.py
 python experiments/particle_creation_flrw/analyze.py
@@ -92,11 +94,62 @@ python experiments/particle_creation_flrw/analyze.py
 
 For the current Apple Silicon Aer runtime note, including the macOS arm64 Python 3.13+ guard status, see the repository [user guide](../../docs/operations/user-guide.md).
 
-The IBM Runtime path is intentionally separate and should be used only after the exact-local and noisy-local validation outputs have been reviewed:
+The independent validator reconstructs the generators, slice propagators, and
+observables directly with NumPy and `scipy.linalg.expm`; it does not call the
+experiment's evolution, circuit, or observable helpers. It also evaluates the
+declared `N = 6, 12, 24, 48, 96` refinement sequence against an ODE obtained by
+linearly interpolating the prescribed scale factor. That ODE is an additional
+discretization diagnostic, not a continuum-exact FLRW field calculation.
+
+The IBM Runtime path is intentionally separate and should be used only after
+the independent, exact-local, and noisy-local validation outputs have been
+reviewed:
 
 ```bash
 python experiments/particle_creation_flrw/run_ibm.py --backend-name <backend>
 ```
+
+The hardware entry point now enforces that ordering as a content-based gate.
+The benchmark, exact-local result, noisy-local result, and independent
+validation evidence carry the current validation lineage. Before a hardware
+request can be submitted, `run_ibm.py` freshly recomputes the independent
+matrix assessment, verifies that the stored independent content matches,
+verifies that all prerequisite artifacts have the current lineage, and
+recomputes both local-tier assessments from their persisted observable values.
+All three assessments must pass the policies declared under `validation` in
+[config.yaml](config.yaml). File existence alone is not sufficient. A change
+to a model parameter, truncation, operator, execution setting, noise model,
+benchmark, or acceptance policy therefore requires the independent benchmark,
+benchmark, exact-local, and noisy-local artifacts to be regenerated.
+
+For each observable, the principal numerical test is
+
+```text
+absolute_error <= absolute_tolerance + relative_tolerance * |benchmark_value|
+```
+
+The configured physical bounds and sign constraints are also required. IBM
+results additionally require a standardized residual no greater than `3.0` for
+each observable. These thresholds establish operational acceptance criteria
+for this reduced experiment; they do not establish fidelity to a continuum
+field theory. In particular, the noisy-tier tolerances are regression
+guardrails for the declared local noise model, and the hardware standardized
+residual is the absolute benchmark deviation divided by the reported estimator
+uncertainty; it is not, by itself, a complete goodness-of-fit test for hardware
+systematics. The hashes detect ordinary configuration and artifact drift but
+are not digital signatures or a tamper-proof provenance system.
+
+Hardware readiness can be checked without credentials, backend resolution, or
+job submission:
+
+```bash
+python experiments/particle_creation_flrw/run_ibm.py --preflight-only
+# or: make particle-preflight
+```
+
+This command reports the current lineage and the independent-benchmark,
+exact-local, and noisy-local PASS results. It exits with an error if required
+evidence is missing, stale, tampered, or outside policy.
 
 The Phase 4 hardware workflow now also writes:
 
@@ -110,4 +163,6 @@ For credential-free infrastructure validation of the IBM wrapper itself, use loc
 python experiments/particle_creation_flrw/run_ibm.py --local-testing-backend FakeManilaV2
 ```
 
-This validates the shared Runtime wrapper and provenance path, but it is not a real hardware result.
+Local testing mode is subject to the same local-evidence gate. It validates the
+shared Runtime wrapper and provenance path, but it is not a real hardware
+result.

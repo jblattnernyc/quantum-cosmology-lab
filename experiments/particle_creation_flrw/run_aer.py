@@ -19,10 +19,12 @@ from qclab.backends import (
 )
 from qclab.backends.base import ExecutionTier, validate_execution_progression
 from qclab.utils.optional import require_dependency
+from qclab.validation import assess_observable_values
 
 from experiments.particle_creation_flrw.benchmark import (
     comparison_records_for_result,
     compute_benchmark,
+    validation_context_for_benchmark,
     write_benchmark_json,
 )
 from experiments.particle_creation_flrw.circuit import build_particle_creation_circuit
@@ -30,6 +32,7 @@ from experiments.particle_creation_flrw.common import (
     DEFAULT_CONFIG_PATH,
     default_backend_request_kwargs,
     load_experiment_definition,
+    validation_configuration_for_experiment,
 )
 from experiments.particle_creation_flrw.observables import build_observables
 
@@ -72,7 +75,12 @@ def run_noisy_local(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, st
         benchmark_complete=True,
     )
     benchmark = compute_benchmark(experiment.parameters)
-    write_benchmark_json(experiment, benchmark)
+    validation_context = validation_context_for_benchmark(experiment, benchmark)
+    write_benchmark_json(
+        experiment,
+        benchmark,
+        validation_context=validation_context,
+    )
 
     aer_module = require_dependency(
         "qiskit_aer",
@@ -103,10 +111,18 @@ def run_noisy_local(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, st
             **kwargs,
         )
     )
+    observables = build_observables(experiment.parameters)
     result = executor.run(
         build_particle_creation_circuit(experiment.parameters),
-        build_observables(experiment.parameters),
+        observables,
         request=request,
+    )
+    validation_assessment = assess_observable_values(
+        tier=ExecutionTier.NOISY_LOCAL.value,
+        lineage_id=validation_context.lineage_id,
+        evaluations=result.evaluations,
+        benchmark_values=benchmark.expected_observable_values(),
+        validation_configuration=validation_configuration_for_experiment(experiment),
     )
     comparison_records = comparison_records_for_result(
         result,
@@ -116,6 +132,8 @@ def run_noisy_local(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, st
     execution_path = write_execution_result_json(
         result,
         experiment.artifacts.noisy_local_json,
+        validation_context=validation_context,
+        validation_assessment=validation_assessment,
     )
     comparison_path = write_comparison_records_json(
         comparison_records,

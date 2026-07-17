@@ -10,6 +10,14 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ### Added
 
+- Added an independent four-dimensional matrix benchmark, persisted validation
+  evidence, and explicit time-slice convergence study for the reduced FLRW
+  particle-creation experiment.
+- Added independent validation reports, convergence tables, regression tests,
+  a Makefile target, and a CI smoke path for the particle-creation experiment.
+- Added a shared validation-lineage package under `src/qclab/validation/` with deterministic configuration, model, observable, and benchmark fingerprints; typed tier assessments; artifact-lineage classification; and a content-based IBM hardware prerequisite gate.
+- Added persisted validation contexts and exact/noisy tier assessments for `particle_creation_flrw`, together with a no-submission `--preflight-only` command and `particle-preflight` Makefile target.
+- Added regression coverage for current, stale, legacy-unbound, and invalid lineage states; tolerance and tamper failures; analysis PASS/FAIL reporting; and validation-aware hardware reports.
 - Added the new official experiment line in `experiments/grand_unification_epoch_toy/`, including a written model statement, configuration, benchmark workflow, circuit interface, observable definitions, exact local execution, noisy local execution, IBM Runtime workflow, analysis pipeline, and written results interpretation for a Grand-Unification-Epoch-context reduced `Z2` symmetry-breaking toy model.
 - Added generated benchmark, exact-local, noisy-local, report, table, and figure artifacts for the default `grand_unification_epoch_toy` workflow.
 - Added automated tests for the implemented `grand_unification_epoch_toy` experiment line, including configuration, benchmark, observable, circuit, exact-local, noisy-local, and analysis checks.
@@ -20,6 +28,14 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ### Changed
 
+- Made current, freshly reproducible, passing independent-benchmark evidence a
+  content-checked prerequisite for the particle-creation IBM hardware path.
+- Clarified the phase-then-pairing slice order in the particle-creation model
+  statement.
+- Replaced file-existence-only IBM progression for `particle_creation_flrw` with recomputed current-lineage exact/noisy assessments before any backend resolution or job submission.
+- Extended particle-creation analysis outputs to distinguish current local evidence from legacy-unbound IBM evidence and to classify the preserved IBM result retrospectively as failing the current hardware policy without altering the historical IBM artifacts.
+- Extended future IBM hardware reports to include optional validation fingerprints, aggregate assessment status, allowed observable errors, standardized residuals, and per-observable PASS/FAIL results.
+- Added the particle-creation noisy-local workflow to CI before analysis and fake-backend IBM validation so the complete gated lineage is rebuilt during smoke testing.
 - Updated `README.md`, `docs/architecture/overview.md`, `Makefile`, import-integrity tests, repository-layout checks, and current repository-state tests so the new `grand_unification_epoch_toy` line is treated as part of the active official experiment surface without creating any new phase structure.
 - Recorded the first live IBM Runtime hardware execution for `grand_unification_epoch_toy` on `ibm_fez`, regenerated the experiment analysis artifacts to include the IBM tier, and aligned the written results interpretation with the archived hardware report.
 - Updated `README.md`, `docs/architecture/overview.md`, `Makefile`, import-integrity tests, repository-layout checks, and current repository-state tests so the new `planck_epoch_minisuperspace` line is treated as part of the active official experiment surface without creating any new phase structure.

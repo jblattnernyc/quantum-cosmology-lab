@@ -15,14 +15,24 @@ if __package__ in {None, ""}:
 from qclab.observables import ObservableEvaluation
 from qclab.plotting import apply_publication_style, configure_noninteractive_backend
 from qclab.utils.paths import repository_relative_path
+from qclab.validation import (
+    TierAssessment,
+    assess_observable_values,
+    classify_artifact_lineage,
+)
 
 from experiments.particle_creation_flrw.benchmark import (
     comparison_records_for_evaluations,
     compute_benchmark,
+    validation_context_for_benchmark,
 )
 from experiments.particle_creation_flrw.common import (
     DEFAULT_CONFIG_PATH,
     load_experiment_definition,
+    validation_configuration_for_experiment,
+)
+from experiments.particle_creation_flrw.independent_benchmark import (
+    independent_validation_record,
 )
 from experiments.particle_creation_flrw.observables import build_observables
 
@@ -50,6 +60,61 @@ def _format_table_value(value: float | None) -> str:
     return f"{value:.6f}"
 
 
+def _observable_status_map(assessment: TierAssessment) -> dict[str, str]:
+    """Return per-observable PASS/FAIL labels for a tier assessment."""
+
+    return {
+        item.observable_name: "PASS" if item.passed else "FAIL"
+        for item in assessment.observables
+    }
+
+
+def _validation_record(
+    *,
+    payload: dict,
+    tier: str,
+    current_context,
+    benchmark_values: dict[str, float],
+    validation_configuration: dict,
+) -> tuple[dict, TierAssessment]:
+    """Recompute and serialize one tier's current-policy assessment."""
+
+    lineage = classify_artifact_lineage(payload, current_context)
+    assessment = assess_observable_values(
+        tier=tier,
+        lineage_id=current_context.lineage_id,
+        evaluations=payload["evaluations"],
+        benchmark_values=benchmark_values,
+        validation_configuration=validation_configuration,
+    )
+    stored_assessment = payload.get("validation_assessment")
+    stored_assessment_matches = (
+        None
+        if stored_assessment is None
+        else stored_assessment == assessment.to_serializable()
+    )
+    assessment_mode = (
+        "recomputed_current_policy"
+        if lineage.status.value == "current"
+        else "retrospective_current_policy"
+    )
+    return (
+        {
+            "lineage_status": lineage.status.value,
+            "lineage_reason": lineage.reason,
+            "artifact_context": (
+                None
+                if lineage.artifact_context is None
+                else lineage.artifact_context.to_serializable()
+            ),
+            "assessment_mode": assessment_mode,
+            "stored_assessment_matches": stored_assessment_matches,
+            "assessment": assessment.to_serializable(),
+        },
+        assessment,
+    )
+
+
 def _write_observable_summary_table(
     *,
     benchmark_values: dict[str, float],
@@ -58,8 +123,11 @@ def _write_observable_summary_table(
     exact_absolute_errors: dict[str, float],
     noisy_absolute_errors: dict[str, float],
     output_path: Path,
+    exact_assessment: TierAssessment,
+    noisy_assessment: TierAssessment,
     ibm_values: dict[str, float] | None = None,
     ibm_absolute_errors: dict[str, float] | None = None,
+    ibm_assessment: TierAssessment | None = None,
 ) -> Path:
     """Write a markdown summary table for benchmarked observables."""
 
@@ -73,6 +141,15 @@ def _write_observable_summary_table(
     ]
     if ibm_values is not None:
         headers.extend(["IBM Runtime", "IBM abs. error"])
+    headers.extend(["Exact status", "Noisy status"])
+    if ibm_assessment is not None:
+        headers.append("IBM status")
+
+    exact_status = _observable_status_map(exact_assessment)
+    noisy_status = _observable_status_map(noisy_assessment)
+    ibm_status = (
+        {} if ibm_assessment is None else _observable_status_map(ibm_assessment)
+    )
 
     lines = [
         "# Particle-Creation FLRW Observable Summary Table",
@@ -100,6 +177,14 @@ def _write_observable_summary_table(
                     ),
                 ]
             )
+        row.extend(
+            [
+                exact_status.get(observable_name, "MISSING"),
+                noisy_status.get(observable_name, "MISSING"),
+            ]
+        )
+        if ibm_assessment is not None:
+            row.append(ibm_status.get(observable_name, "MISSING"))
         lines.append("|" + "|".join(row) + "|")
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -128,7 +213,9 @@ def _plot_observable_comparison(
         width=bar_width,
         label="Benchmark",
     )
-    for series_index, (series_label, values) in enumerate(candidate_series.items(), start=1):
+    for series_index, (series_label, values) in enumerate(
+        candidate_series.items(), start=1
+    ):
         axis.bar(
             [
                 position - 0.4 + (series_index + 0.5) * bar_width
@@ -154,9 +241,32 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
     experiment = load_experiment_definition(config_path)
     benchmark = compute_benchmark(experiment.parameters)
     benchmark_values = benchmark.expected_observable_values()
+    validation_context = validation_context_for_benchmark(experiment, benchmark)
+    validation_configuration = validation_configuration_for_experiment(experiment)
+    independent_validation_record_payload, independent_assessment = (
+        independent_validation_record(
+            experiment,
+            benchmark,
+            validation_context,
+        )
+    )
 
     exact_payload = _load_json(experiment.artifacts.exact_local_json)
     noisy_payload = _load_json(experiment.artifacts.noisy_local_json)
+    exact_validation_record, exact_assessment = _validation_record(
+        payload=exact_payload,
+        tier="exact_local",
+        current_context=validation_context,
+        benchmark_values=benchmark_values,
+        validation_configuration=validation_configuration,
+    )
+    noisy_validation_record, noisy_assessment = _validation_record(
+        payload=noisy_payload,
+        tier="noisy_local",
+        current_context=validation_context,
+        benchmark_values=benchmark_values,
+        validation_configuration=validation_configuration,
+    )
     series = {
         "Exact local": _evaluation_map(exact_payload),
         "Noisy local": _evaluation_map(noisy_payload),
@@ -165,6 +275,16 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
     if experiment.artifacts.ibm_runtime_json.exists():
         ibm_payload = _load_json(experiment.artifacts.ibm_runtime_json)
         series["IBM Runtime"] = _evaluation_map(ibm_payload)
+        ibm_validation_record, ibm_assessment = _validation_record(
+            payload=ibm_payload,
+            tier="ibm_hardware",
+            current_context=validation_context,
+            benchmark_values=benchmark_values,
+            validation_configuration=validation_configuration,
+        )
+    else:
+        ibm_validation_record = None
+        ibm_assessment = None
 
     figure_path = _plot_observable_comparison(
         benchmark_values=benchmark_values,
@@ -173,7 +293,8 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
     )
 
     observable_lookup = {
-        observable.name: observable for observable in build_observables(experiment.parameters)
+        observable.name: observable
+        for observable in build_observables(experiment.parameters)
     }
     exact_evaluations = tuple(
         ObservableEvaluation(
@@ -211,12 +332,30 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
         "exact_local_values": series["Exact local"],
         "noisy_local_values": series["Noisy local"],
         "exact_local_absolute_errors": {
-            record.observable_name: record.absolute_error for record in exact_comparisons
+            record.observable_name: record.absolute_error
+            for record in exact_comparisons
         },
         "noisy_local_absolute_errors": {
-            record.observable_name: record.absolute_error for record in noisy_comparisons
+            record.observable_name: record.absolute_error
+            for record in noisy_comparisons
         },
         "comparison_figure": repository_relative_path(figure_path),
+        "independent_validation_json": repository_relative_path(
+            experiment.artifacts.independent_validation_json
+        ),
+        "independent_validation_report_markdown": repository_relative_path(
+            experiment.artifacts.independent_validation_report_markdown
+        ),
+        "convergence_summary_table_markdown": repository_relative_path(
+            experiment.artifacts.convergence_summary_table_markdown
+        ),
+        "validation": {
+            "current_context": validation_context.to_serializable(),
+            "independent_benchmark": independent_validation_record_payload,
+            "exact_local": exact_validation_record,
+            "noisy_local": noisy_validation_record,
+            "ibm_runtime": ibm_validation_record,
+        },
     }
     if ibm_payload is not None:
         summary_payload["ibm_runtime_values"] = series["IBM Runtime"]
@@ -261,12 +400,15 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
         noisy_values=series["Noisy local"],
         exact_absolute_errors=summary_payload["exact_local_absolute_errors"],
         noisy_absolute_errors=summary_payload["noisy_local_absolute_errors"],
+        exact_assessment=exact_assessment,
+        noisy_assessment=noisy_assessment,
         ibm_values=None if ibm_payload is None else series["IBM Runtime"],
         ibm_absolute_errors=(
             None
             if ibm_comparisons is None
             else summary_payload["ibm_runtime_absolute_errors"]
         ),
+        ibm_assessment=ibm_assessment,
         output_path=experiment.artifacts.observable_summary_table_markdown,
     )
     summary_payload["observable_summary_table_markdown"] = repository_relative_path(
@@ -316,19 +458,64 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
             f"{summary_payload['noisy_local_absolute_errors']['total_particle_number_expectation']:.6e}"
         ),
         "",
-        "## Interpretation",
+        "## Validation Status",
         "",
+        f"- Current lineage: `{validation_context.lineage_id}`",
+        "",
+        "| Tier | Lineage | Assessment mode | Stored assessment matches | Result |",
+        "|---|---|---|---|---|",
         (
-            "The exact local workflow reproduces the exact discrete benchmark of "
-            "the retained two-mode FLRW particle-creation toy model."
+            "| Independent benchmark | "
+            f"{independent_validation_record_payload['lineage_status']} | "
+            "fresh_matrix_recomputation | "
+            f"{independent_validation_record_payload['stored_result_matches']} | "
+            f"{'PASS' if independent_assessment.passed else 'FAIL'} |"
         ),
         (
-            "The noisy local workflow preserves a nonzero particle-number signal "
-            "and the sign of the pairing correlator under the explicit Aer noise "
-            "model, but it is not interpreted as evidence for a full continuum "
-            "curved-spacetime field theory."
+            "| Exact local | "
+            f"{exact_validation_record['lineage_status']} | "
+            f"{exact_validation_record['assessment_mode']} | "
+            f"{exact_validation_record['stored_assessment_matches']} | "
+            f"{'PASS' if exact_assessment.passed else 'FAIL'} |"
+        ),
+        (
+            "| Noisy local | "
+            f"{noisy_validation_record['lineage_status']} | "
+            f"{noisy_validation_record['assessment_mode']} | "
+            f"{noisy_validation_record['stored_assessment_matches']} | "
+            f"{'PASS' if noisy_assessment.passed else 'FAIL'} |"
         ),
     ]
+    if ibm_validation_record is not None and ibm_assessment is not None:
+        report_lines.append(
+            "| IBM Runtime | "
+            f"{ibm_validation_record['lineage_status']} | "
+            f"{ibm_validation_record['assessment_mode']} | "
+            f"{ibm_validation_record['stored_assessment_matches']} | "
+            f"{'PASS' if ibm_assessment.passed else 'FAIL'} |"
+        )
+    report_lines.extend(
+        [
+            "",
+            "## Interpretation",
+            "",
+            (
+                "The exact local workflow reproduces the exact discrete benchmark of "
+                "the retained two-mode FLRW particle-creation toy model."
+            ),
+            (
+                "The independent matrix benchmark separately reconstructs the "
+                "four-dimensional evolution and quantifies time-slice refinement "
+                "under an explicitly added continuum interpolation."
+            ),
+            (
+                "The noisy local workflow preserves a nonzero particle-number signal "
+                "and the sign of the pairing correlator under the explicit Aer noise "
+                "model, but it is not interpreted as evidence for a full continuum "
+                "curved-spacetime field theory."
+            ),
+        ]
+    )
     if ibm_payload is not None:
         report_lines.extend(
             [
@@ -336,6 +523,11 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
                     "The IBM Runtime tier, when present, remains subordinate to the "
                     "benchmark, exact-local, and noisy-local tiers and must be read "
                     "through the associated hardware report and metadata capture."
+                ),
+                (
+                    "Its validation status above is a current-policy assessment. "
+                    "A legacy-unbound result is retrospective evidence and is not "
+                    "eligible as prerequisite evidence for a new hardware run."
                 ),
                 "",
                 (
@@ -364,6 +556,15 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
             f"Table: `{repository_relative_path(summary_table_path)}`",
             "",
             f"Figure: `{repository_relative_path(figure_path)}`",
+            "",
+            (
+                "Independent validation report: "
+                f"`{repository_relative_path(experiment.artifacts.independent_validation_report_markdown)}`"
+            ),
+            (
+                "Convergence table: "
+                f"`{repository_relative_path(experiment.artifacts.convergence_summary_table_markdown)}`"
+            ),
         ]
     )
     experiment.artifacts.analysis_report_markdown.write_text(
@@ -377,8 +578,19 @@ def run_analysis(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, str]:
         "analysis_report_markdown": repository_relative_path(
             experiment.artifacts.analysis_report_markdown
         ),
-        "observable_summary_table_markdown": repository_relative_path(summary_table_path),
+        "observable_summary_table_markdown": repository_relative_path(
+            summary_table_path
+        ),
         "comparison_figure": repository_relative_path(figure_path),
+        "independent_validation_json": repository_relative_path(
+            experiment.artifacts.independent_validation_json
+        ),
+        "independent_validation_report_markdown": repository_relative_path(
+            experiment.artifacts.independent_validation_report_markdown
+        ),
+        "convergence_summary_table_markdown": repository_relative_path(
+            experiment.artifacts.convergence_summary_table_markdown
+        ),
     }
     if ibm_payload is not None:
         outputs["ibm_runtime_json"] = repository_relative_path(

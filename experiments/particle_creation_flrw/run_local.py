@@ -18,10 +18,12 @@ from qclab.backends import (
     write_execution_result_json,
 )
 from qclab.backends.base import ExecutionTier, validate_execution_progression
+from qclab.validation import assess_observable_values
 
 from experiments.particle_creation_flrw.benchmark import (
     comparison_records_for_result,
     compute_benchmark,
+    validation_context_for_benchmark,
     write_benchmark_json,
 )
 from experiments.particle_creation_flrw.circuit import build_particle_creation_circuit
@@ -29,6 +31,7 @@ from experiments.particle_creation_flrw.common import (
     DEFAULT_CONFIG_PATH,
     default_backend_request_kwargs,
     load_experiment_definition,
+    validation_configuration_for_experiment,
 )
 from experiments.particle_creation_flrw.observables import build_observables
 
@@ -42,15 +45,28 @@ def run_exact_local(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, st
         benchmark_complete=True,
     )
     benchmark = compute_benchmark(experiment.parameters)
-    write_benchmark_json(experiment, benchmark)
+    validation_context = validation_context_for_benchmark(experiment, benchmark)
+    write_benchmark_json(
+        experiment,
+        benchmark,
+        validation_context=validation_context,
+    )
 
+    observables = build_observables(experiment.parameters)
     request = BackendRequest(
         **default_backend_request_kwargs(experiment, ExecutionTier.EXACT_LOCAL)
     )
     result = ExactLocalEstimatorExecutor().run(
         build_particle_creation_circuit(experiment.parameters),
-        build_observables(experiment.parameters),
+        observables,
         request=request,
+    )
+    validation_assessment = assess_observable_values(
+        tier=ExecutionTier.EXACT_LOCAL.value,
+        lineage_id=validation_context.lineage_id,
+        evaluations=result.evaluations,
+        benchmark_values=benchmark.expected_observable_values(),
+        validation_configuration=validation_configuration_for_experiment(experiment),
     )
     comparison_records = comparison_records_for_result(
         result,
@@ -60,6 +76,8 @@ def run_exact_local(config_path: str = str(DEFAULT_CONFIG_PATH)) -> dict[str, st
     execution_path = write_execution_result_json(
         result,
         experiment.artifacts.exact_local_json,
+        validation_context=validation_context,
+        validation_assessment=validation_assessment,
     )
     comparison_path = write_comparison_records_json(
         comparison_records,

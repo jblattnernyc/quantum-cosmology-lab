@@ -17,6 +17,7 @@ import numpy as np
 
 from qclab.analysis import compare_scalar_observable
 from qclab.observables import ObservableEvaluation
+from qclab.validation import ValidationContext, build_validation_context
 
 from experiments.particle_creation_flrw.common import (
     DEFAULT_CONFIG_PATH,
@@ -103,10 +104,12 @@ def compute_benchmark(
 def benchmark_to_serializable(
     experiment: ParticleCreationFLRWExperiment,
     benchmark: ParticleCreationFLRWBenchmark,
+    *,
+    validation_context: ValidationContext | None = None,
 ) -> dict[str, object]:
     """Convert benchmark data into a serializable record."""
 
-    return {
+    payload: dict[str, object] = {
         "experiment_name": experiment.configuration.experiment_name,
         "scientific_question": experiment.configuration.scientific_question,
         "parameters": dict(experiment.configuration.parameters),
@@ -141,12 +144,32 @@ def benchmark_to_serializable(
             ],
         },
     }
+    if validation_context is not None:
+        payload["validation_context"] = validation_context.to_serializable()
+    return payload
+
+
+def validation_context_for_benchmark(
+    experiment: ParticleCreationFLRWExperiment,
+    benchmark: ParticleCreationFLRWBenchmark,
+) -> ValidationContext:
+    """Build the current lineage from model, observables, and benchmark data."""
+
+    from experiments.particle_creation_flrw.observables import build_observables
+
+    return build_validation_context(
+        experiment.configuration,
+        benchmark_to_serializable(experiment, benchmark),
+        build_observables(experiment.parameters),
+    )
 
 
 def write_benchmark_json(
     experiment: ParticleCreationFLRWExperiment,
     benchmark: ParticleCreationFLRWBenchmark,
     path: str | Path | None = None,
+    *,
+    validation_context: ValidationContext | None = None,
 ) -> Path:
     """Write the classical benchmark to disk as JSON."""
 
@@ -156,8 +179,19 @@ def write_benchmark_json(
         else Path(path).expanduser().resolve()
     )
     resolved_path.parent.mkdir(parents=True, exist_ok=True)
+    current_context = validation_context or validation_context_for_benchmark(
+        experiment, benchmark
+    )
     resolved_path.write_text(
-        json.dumps(benchmark_to_serializable(experiment, benchmark), indent=2, sort_keys=True)
+        json.dumps(
+            benchmark_to_serializable(
+                experiment,
+                benchmark,
+                validation_context=current_context,
+            ),
+            indent=2,
+            sort_keys=True,
+        )
         + "\n",
         encoding="utf-8",
     )

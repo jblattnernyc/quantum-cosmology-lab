@@ -233,10 +233,28 @@ def _json_safe(value: Any) -> Any:
     return repr(value)
 
 
-def execution_result_to_serializable(result: EstimatorExecutionResult) -> dict[str, Any]:
+def _validation_record_to_serializable(value: Any) -> dict[str, Any]:
+    """Normalize a typed or mapping-based validation record."""
+
+    if isinstance(value, Mapping):
+        return _json_safe(dict(value))
+    to_serializable = getattr(value, "to_serializable", None)
+    if callable(to_serializable):
+        payload = to_serializable()
+        if isinstance(payload, Mapping):
+            return _json_safe(dict(payload))
+    raise TypeError("Validation records must be mappings or expose to_serializable().")
+
+
+def execution_result_to_serializable(
+    result: EstimatorExecutionResult,
+    *,
+    validation_context: Any | None = None,
+    validation_assessment: Any | None = None,
+) -> dict[str, Any]:
     """Convert an execution result into a JSON-safe record."""
 
-    return {
+    payload = {
         "request": {
             "tier": result.request.tier.value,
             "backend_name": result.request.backend_name,
@@ -275,18 +293,38 @@ def execution_result_to_serializable(result: EstimatorExecutionResult) -> dict[s
         ],
         "job_metadata": _json_safe(result.job_metadata),
     }
+    if validation_context is not None:
+        payload["validation_context"] = _validation_record_to_serializable(
+            validation_context
+        )
+    if validation_assessment is not None:
+        payload["validation_assessment"] = _validation_record_to_serializable(
+            validation_assessment
+        )
+    return payload
 
 
 def write_execution_result_json(
     result: EstimatorExecutionResult,
     path: str | Path,
+    *,
+    validation_context: Any | None = None,
+    validation_assessment: Any | None = None,
 ) -> Path:
     """Write a serialized execution result to disk as formatted JSON."""
 
     resolved_path = Path(path).expanduser().resolve()
     resolved_path.parent.mkdir(parents=True, exist_ok=True)
     resolved_path.write_text(
-        json.dumps(execution_result_to_serializable(result), indent=2, sort_keys=True)
+        json.dumps(
+            execution_result_to_serializable(
+                result,
+                validation_context=validation_context,
+                validation_assessment=validation_assessment,
+            ),
+            indent=2,
+            sort_keys=True,
+        )
         + "\n",
         encoding="utf-8",
     )

@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+from contextlib import redirect_stdout
 import importlib.util
+import io
 import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 import yaml
 
@@ -24,6 +27,11 @@ from experiments.particle_creation_flrw.common import (
     load_experiment_definition,
 )
 from experiments.particle_creation_flrw.observables import build_observables
+from experiments.particle_creation_flrw.run_ibm import (
+    main as run_ibm_main,
+    run_hardware_preflight,
+)
+from qclab.validation import HardwareValidationGateError
 
 
 QISKIT_AVAILABLE = importlib.util.find_spec("qiskit") is not None
@@ -43,6 +51,16 @@ class ParticleCreationFLRWTests(unittest.TestCase):
                 "total_particle_number_expectation",
                 "pairing_correlator_expectation",
             ),
+        )
+        validation = experiment.configuration.metadata["validation"]
+        self.assertEqual(validation["schema_version"], 1)
+        self.assertEqual(
+            set(validation["tiers"]),
+            {"exact_local", "noisy_local", "ibm_hardware"},
+        )
+        self.assertEqual(
+            validation["independent_benchmark"]["convergence_time_steps"],
+            [6, 12, 24, 48, 96],
         )
 
     def test_evolution_slices_are_monotone_and_match_time_steps(self) -> None:
@@ -71,7 +89,9 @@ class ParticleCreationFLRWTests(unittest.TestCase):
             benchmark.pairing_correlator_expectation,
             -0.3465452307022458,
         )
-        self.assertAlmostEqual(benchmark.pair_occupation_probability, 0.03422860544437149)
+        self.assertAlmostEqual(
+            benchmark.pair_occupation_probability, 0.03422860544437149
+        )
         self.assertAlmostEqual(benchmark.even_parity_probability, 1.0)
 
     def test_observables_have_expected_pauli_decomposition(self) -> None:
@@ -92,18 +112,14 @@ class ParticleCreationFLRWTests(unittest.TestCase):
         self.assertEqual(
             [
                 (term.label, term.coefficient)
-                for term in observables[
-                    "total_particle_number_expectation"
-                ].pauli_terms
+                for term in observables["total_particle_number_expectation"].pauli_terms
             ],
             [("II", 1.0), ("IZ", -0.5), ("ZI", -0.5)],
         )
         self.assertEqual(
             [
                 (term.label, term.coefficient)
-                for term in observables[
-                    "pairing_correlator_expectation"
-                ].pauli_terms
+                for term in observables["pairing_correlator_expectation"].pauli_terms
             ],
             [("XX", 0.5), ("YY", -0.5)],
         )
@@ -121,6 +137,103 @@ class ParticleCreationFLRWTests(unittest.TestCase):
             "|total_particle_number_expectation|0.068457|0.068457|0.000000|0.122302|0.053845|",
             table_text,
         )
+        self.assertIn("|PASS|PASS|FAIL|", table_text)
+
+        summary_payload = json.loads(
+            Path(outputs["analysis_summary_json"]).read_text(encoding="utf-8")
+        )
+        validation = summary_payload["validation"]
+        self.assertEqual(
+            validation["independent_benchmark"]["lineage_status"],
+            "current",
+        )
+        self.assertTrue(validation["independent_benchmark"]["stored_result_matches"])
+        self.assertTrue(validation["independent_benchmark"]["assessment"]["passed"])
+        self.assertEqual(validation["exact_local"]["lineage_status"], "current")
+        self.assertTrue(validation["exact_local"]["assessment"]["passed"])
+        self.assertTrue(validation["exact_local"]["stored_assessment_matches"])
+        self.assertEqual(validation["noisy_local"]["lineage_status"], "current")
+        self.assertTrue(validation["noisy_local"]["assessment"]["passed"])
+        self.assertTrue(validation["noisy_local"]["stored_assessment_matches"])
+        self.assertEqual(
+            validation["ibm_runtime"]["lineage_status"],
+            "legacy_unbound",
+        )
+        self.assertFalse(validation["ibm_runtime"]["assessment"]["passed"])
+
+        report_text = Path(outputs["analysis_report_markdown"]).read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("| Independent benchmark | current |", report_text)
+        self.assertIn("| Exact local | current |", report_text)
+        self.assertIn("| Noisy local | current |", report_text)
+        self.assertIn("| IBM Runtime | legacy_unbound |", report_text)
+
+    def test_preflight_only_does_not_invoke_ibm_executor(self) -> None:
+        preflight = run_hardware_preflight()
+        self.assertTrue(preflight.passed)
+
+        stdout = io.StringIO()
+        with patch(
+            "experiments.particle_creation_flrw.run_ibm.IBMRuntimeEstimatorExecutor.run"
+        ) as executor_run:
+            with redirect_stdout(stdout):
+                return_code = run_ibm_main(["--preflight-only"])
+        executor_run.assert_not_called()
+        self.assertEqual(return_code, 0)
+        self.assertIn("validation_preflight: PASS", stdout.getvalue())
+        self.assertIn("independent_benchmark: PASS", stdout.getvalue())
+        self.assertIn("exact_local: PASS", stdout.getvalue())
+        self.assertIn("noisy_local: PASS", stdout.getvalue())
+
+    def test_preflight_rejects_configuration_drift(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_mapping = yaml.safe_load(
+                DEFAULT_CONFIG_PATH.read_text(encoding="utf-8")
+            )
+            config_mapping["parameters"]["mass"] = 0.61
+            config_path = Path(temp_dir) / "config.yaml"
+            config_path.write_text(
+                yaml.safe_dump(config_mapping, sort_keys=False),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(
+                HardwareValidationGateError,
+                "lineage does not match",
+            ):
+                run_hardware_preflight(str(config_path))
+
+    def test_preflight_rejects_missing_independent_evidence_before_execution(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            config_mapping = yaml.safe_load(
+                DEFAULT_CONFIG_PATH.read_text(encoding="utf-8")
+            )
+            config_mapping["artifacts"]["independent_validation_json"] = str(
+                Path(temp_dir) / "missing-independent-validation.json"
+            )
+            config_path = Path(temp_dir) / "config.yaml"
+            config_path.write_text(
+                yaml.safe_dump(config_mapping, sort_keys=False),
+                encoding="utf-8",
+            )
+            with patch(
+                "experiments.particle_creation_flrw.run_ibm.IBMRuntimeEstimatorExecutor.run"
+            ) as executor_run:
+                with self.assertRaisesRegex(
+                    HardwareValidationGateError,
+                    "does not exist",
+                ):
+                    run_ibm_main(
+                        [
+                            "--config",
+                            str(config_path),
+                            "--local-testing-backend",
+                            "FakeManilaV2",
+                        ]
+                    )
+            executor_run.assert_not_called()
 
     def test_analysis_exposes_ibm_artifact_paths_when_ibm_outputs_exist(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -199,6 +312,10 @@ class ParticleCreationFLRWTests(unittest.TestCase):
         for circuit_component, benchmark_component in zip(
             circuit_state, benchmark_state, strict=True
         ):
-            self.assertAlmostEqual(circuit_component.real, benchmark_component.real, places=10)
-            self.assertAlmostEqual(circuit_component.imag, benchmark_component.imag, places=10)
+            self.assertAlmostEqual(
+                circuit_component.real, benchmark_component.real, places=10
+            )
+            self.assertAlmostEqual(
+                circuit_component.imag, benchmark_component.imag, places=10
+            )
         self.assertEqual(artifact.qubit_count, 2)

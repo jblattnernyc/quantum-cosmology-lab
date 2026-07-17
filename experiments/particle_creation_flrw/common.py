@@ -87,6 +87,9 @@ class ParticleCreationArtifactPaths:
     """Artifact locations for experiment outputs."""
 
     benchmark_json: Path
+    independent_validation_json: Path
+    independent_validation_report_markdown: Path
+    convergence_summary_table_markdown: Path
     exact_local_json: Path
     exact_local_comparisons_json: Path
     noisy_local_json: Path
@@ -142,6 +145,15 @@ def _artifact_paths_from_metadata(metadata: dict[str, Any]) -> ParticleCreationA
     raw_paths = dict(metadata.get("artifacts", {}))
     defaults = {
         "benchmark_json": "data/processed/particle_creation_flrw/benchmark.json",
+        "independent_validation_json": (
+            "data/processed/particle_creation_flrw/independent_validation.json"
+        ),
+        "independent_validation_report_markdown": (
+            "results/reports/particle_creation_flrw/independent_validation_report.md"
+        ),
+        "convergence_summary_table_markdown": (
+            "results/tables/particle_creation_flrw/convergence_summary.md"
+        ),
         "exact_local_json": "data/processed/particle_creation_flrw/exact_local.json",
         "exact_local_comparisons_json": (
             "data/processed/particle_creation_flrw/exact_local_comparisons.json"
@@ -214,6 +226,19 @@ def load_experiment_definition(
         noise_model=noise_model,
         artifacts=artifacts,
     )
+
+
+def validation_configuration_for_experiment(
+    experiment: ParticleCreationFLRWExperiment,
+) -> dict[str, Any]:
+    """Return the required validation-policy mapping for this official line."""
+
+    validation_configuration = experiment.configuration.metadata.get("validation")
+    if not isinstance(validation_configuration, dict):
+        raise ValueError(
+            "The particle-creation experiment requires a validation mapping in config.yaml."
+        )
+    return dict(validation_configuration)
 
 
 def scale_factor_edges(parameters: ParticleCreationFLRWParameters) -> np.ndarray:

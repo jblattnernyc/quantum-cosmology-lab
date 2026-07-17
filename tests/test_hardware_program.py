@@ -295,6 +295,57 @@ class HardwareProgramTests(unittest.TestCase):
         self.assertNotIn("runtime-instance-example", report_text)
         self.assertIn("| toy_observable | 1.000000 | 0.900000 | 0.100000 | 0.100000 | 0.020000 |", report_text)
 
+    def test_hardware_report_includes_optional_validation_lineage_and_assessment(
+        self,
+    ) -> None:
+        result = self._build_result()
+        comparison_records = [
+            ComparisonRecord(
+                observable_name="toy_observable",
+                benchmark_value=1.0,
+                candidate_value=0.9,
+                absolute_error=0.1,
+                relative_error=0.1,
+                interpretation="Infrastructure-only comparison.",
+            )
+        ]
+        validation_context = {
+            "lineage_id": "1" * 64,
+            "configuration_fingerprint": "2" * 64,
+            "model_fingerprint": "3" * 64,
+            "observable_fingerprint": "4" * 64,
+            "benchmark_fingerprint": "5" * 64,
+        }
+        validation_assessment = {
+            "passed": False,
+            "observables": [
+                {
+                    "observable_name": "toy_observable",
+                    "allowed_error": 0.05,
+                    "standardized_residual": 5.0,
+                    "passed": False,
+                }
+            ],
+        }
+        with tempfile.TemporaryDirectory() as temp_dir:
+            report_path = Path(temp_dir) / "hardware_report.md"
+            write_hardware_report_markdown(
+                experiment_name="phase4_test",
+                scientific_question="Does the report expose validation status?",
+                result=result,
+                comparison_records=comparison_records,
+                benchmark_complete=True,
+                exact_local_complete=True,
+                noisy_local_complete=True,
+                path=report_path,
+                validation_context=validation_context,
+                validation_assessment=validation_assessment,
+            )
+            report_text = report_path.read_text(encoding="utf-8")
+        self.assertIn(f"- Lineage id: `{'1' * 64}`", report_text)
+        self.assertIn("- Post-run assessment: `FAIL`", report_text)
+        self.assertIn("| toy_observable | 0.050000 | 5.000000 | FAIL |", report_text)
+
     def test_ibm_runtime_artifacts_archive_completed_live_runs(self) -> None:
         result = self._build_result()
         comparison_records = [
