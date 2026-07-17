@@ -14,6 +14,7 @@ parameters:
   scale_factor_final: 2.4
   time_extent: 1.5
   time_steps: 6
+  factor_ordering: symmetric_strang
 truncation:
   basis: two_mode_single_pair_truncation
   mode_count: 2
@@ -74,9 +75,10 @@ validation:
     normalization_tolerance: 1.0e-12
     parity_tolerance: 1.0e-12
     convergence_time_steps: [6, 12, 24, 48, 96]
-    maximum_final_observable_error: 3.0e-3
-    maximum_final_state_infidelity: 2.0e-5
-    minimum_final_observable_convergence_order: 0.8
+    minimum_official_step_factor_ordering_improvement: 3.0
+    maximum_final_observable_error: 5.0e-5
+    maximum_final_state_infidelity: 1.0e-8
+    minimum_final_observable_convergence_order: 1.8
     require_monotone_observable_error: true
     continuum_reference:
       method: DOP853

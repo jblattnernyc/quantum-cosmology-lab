@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from contextlib import redirect_stdout
+from dataclasses import replace
 import importlib.util
 import io
 import json
@@ -62,10 +63,28 @@ class ParticleCreationFLRWTests(unittest.TestCase):
             validation["independent_benchmark"]["convergence_time_steps"],
             [6, 12, 24, 48, 96],
         )
+        self.assertEqual(experiment.parameters.factor_ordering, "symmetric_strang")
+        self.assertEqual(
+            validation["independent_benchmark"][
+                "minimum_final_observable_convergence_order"
+            ],
+            1.8,
+        )
+        self.assertEqual(
+            validation["independent_benchmark"][
+                "minimum_official_step_factor_ordering_improvement"
+            ],
+            3.0,
+        )
         feasibility = experiment.configuration.metadata["hardware_feasibility"]
         self.assertEqual(feasibility["status"], "exploratory")
         self.assertEqual(feasibility["time_steps"], [6, 12, 24])
         self.assertEqual(feasibility["live_hardware_recommendation"], "defer")
+        with self.assertRaisesRegex(ValueError, "factor_ordering"):
+            replace(
+                experiment.parameters,
+                factor_ordering="phase_then_pairing",
+            )
 
     def test_evolution_slices_are_monotone_and_match_time_steps(self) -> None:
         experiment = load_experiment_definition()
@@ -83,18 +102,18 @@ class ParticleCreationFLRWTests(unittest.TestCase):
         benchmark = compute_benchmark(experiment.parameters)
         self.assertAlmostEqual(
             benchmark.single_mode_particle_number_expectation,
-            0.03422860544437149,
+            0.03892064274087119,
         )
         self.assertAlmostEqual(
             benchmark.total_particle_number_expectation,
-            0.06845721088874299,
+            0.07784128548174238,
         )
         self.assertAlmostEqual(
             benchmark.pairing_correlator_expectation,
-            -0.3465452307022458,
+            -0.3255165181389995,
         )
         self.assertAlmostEqual(
-            benchmark.pair_occupation_probability, 0.03422860544437149
+            benchmark.pair_occupation_probability, 0.03892064274087119
         )
         self.assertAlmostEqual(benchmark.even_parity_probability, 1.0)
 
@@ -138,7 +157,7 @@ class ParticleCreationFLRWTests(unittest.TestCase):
             table_text,
         )
         self.assertIn(
-            "|total_particle_number_expectation|0.068457|0.068457|0.000000|0.122302|0.053845|",
+            "|total_particle_number_expectation|0.077841|0.077841|0.000000|0.135791|0.057950|",
             table_text,
         )
         self.assertIn("|PASS|PASS|FAIL|", table_text)
@@ -326,3 +345,15 @@ class ParticleCreationFLRWTests(unittest.TestCase):
                 circuit_component.imag, benchmark_component.imag, places=10
             )
         self.assertEqual(artifact.qubit_count, 2)
+        self.assertEqual(
+            artifact.payload.count_ops(),
+            {
+                "rz": 4 * experiment.parameters.time_steps,
+                "rxx": experiment.parameters.time_steps,
+                "ryy": experiment.parameters.time_steps,
+            },
+        )
+        self.assertEqual(
+            artifact.payload.metadata["factor_ordering"],
+            "symmetric_strang",
+        )

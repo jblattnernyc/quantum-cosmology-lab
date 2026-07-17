@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from dataclasses import replace
 import json
 import math
 from pathlib import Path
@@ -31,6 +32,7 @@ from experiments.particle_creation_flrw.independent_benchmark import (
     independent_slice_unitary,
     independent_validation_policy,
     independent_validation_record,
+    independent_validation_to_serializable,
     write_independent_validation_artifacts,
 )
 
@@ -54,7 +56,7 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
             cls.policy,
         )
 
-    def test_matrix_implementation_is_hermitian_unitary_and_ordered(self) -> None:
+    def test_matrix_implementation_is_hermitian_unitary_and_symmetric(self) -> None:
         matrices = independent_operator_matrices()
         for name, matrix in matrices.items():
             with self.subTest(operator=name):
@@ -88,15 +90,16 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
             atol=1.0e-14,
         )
 
-        phase_unitary = expm(-1.0j * phase_angle * matrices["phase_generator"])
+        phase_half_unitary = expm(-0.5j * phase_angle * matrices["phase_generator"])
         pairing_unitary = expm(-1.0j * squeezing_angle * matrices["pairing_generator"])
         np.testing.assert_allclose(
             unitary,
-            pairing_unitary @ phase_unitary,
+            phase_half_unitary @ pairing_unitary @ phase_half_unitary,
             atol=1.0e-14,
         )
+        phase_unitary = phase_half_unitary @ phase_half_unitary
         self.assertGreater(
-            float(np.max(np.abs(unitary - phase_unitary @ pairing_unitary))),
+            float(np.max(np.abs(unitary - pairing_unitary @ phase_unitary))),
             1.0e-4,
         )
 
@@ -140,6 +143,137 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
         self.assertGreaterEqual(
             records[-1].observable_convergence_order,
             self.policy.minimum_final_observable_convergence_order,
+        )
+        self.assertGreater(records[-1].observable_convergence_order, 1.99)
+
+    def test_symmetric_ordering_improves_official_step_error(self) -> None:
+        comparison = self.result.factor_ordering_comparison
+        self.assertEqual(comparison.time_steps, 6)
+        self.assertAlmostEqual(
+            comparison.symmetric_maximum_observable_error,
+            0.006417712569834921,
+        )
+        self.assertAlmostEqual(
+            comparison.legacy_first_order_maximum_observable_error,
+            0.027446425133081764,
+        )
+        self.assertGreater(
+            comparison.observable_error_improvement_factor,
+            self.policy.minimum_official_step_factor_ordering_improvement,
+        )
+        self.assertTrue(
+            self.result.assessment.checks["official_step_factor_ordering_improvement"]
+        )
+
+    def test_factor_ordering_diagnostics_are_platform_stable(self) -> None:
+        payload = independent_validation_to_serializable(
+            self.experiment,
+            self.result,
+            self.policy,
+            self.context,
+        )
+        comparison = self.result.factor_ordering_comparison
+        serialized = payload["factor_ordering_comparison"]
+        self.assertEqual(
+            serialized["observable_error_improvement_factor"],
+            round(comparison.observable_error_improvement_factor, 8),
+        )
+        self.assertNotIn(
+            "official_step_factor_ordering_improvement",
+            payload["assessment"]["metrics"],
+        )
+        self.assertEqual(
+            payload["method"]["factor_ordering_comparison_canonical_decimal_places"],
+            10,
+        )
+        self.assertEqual(
+            payload["method"]["factor_ordering_improvement_canonical_decimal_places"],
+            8,
+        )
+
+        perturbed_comparison = replace(
+            comparison,
+            symmetric_maximum_observable_error=(
+                comparison.symmetric_maximum_observable_error + 5.0e-12
+            ),
+            legacy_first_order_maximum_observable_error=(
+                comparison.legacy_first_order_maximum_observable_error + 5.0e-12
+            ),
+            observable_error_improvement_factor=(
+                comparison.observable_error_improvement_factor + 5.0e-10
+            ),
+            symmetric_state_infidelity=(
+                comparison.symmetric_state_infidelity + 5.0e-12
+            ),
+            legacy_first_order_state_infidelity=(
+                comparison.legacy_first_order_state_infidelity + 5.0e-12
+            ),
+        )
+        perturbed_payload = independent_validation_to_serializable(
+            self.experiment,
+            replace(
+                self.result,
+                factor_ordering_comparison=perturbed_comparison,
+            ),
+            self.policy,
+            self.context,
+        )
+        self.assertEqual(
+            serialized,
+            perturbed_payload["factor_ordering_comparison"],
+        )
+
+    def test_convergence_order_diagnostics_are_platform_stable(self) -> None:
+        payload = independent_validation_to_serializable(
+            self.experiment,
+            self.result,
+            self.policy,
+            self.context,
+        )
+        final_order = self.result.assessment.metrics[
+            "final_observable_convergence_order"
+        ]
+        self.assertEqual(
+            payload["assessment"]["metrics"]["final_observable_convergence_order"],
+            round(final_order, 8),
+        )
+        self.assertEqual(
+            payload["method"]["convergence_order_canonical_decimal_places"],
+            8,
+        )
+
+        perturbed_records = tuple(
+            replace(
+                record,
+                observable_convergence_order=(
+                    record.observable_convergence_order
+                    if record.observable_convergence_order is None or index < 3
+                    else record.observable_convergence_order + 1.0e-10
+                ),
+            )
+            for index, record in enumerate(self.result.convergence_records)
+        )
+        perturbed_metrics = dict(self.result.assessment.metrics)
+        perturbed_metrics["final_observable_convergence_order"] += 1.0e-10
+        perturbed_payload = independent_validation_to_serializable(
+            self.experiment,
+            replace(
+                self.result,
+                convergence_records=perturbed_records,
+                assessment=replace(
+                    self.result.assessment,
+                    metrics=perturbed_metrics,
+                ),
+            ),
+            self.policy,
+            self.context,
+        )
+        self.assertEqual(payload["convergence"], perturbed_payload["convergence"])
+        self.assertEqual(
+            payload["assessment"]["metrics"]["final_observable_convergence_order"],
+            perturbed_payload["assessment"]["metrics"][
+                "final_observable_convergence_order"
+            ],
         )
 
     def test_independent_module_does_not_call_primary_evolution_helpers(self) -> None:
@@ -233,6 +367,10 @@ class IndependentParticleCreationValidationTests(unittest.TestCase):
             )
             self.assertFalse(tampered_record["stored_result_matches"])
             self.assertFalse(tampered_assessment.passed)
+            self.assertIn(
+                "convergence[0].time_steps: stored=7, fresh=6",
+                tampered_assessment.errors[0],
+            )
 
 
 if __name__ == "__main__":

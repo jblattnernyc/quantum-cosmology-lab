@@ -2,18 +2,18 @@
   "aggregates": [
     {
       "all_initial_pairs_adjacent": true,
-      "continuum_maximum_observable_error": 0.027446425133081043,
-      "logical_depth": 18,
+      "continuum_maximum_observable_error": 0.006417712569834921,
+      "logical_depth": 24,
       "logical_two_qubit_gate_count": 12,
       "maximum_surviving_swap_count": 0,
-      "maximum_transpiled_depth": 72,
+      "maximum_transpiled_depth": 73,
       "maximum_two_qubit_gate_count": 24,
       "median_aggregate_gate_error_proxy": 0.19961149876420836,
       "median_sum_instruction_duration_seconds": 7.935999999999998e-06,
-      "median_transpiled_depth": 72.0,
+      "median_transpiled_depth": 73.0,
       "median_two_qubit_gate_count": 24.0,
       "median_two_qubit_gate_error_proxy": 0.19168688085865648,
-      "minimum_transpiled_depth": 72,
+      "minimum_transpiled_depth": 73,
       "minimum_two_qubit_gate_count": 24,
       "time_steps": 6,
       "unique_initial_layouts": [
@@ -25,18 +25,18 @@
     },
     {
       "all_initial_pairs_adjacent": true,
-      "continuum_maximum_observable_error": 0.01602874850952879,
-      "logical_depth": 36,
+      "continuum_maximum_observable_error": 0.0015965724628989597,
+      "logical_depth": 48,
       "logical_two_qubit_gate_count": 24,
       "maximum_surviving_swap_count": 0,
-      "maximum_transpiled_depth": 144,
+      "maximum_transpiled_depth": 145,
       "maximum_two_qubit_gate_count": 48,
       "median_aggregate_gate_error_proxy": 0.35937824708952304,
       "median_sum_instruction_duration_seconds": 1.5872000000000017e-05,
-      "median_transpiled_depth": 144.0,
+      "median_transpiled_depth": 145.0,
       "median_two_qubit_gate_count": 48.0,
       "median_two_qubit_gate_error_proxy": 0.34662990142399175,
-      "minimum_transpiled_depth": 144,
+      "minimum_transpiled_depth": 145,
       "minimum_two_qubit_gate_count": 48,
       "time_steps": 12,
       "unique_initial_layouts": [
@@ -48,18 +48,18 @@
     },
     {
       "all_initial_pairs_adjacent": true,
-      "continuum_maximum_observable_error": 0.00856492646171969,
-      "logical_depth": 72,
+      "continuum_maximum_observable_error": 0.00039865914204484376,
+      "logical_depth": 96,
       "logical_two_qubit_gate_count": 48,
       "maximum_surviving_swap_count": 0,
-      "maximum_transpiled_depth": 288,
+      "maximum_transpiled_depth": 289,
       "maximum_two_qubit_gate_count": 96,
       "median_aggregate_gate_error_proxy": 0.5896037696979081,
       "median_sum_instruction_duration_seconds": 3.1744000000000006e-05,
-      "median_transpiled_depth": 288.0,
+      "median_transpiled_depth": 289.0,
       "median_two_qubit_gate_count": 96.0,
       "median_two_qubit_gate_error_proxy": 0.5731075142867772,
-      "minimum_transpiled_depth": 288,
+      "minimum_transpiled_depth": 289,
       "minimum_two_qubit_gate_count": 96,
       "time_steps": 24,
       "unique_initial_layouts": [
@@ -152,9 +152,9 @@
   "prerequisites": {
     "independent_validation": {
       "artifact_path": "data/processed/particle_creation_flrw/independent_validation.json",
-      "artifact_sha256": "292f95db6cbeb0a2be70fec1450702b9360cf517a8dae0f8f658377434578d0b",
+      "artifact_sha256": "f31b3d570aaeba78656a82e46983645ac2c894650e03a2237b42cf3448f148bb",
       "digest_scope": "exact_file_bytes",
-      "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
+      "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
       "lineage_status": "current",
       "passed": true,
       "schema_version": 1,
@@ -165,7 +165,7 @@
   "records": [
     {
       "aggregate_gate_error_proxy": 0.19961149876420836,
-      "continuum_maximum_observable_error": 0.027446425133081043,
+      "continuum_maximum_observable_error": 0.006417712569834921,
       "final_layout": [
         0,
         1
@@ -175,26 +175,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 108,
-      "logical_depth": 18,
+      "known_error_instruction_count": 110,
+      "logical_depth": 24,
       "logical_operation_counts": {
         "rxx": 6,
         "ryy": 6,
-        "rz": 12
+        "rz": 24
       },
-      "logical_size": 24,
+      "logical_size": 36,
       "logical_two_qubit_gate_count": 12,
-      "one_qubit_gate_count": 84,
+      "one_qubit_gate_count": 86,
       "sum_instruction_duration_seconds": 7.935999999999998e-06,
       "surviving_swap_count": 0,
       "time_steps": 6,
-      "transpiled_depth": 72,
+      "transpiled_depth": 73,
       "transpiled_operation_counts": {
         "cx": 24,
-        "rz": 48,
+        "rz": 50,
         "sx": 36
       },
-      "transpiled_size": 108,
+      "transpiled_size": 110,
       "transpiler_seed": 11,
       "two_qubit_gate_count": 24,
       "two_qubit_gate_error_proxy": 0.19168688085865648,
@@ -202,7 +202,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.19961149876420836,
-      "continuum_maximum_observable_error": 0.027446425133081043,
+      "continuum_maximum_observable_error": 0.006417712569834921,
       "final_layout": [
         0,
         1
@@ -212,26 +212,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 108,
-      "logical_depth": 18,
+      "known_error_instruction_count": 110,
+      "logical_depth": 24,
       "logical_operation_counts": {
         "rxx": 6,
         "ryy": 6,
-        "rz": 12
+        "rz": 24
       },
-      "logical_size": 24,
+      "logical_size": 36,
       "logical_two_qubit_gate_count": 12,
-      "one_qubit_gate_count": 84,
+      "one_qubit_gate_count": 86,
       "sum_instruction_duration_seconds": 7.935999999999998e-06,
       "surviving_swap_count": 0,
       "time_steps": 6,
-      "transpiled_depth": 72,
+      "transpiled_depth": 73,
       "transpiled_operation_counts": {
         "cx": 24,
-        "rz": 48,
+        "rz": 50,
         "sx": 36
       },
-      "transpiled_size": 108,
+      "transpiled_size": 110,
       "transpiler_seed": 29,
       "two_qubit_gate_count": 24,
       "two_qubit_gate_error_proxy": 0.19168688085865648,
@@ -239,7 +239,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.19961149876420836,
-      "continuum_maximum_observable_error": 0.027446425133081043,
+      "continuum_maximum_observable_error": 0.006417712569834921,
       "final_layout": [
         0,
         1
@@ -249,26 +249,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 108,
-      "logical_depth": 18,
+      "known_error_instruction_count": 110,
+      "logical_depth": 24,
       "logical_operation_counts": {
         "rxx": 6,
         "ryy": 6,
-        "rz": 12
+        "rz": 24
       },
-      "logical_size": 24,
+      "logical_size": 36,
       "logical_two_qubit_gate_count": 12,
-      "one_qubit_gate_count": 84,
+      "one_qubit_gate_count": 86,
       "sum_instruction_duration_seconds": 7.935999999999998e-06,
       "surviving_swap_count": 0,
       "time_steps": 6,
-      "transpiled_depth": 72,
+      "transpiled_depth": 73,
       "transpiled_operation_counts": {
         "cx": 24,
-        "rz": 48,
+        "rz": 50,
         "sx": 36
       },
-      "transpiled_size": 108,
+      "transpiled_size": 110,
       "transpiler_seed": 47,
       "two_qubit_gate_count": 24,
       "two_qubit_gate_error_proxy": 0.19168688085865648,
@@ -276,7 +276,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.19961149876420836,
-      "continuum_maximum_observable_error": 0.027446425133081043,
+      "continuum_maximum_observable_error": 0.006417712569834921,
       "final_layout": [
         0,
         1
@@ -286,26 +286,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 108,
-      "logical_depth": 18,
+      "known_error_instruction_count": 110,
+      "logical_depth": 24,
       "logical_operation_counts": {
         "rxx": 6,
         "ryy": 6,
-        "rz": 12
+        "rz": 24
       },
-      "logical_size": 24,
+      "logical_size": 36,
       "logical_two_qubit_gate_count": 12,
-      "one_qubit_gate_count": 84,
+      "one_qubit_gate_count": 86,
       "sum_instruction_duration_seconds": 7.935999999999998e-06,
       "surviving_swap_count": 0,
       "time_steps": 6,
-      "transpiled_depth": 72,
+      "transpiled_depth": 73,
       "transpiled_operation_counts": {
         "cx": 24,
-        "rz": 48,
+        "rz": 50,
         "sx": 36
       },
-      "transpiled_size": 108,
+      "transpiled_size": 110,
       "transpiler_seed": 71,
       "two_qubit_gate_count": 24,
       "two_qubit_gate_error_proxy": 0.19168688085865648,
@@ -313,7 +313,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.19961149876420836,
-      "continuum_maximum_observable_error": 0.027446425133081043,
+      "continuum_maximum_observable_error": 0.006417712569834921,
       "final_layout": [
         0,
         1
@@ -323,26 +323,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 108,
-      "logical_depth": 18,
+      "known_error_instruction_count": 110,
+      "logical_depth": 24,
       "logical_operation_counts": {
         "rxx": 6,
         "ryy": 6,
-        "rz": 12
+        "rz": 24
       },
-      "logical_size": 24,
+      "logical_size": 36,
       "logical_two_qubit_gate_count": 12,
-      "one_qubit_gate_count": 84,
+      "one_qubit_gate_count": 86,
       "sum_instruction_duration_seconds": 7.935999999999998e-06,
       "surviving_swap_count": 0,
       "time_steps": 6,
-      "transpiled_depth": 72,
+      "transpiled_depth": 73,
       "transpiled_operation_counts": {
         "cx": 24,
-        "rz": 48,
+        "rz": 50,
         "sx": 36
       },
-      "transpiled_size": 108,
+      "transpiled_size": 110,
       "transpiler_seed": 101,
       "two_qubit_gate_count": 24,
       "two_qubit_gate_error_proxy": 0.19168688085865648,
@@ -350,7 +350,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.35937824708952304,
-      "continuum_maximum_observable_error": 0.01602874850952879,
+      "continuum_maximum_observable_error": 0.0015965724628989597,
       "final_layout": [
         0,
         1
@@ -360,26 +360,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 216,
-      "logical_depth": 36,
+      "known_error_instruction_count": 218,
+      "logical_depth": 48,
       "logical_operation_counts": {
         "rxx": 12,
         "ryy": 12,
-        "rz": 24
+        "rz": 48
       },
-      "logical_size": 48,
+      "logical_size": 72,
       "logical_two_qubit_gate_count": 24,
-      "one_qubit_gate_count": 168,
+      "one_qubit_gate_count": 170,
       "sum_instruction_duration_seconds": 1.5872000000000017e-05,
       "surviving_swap_count": 0,
       "time_steps": 12,
-      "transpiled_depth": 144,
+      "transpiled_depth": 145,
       "transpiled_operation_counts": {
         "cx": 48,
-        "rz": 96,
+        "rz": 98,
         "sx": 72
       },
-      "transpiled_size": 216,
+      "transpiled_size": 218,
       "transpiler_seed": 11,
       "two_qubit_gate_count": 48,
       "two_qubit_gate_error_proxy": 0.34662990142399175,
@@ -387,7 +387,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.35937824708952304,
-      "continuum_maximum_observable_error": 0.01602874850952879,
+      "continuum_maximum_observable_error": 0.0015965724628989597,
       "final_layout": [
         0,
         1
@@ -397,26 +397,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 216,
-      "logical_depth": 36,
+      "known_error_instruction_count": 218,
+      "logical_depth": 48,
       "logical_operation_counts": {
         "rxx": 12,
         "ryy": 12,
-        "rz": 24
+        "rz": 48
       },
-      "logical_size": 48,
+      "logical_size": 72,
       "logical_two_qubit_gate_count": 24,
-      "one_qubit_gate_count": 168,
+      "one_qubit_gate_count": 170,
       "sum_instruction_duration_seconds": 1.5872000000000017e-05,
       "surviving_swap_count": 0,
       "time_steps": 12,
-      "transpiled_depth": 144,
+      "transpiled_depth": 145,
       "transpiled_operation_counts": {
         "cx": 48,
-        "rz": 96,
+        "rz": 98,
         "sx": 72
       },
-      "transpiled_size": 216,
+      "transpiled_size": 218,
       "transpiler_seed": 29,
       "two_qubit_gate_count": 48,
       "two_qubit_gate_error_proxy": 0.34662990142399175,
@@ -424,7 +424,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.35937824708952304,
-      "continuum_maximum_observable_error": 0.01602874850952879,
+      "continuum_maximum_observable_error": 0.0015965724628989597,
       "final_layout": [
         0,
         1
@@ -434,26 +434,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 216,
-      "logical_depth": 36,
+      "known_error_instruction_count": 218,
+      "logical_depth": 48,
       "logical_operation_counts": {
         "rxx": 12,
         "ryy": 12,
-        "rz": 24
+        "rz": 48
       },
-      "logical_size": 48,
+      "logical_size": 72,
       "logical_two_qubit_gate_count": 24,
-      "one_qubit_gate_count": 168,
+      "one_qubit_gate_count": 170,
       "sum_instruction_duration_seconds": 1.5872000000000017e-05,
       "surviving_swap_count": 0,
       "time_steps": 12,
-      "transpiled_depth": 144,
+      "transpiled_depth": 145,
       "transpiled_operation_counts": {
         "cx": 48,
-        "rz": 96,
+        "rz": 98,
         "sx": 72
       },
-      "transpiled_size": 216,
+      "transpiled_size": 218,
       "transpiler_seed": 47,
       "two_qubit_gate_count": 48,
       "two_qubit_gate_error_proxy": 0.34662990142399175,
@@ -461,7 +461,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.35937824708952304,
-      "continuum_maximum_observable_error": 0.01602874850952879,
+      "continuum_maximum_observable_error": 0.0015965724628989597,
       "final_layout": [
         0,
         1
@@ -471,26 +471,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 216,
-      "logical_depth": 36,
+      "known_error_instruction_count": 218,
+      "logical_depth": 48,
       "logical_operation_counts": {
         "rxx": 12,
         "ryy": 12,
-        "rz": 24
+        "rz": 48
       },
-      "logical_size": 48,
+      "logical_size": 72,
       "logical_two_qubit_gate_count": 24,
-      "one_qubit_gate_count": 168,
+      "one_qubit_gate_count": 170,
       "sum_instruction_duration_seconds": 1.5872000000000017e-05,
       "surviving_swap_count": 0,
       "time_steps": 12,
-      "transpiled_depth": 144,
+      "transpiled_depth": 145,
       "transpiled_operation_counts": {
         "cx": 48,
-        "rz": 96,
+        "rz": 98,
         "sx": 72
       },
-      "transpiled_size": 216,
+      "transpiled_size": 218,
       "transpiler_seed": 71,
       "two_qubit_gate_count": 48,
       "two_qubit_gate_error_proxy": 0.34662990142399175,
@@ -498,7 +498,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.35937824708952304,
-      "continuum_maximum_observable_error": 0.01602874850952879,
+      "continuum_maximum_observable_error": 0.0015965724628989597,
       "final_layout": [
         0,
         1
@@ -508,26 +508,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 216,
-      "logical_depth": 36,
+      "known_error_instruction_count": 218,
+      "logical_depth": 48,
       "logical_operation_counts": {
         "rxx": 12,
         "ryy": 12,
-        "rz": 24
+        "rz": 48
       },
-      "logical_size": 48,
+      "logical_size": 72,
       "logical_two_qubit_gate_count": 24,
-      "one_qubit_gate_count": 168,
+      "one_qubit_gate_count": 170,
       "sum_instruction_duration_seconds": 1.5872000000000017e-05,
       "surviving_swap_count": 0,
       "time_steps": 12,
-      "transpiled_depth": 144,
+      "transpiled_depth": 145,
       "transpiled_operation_counts": {
         "cx": 48,
-        "rz": 96,
+        "rz": 98,
         "sx": 72
       },
-      "transpiled_size": 216,
+      "transpiled_size": 218,
       "transpiler_seed": 101,
       "two_qubit_gate_count": 48,
       "two_qubit_gate_error_proxy": 0.34662990142399175,
@@ -535,7 +535,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.5896037696979081,
-      "continuum_maximum_observable_error": 0.00856492646171969,
+      "continuum_maximum_observable_error": 0.00039865914204484376,
       "final_layout": [
         0,
         1
@@ -545,26 +545,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 432,
-      "logical_depth": 72,
+      "known_error_instruction_count": 434,
+      "logical_depth": 96,
       "logical_operation_counts": {
         "rxx": 24,
         "ryy": 24,
-        "rz": 48
+        "rz": 96
       },
-      "logical_size": 96,
+      "logical_size": 144,
       "logical_two_qubit_gate_count": 48,
-      "one_qubit_gate_count": 336,
+      "one_qubit_gate_count": 338,
       "sum_instruction_duration_seconds": 3.1744000000000006e-05,
       "surviving_swap_count": 0,
       "time_steps": 24,
-      "transpiled_depth": 288,
+      "transpiled_depth": 289,
       "transpiled_operation_counts": {
         "cx": 96,
-        "rz": 192,
+        "rz": 194,
         "sx": 144
       },
-      "transpiled_size": 432,
+      "transpiled_size": 434,
       "transpiler_seed": 11,
       "two_qubit_gate_count": 96,
       "two_qubit_gate_error_proxy": 0.5731075142867772,
@@ -572,7 +572,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.5896037696979081,
-      "continuum_maximum_observable_error": 0.00856492646171969,
+      "continuum_maximum_observable_error": 0.00039865914204484376,
       "final_layout": [
         0,
         1
@@ -582,26 +582,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 432,
-      "logical_depth": 72,
+      "known_error_instruction_count": 434,
+      "logical_depth": 96,
       "logical_operation_counts": {
         "rxx": 24,
         "ryy": 24,
-        "rz": 48
+        "rz": 96
       },
-      "logical_size": 96,
+      "logical_size": 144,
       "logical_two_qubit_gate_count": 48,
-      "one_qubit_gate_count": 336,
+      "one_qubit_gate_count": 338,
       "sum_instruction_duration_seconds": 3.1744000000000006e-05,
       "surviving_swap_count": 0,
       "time_steps": 24,
-      "transpiled_depth": 288,
+      "transpiled_depth": 289,
       "transpiled_operation_counts": {
         "cx": 96,
-        "rz": 192,
+        "rz": 194,
         "sx": 144
       },
-      "transpiled_size": 432,
+      "transpiled_size": 434,
       "transpiler_seed": 29,
       "two_qubit_gate_count": 96,
       "two_qubit_gate_error_proxy": 0.5731075142867772,
@@ -609,7 +609,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.5896037696979081,
-      "continuum_maximum_observable_error": 0.00856492646171969,
+      "continuum_maximum_observable_error": 0.00039865914204484376,
       "final_layout": [
         0,
         1
@@ -619,26 +619,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 432,
-      "logical_depth": 72,
+      "known_error_instruction_count": 434,
+      "logical_depth": 96,
       "logical_operation_counts": {
         "rxx": 24,
         "ryy": 24,
-        "rz": 48
+        "rz": 96
       },
-      "logical_size": 96,
+      "logical_size": 144,
       "logical_two_qubit_gate_count": 48,
-      "one_qubit_gate_count": 336,
+      "one_qubit_gate_count": 338,
       "sum_instruction_duration_seconds": 3.1744000000000006e-05,
       "surviving_swap_count": 0,
       "time_steps": 24,
-      "transpiled_depth": 288,
+      "transpiled_depth": 289,
       "transpiled_operation_counts": {
         "cx": 96,
-        "rz": 192,
+        "rz": 194,
         "sx": 144
       },
-      "transpiled_size": 432,
+      "transpiled_size": 434,
       "transpiler_seed": 47,
       "two_qubit_gate_count": 96,
       "two_qubit_gate_error_proxy": 0.5731075142867772,
@@ -646,7 +646,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.5896037696979081,
-      "continuum_maximum_observable_error": 0.00856492646171969,
+      "continuum_maximum_observable_error": 0.00039865914204484376,
       "final_layout": [
         0,
         1
@@ -656,26 +656,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 432,
-      "logical_depth": 72,
+      "known_error_instruction_count": 434,
+      "logical_depth": 96,
       "logical_operation_counts": {
         "rxx": 24,
         "ryy": 24,
-        "rz": 48
+        "rz": 96
       },
-      "logical_size": 96,
+      "logical_size": 144,
       "logical_two_qubit_gate_count": 48,
-      "one_qubit_gate_count": 336,
+      "one_qubit_gate_count": 338,
       "sum_instruction_duration_seconds": 3.1744000000000006e-05,
       "surviving_swap_count": 0,
       "time_steps": 24,
-      "transpiled_depth": 288,
+      "transpiled_depth": 289,
       "transpiled_operation_counts": {
         "cx": 96,
-        "rz": 192,
+        "rz": 194,
         "sx": 144
       },
-      "transpiled_size": 432,
+      "transpiled_size": 434,
       "transpiler_seed": 71,
       "two_qubit_gate_count": 96,
       "two_qubit_gate_error_proxy": 0.5731075142867772,
@@ -683,7 +683,7 @@
     },
     {
       "aggregate_gate_error_proxy": 0.5896037696979081,
-      "continuum_maximum_observable_error": 0.00856492646171969,
+      "continuum_maximum_observable_error": 0.00039865914204484376,
       "final_layout": [
         0,
         1
@@ -693,26 +693,26 @@
         1
       ],
       "initial_pair_adjacent": true,
-      "known_error_instruction_count": 432,
-      "logical_depth": 72,
+      "known_error_instruction_count": 434,
+      "logical_depth": 96,
       "logical_operation_counts": {
         "rxx": 24,
         "ryy": 24,
-        "rz": 48
+        "rz": 96
       },
-      "logical_size": 96,
+      "logical_size": 144,
       "logical_two_qubit_gate_count": 48,
-      "one_qubit_gate_count": 336,
+      "one_qubit_gate_count": 338,
       "sum_instruction_duration_seconds": 3.1744000000000006e-05,
       "surviving_swap_count": 0,
       "time_steps": 24,
-      "transpiled_depth": 288,
+      "transpiled_depth": 289,
       "transpiled_operation_counts": {
         "cx": 96,
-        "rz": 192,
+        "rz": 194,
         "sx": 144
       },
-      "transpiled_size": 432,
+      "transpiled_size": 434,
       "transpiler_seed": 101,
       "two_qubit_gate_count": 96,
       "two_qubit_gate_error_proxy": 0.5731075142867772,
@@ -728,11 +728,11 @@
   },
   "status": "exploratory_transpilation_only",
   "validation_context": {
-    "benchmark_fingerprint": "ce8aa4a71dc6b6c202024f7209615216da02d1847426b8394bc1fbb47881a464",
-    "configuration_fingerprint": "d49e754e7ff2fd221f4ac4029510c74939051e575484ecbf92f01bcfeb0bb732",
+    "benchmark_fingerprint": "e7f6ebea31786bb1e7488286305ca38eeeae39cdce9d75b74fe5244f48aa2767",
+    "configuration_fingerprint": "d8d2b6d1a5fb89fb01f21933282e61a5efa9f5595c7d07f04ad1c43348472ea6",
     "experiment_name": "particle_creation_flrw",
-    "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
-    "model_fingerprint": "e34bd7e6d9389c4ff69bfb1c8ec75b29d38a618c1c071582d069eb9a8c29ed13",
+    "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
+    "model_fingerprint": "95b3b2d902ef21a6dcbbb7f1888881c6b4da86e864cae8c649020110d4d2b969",
     "observable_fingerprint": "707fea366a2d04c99a636bd857bfd72cac1f0de446245c9d6fbd3800d29e5c7b",
     "schema_version": 1
   }

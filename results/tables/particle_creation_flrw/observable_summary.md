@@ -2,6 +2,6 @@
 
 |Observable|Benchmark|Exact local|Exact abs. error|Noisy local|Noisy abs. error|IBM Runtime|IBM abs. error|Exact status|Noisy status|IBM status|
 |---|---|---|---|---|---|---|---|---|---|---|
-|single_mode_particle_number_expectation|0.034229|0.034229|0.000000|0.063849|0.029620|0.303708|0.269480|PASS|PASS|FAIL|
-|total_particle_number_expectation|0.068457|0.068457|0.000000|0.122302|0.053845|0.591349|0.522892|PASS|PASS|FAIL|
-|pairing_correlator_expectation|-0.346545|-0.346545|0.000000|-0.302158|0.044387|-0.206725|0.139820|PASS|PASS|FAIL|
+|single_mode_particle_number_expectation|0.038921|0.038921|0.000000|0.062950|0.024029|0.303708|0.264787|PASS|PASS|FAIL|
+|total_particle_number_expectation|0.077841|0.077841|0.000000|0.135791|0.057950|0.591349|0.513508|PASS|PASS|FAIL|
+|pairing_correlator_expectation|-0.325517|-0.325517|0.000000|-0.280576|0.044941|-0.206725|0.118792|PASS|PASS|FAIL|

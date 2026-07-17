@@ -46,6 +46,9 @@ from experiments.particle_creation_flrw.common import (
 
 
 INDEPENDENT_TIER = "independent_benchmark"
+FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES = 10
+FACTOR_ORDERING_IMPROVEMENT_DECIMAL_PLACES = 8
+CONVERGENCE_ORDER_DECIMAL_PLACES = 8
 OBSERVABLE_NAMES = (
     "single_mode_particle_number_expectation",
     "total_particle_number_expectation",
@@ -75,6 +78,7 @@ class IndependentValidationPolicy:
     normalization_tolerance: float
     parity_tolerance: float
     convergence_time_steps: tuple[int, ...]
+    minimum_official_step_factor_ordering_improvement: float
     maximum_final_observable_error: float
     maximum_final_state_infidelity: float
     minimum_final_observable_convergence_order: float
@@ -89,6 +93,9 @@ class IndependentValidationPolicy:
             "observable_tolerance": self.observable_tolerance,
             "normalization_tolerance": self.normalization_tolerance,
             "parity_tolerance": self.parity_tolerance,
+            "minimum_official_step_factor_ordering_improvement": (
+                self.minimum_official_step_factor_ordering_improvement
+            ),
             "maximum_final_observable_error": self.maximum_final_observable_error,
             "maximum_final_state_infidelity": self.maximum_final_state_infidelity,
             "minimum_final_observable_convergence_order": (
@@ -98,6 +105,11 @@ class IndependentValidationPolicy:
         for name, value in nonnegative.items():
             if not math.isfinite(value) or value < 0.0:
                 raise ValueError(f"{name} must be finite and non-negative.")
+        if self.minimum_official_step_factor_ordering_improvement <= 1.0:
+            raise ValueError(
+                "minimum_official_step_factor_ordering_improvement must be "
+                "greater than 1."
+            )
         if len(self.convergence_time_steps) < 2:
             raise ValueError("At least two convergence time-step counts are required.")
         if any(value <= 0 for value in self.convergence_time_steps):
@@ -128,6 +140,9 @@ class IndependentValidationPolicy:
             "normalization_tolerance": self.normalization_tolerance,
             "parity_tolerance": self.parity_tolerance,
             "convergence_time_steps": list(self.convergence_time_steps),
+            "minimum_official_step_factor_ordering_improvement": (
+                self.minimum_official_step_factor_ordering_improvement
+            ),
             "maximum_final_observable_error": (self.maximum_final_observable_error),
             "maximum_final_state_infidelity": self.maximum_final_state_infidelity,
             "minimum_final_observable_convergence_order": (
@@ -158,6 +173,12 @@ class ConvergenceRecord:
     def to_serializable(self) -> dict[str, Any]:
         """Return the refinement record as a JSON-safe mapping."""
 
+        canonical_order = self.observable_convergence_order
+        if canonical_order is not None:
+            canonical_order = round(
+                float(canonical_order),
+                CONVERGENCE_ORDER_DECIMAL_PLACES,
+            )
         return {
             "time_steps": self.time_steps,
             "observables": dict(self.observables),
@@ -168,7 +189,60 @@ class ConvergenceRecord:
             "phase_aligned_maximum_amplitude_error": (
                 self.phase_aligned_maximum_amplitude_error
             ),
-            "observable_convergence_order": self.observable_convergence_order,
+            "observable_convergence_order": canonical_order,
+        }
+
+
+@dataclass(frozen=True)
+class FactorOrderingComparison:
+    """Official-step comparison of symmetric and legacy first-order products."""
+
+    time_steps: int
+    symmetric_maximum_observable_error: float
+    legacy_first_order_maximum_observable_error: float
+    observable_error_improvement_factor: float
+    symmetric_state_infidelity: float
+    legacy_first_order_state_infidelity: float
+
+    def to_serializable(self) -> dict[str, Any]:
+        """Return a platform-stable diagnostic comparison mapping."""
+
+        def canonicalize(value: float, decimal_places: int) -> float:
+            canonical = round(float(value), decimal_places)
+            return 0.0 if canonical == 0.0 else canonical
+
+        return {
+            "time_steps": self.time_steps,
+            "symmetric_ordering": "U_phase_half @ U_pairing @ U_phase_half",
+            "legacy_first_ordering": "U_pairing @ U_phase",
+            "symmetric_maximum_observable_error": (
+                canonicalize(
+                    self.symmetric_maximum_observable_error,
+                    FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES,
+                )
+            ),
+            "legacy_first_order_maximum_observable_error": (
+                canonicalize(
+                    self.legacy_first_order_maximum_observable_error,
+                    FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES,
+                )
+            ),
+            "observable_error_improvement_factor": (
+                canonicalize(
+                    self.observable_error_improvement_factor,
+                    FACTOR_ORDERING_IMPROVEMENT_DECIMAL_PLACES,
+                )
+            ),
+            "symmetric_state_infidelity": canonicalize(
+                self.symmetric_state_infidelity,
+                FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES,
+            ),
+            "legacy_first_order_state_infidelity": (
+                canonicalize(
+                    self.legacy_first_order_state_infidelity,
+                    FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES,
+                )
+            ),
         }
 
 
@@ -185,12 +259,19 @@ class IndependentValidationAssessment:
     def to_serializable(self) -> dict[str, Any]:
         """Return the assessment as a JSON-safe mapping."""
 
+        metrics = dict(self.metrics)
+        final_order = metrics.get("final_observable_convergence_order")
+        if isinstance(final_order, float):
+            metrics["final_observable_convergence_order"] = round(
+                final_order,
+                CONVERGENCE_ORDER_DECIMAL_PLACES,
+            )
         return {
             "schema_version": self.schema_version,
             "tier": INDEPENDENT_TIER,
             "passed": self.passed,
             "checks": dict(self.checks),
-            "metrics": dict(self.metrics),
+            "metrics": metrics,
             "errors": list(self.errors),
         }
 
@@ -205,6 +286,7 @@ class IndependentValidationResult:
     independent_observables: dict[str, float]
     continuum_reference_statevector: tuple[complex, ...]
     continuum_reference_observables: dict[str, float]
+    factor_ordering_comparison: FactorOrderingComparison
     convergence_records: tuple[ConvergenceRecord, ...]
     assessment: IndependentValidationAssessment
 
@@ -235,6 +317,9 @@ def independent_validation_policy(
         normalization_tolerance=float(raw_policy["normalization_tolerance"]),
         parity_tolerance=float(raw_policy["parity_tolerance"]),
         convergence_time_steps=tuple(int(value) for value in raw_steps),
+        minimum_official_step_factor_ordering_improvement=float(
+            raw_policy["minimum_official_step_factor_ordering_improvement"]
+        ),
         maximum_final_observable_error=float(
             raw_policy["maximum_final_observable_error"]
         ),
@@ -266,17 +351,30 @@ def independent_operator_matrices() -> dict[str, np.ndarray]:
 
 
 def independent_slice_unitary(phase_angle: float, squeezing_angle: float) -> np.ndarray:
-    """Return one phase-then-pairing slice as an explicit matrix exponential."""
+    """Return one symmetric slice as explicit matrix exponentials."""
+
+    phase_half_unitary = expm(-0.5j * phase_angle * _PHASE_GENERATOR)
+    pairing_unitary = expm(-1.0j * squeezing_angle * _PAIRING_GENERATOR)
+    return phase_half_unitary @ pairing_unitary @ phase_half_unitary
+
+
+def independent_legacy_first_order_slice_unitary(
+    phase_angle: float,
+    squeezing_angle: float,
+) -> np.ndarray:
+    """Return the superseded first-order slice for comparison only."""
 
     phase_unitary = expm(-1.0j * phase_angle * _PHASE_GENERATOR)
     pairing_unitary = expm(-1.0j * squeezing_angle * _PAIRING_GENERATOR)
     return pairing_unitary @ phase_unitary
 
 
-def independent_discrete_state(
+def _independent_discrete_state(
     parameters: ParticleCreationFLRWParameters,
+    *,
+    use_legacy_first_ordering: bool,
 ) -> np.ndarray:
-    """Evolve the vacuum without using experiment evolution or circuit helpers."""
+    """Evolve the vacuum with one independently constructed slice rule."""
 
     scale_factors = np.linspace(
         parameters.scale_factor_initial,
@@ -297,8 +395,40 @@ def independent_discrete_state(
             * (parameters.time_extent / parameters.time_steps)
         )
         squeezing_angle = 0.5 * math.log(frequency_end / frequency_start)
-        state = independent_slice_unitary(phase_angle, squeezing_angle) @ state
+        if use_legacy_first_ordering:
+            slice_unitary = independent_legacy_first_order_slice_unitary(
+                phase_angle,
+                squeezing_angle,
+            )
+        else:
+            slice_unitary = independent_slice_unitary(
+                phase_angle,
+                squeezing_angle,
+            )
+        state = slice_unitary @ state
     return state
+
+
+def independent_discrete_state(
+    parameters: ParticleCreationFLRWParameters,
+) -> np.ndarray:
+    """Evolve the vacuum with the declared symmetric slice rule."""
+
+    return _independent_discrete_state(
+        parameters,
+        use_legacy_first_ordering=False,
+    )
+
+
+def independent_legacy_first_order_state(
+    parameters: ParticleCreationFLRWParameters,
+) -> np.ndarray:
+    """Evolve the vacuum with the superseded slice for comparison only."""
+
+    return _independent_discrete_state(
+        parameters,
+        use_legacy_first_ordering=True,
+    )
 
 
 def independent_observable_values(statevector: np.ndarray) -> dict[str, float]:
@@ -455,6 +585,10 @@ def compute_independent_validation(
     independent_observables = independent_observable_values(independent_state)
     continuum_state = continuum_reference_state(parameters, policy)
     continuum_observables = independent_observable_values(continuum_state)
+    legacy_first_order_state = independent_legacy_first_order_state(parameters)
+    legacy_first_order_observables = independent_observable_values(
+        legacy_first_order_state
+    )
     convergence_records = _convergence_records(
         parameters,
         policy,
@@ -468,6 +602,33 @@ def compute_independent_validation(
     official_observable_error = _maximum_observable_error(
         independent_observables,
         official_observables,
+    )
+    symmetric_continuum_observable_error = _maximum_observable_error(
+        independent_observables,
+        continuum_observables,
+    )
+    legacy_continuum_observable_error = _maximum_observable_error(
+        legacy_first_order_observables,
+        continuum_observables,
+    )
+    symmetric_continuum_infidelity, _ = _state_comparison(
+        independent_state,
+        continuum_state,
+    )
+    legacy_continuum_infidelity, _ = _state_comparison(
+        legacy_first_order_state,
+        continuum_state,
+    )
+    factor_ordering_improvement = (
+        legacy_continuum_observable_error / symmetric_continuum_observable_error
+    )
+    factor_ordering_comparison = FactorOrderingComparison(
+        time_steps=parameters.time_steps,
+        symmetric_maximum_observable_error=symmetric_continuum_observable_error,
+        legacy_first_order_maximum_observable_error=(legacy_continuum_observable_error),
+        observable_error_improvement_factor=factor_ordering_improvement,
+        symmetric_state_infidelity=symmetric_continuum_infidelity,
+        legacy_first_order_state_infidelity=legacy_continuum_infidelity,
     )
     normalization_error = abs(
         float(np.vdot(independent_state, independent_state).real) - 1.0
@@ -506,6 +667,10 @@ def compute_independent_validation(
         "odd_parity_suppression": odd_parity_probability <= policy.parity_tolerance,
         "even_parity_preservation": abs(even_parity_probability - 1.0)
         <= policy.parity_tolerance,
+        "official_step_factor_ordering_improvement": (
+            factor_ordering_improvement
+            >= policy.minimum_official_step_factor_ordering_improvement
+        ),
         "monotone_observable_refinement": (
             monotone_observable_error
             if policy.require_monotone_observable_error
@@ -559,6 +724,7 @@ def compute_independent_validation(
             complex(value) for value in continuum_state
         ),
         continuum_reference_observables=continuum_observables,
+        factor_ordering_comparison=factor_ordering_comparison,
         convergence_records=convergence_records,
         assessment=assessment,
     )
@@ -588,8 +754,18 @@ def independent_validation_to_serializable(
             "basis_order": ["|00>", "|01>", "|10>", "|11>"],
             "phase_generator": "-(IZ + ZI) / 2",
             "pairing_generator": "(XX - YY) / 2",
-            "slice_action_order": "phase_then_pairing",
-            "slice_unitary": "U_pairing @ U_phase",
+            "slice_action_order": "phase_half_then_pairing_then_phase_half",
+            "slice_unitary": "U_phase_half @ U_pairing @ U_phase_half",
+            "factor_ordering": experiment.parameters.factor_ordering,
+            "factor_ordering_comparison_canonical_decimal_places": (
+                FACTOR_ORDERING_COMPARISON_DECIMAL_PLACES
+            ),
+            "factor_ordering_improvement_canonical_decimal_places": (
+                FACTOR_ORDERING_IMPROVEMENT_DECIMAL_PLACES
+            ),
+            "convergence_order_canonical_decimal_places": (
+                CONVERGENCE_ORDER_DECIMAL_PLACES
+            ),
             "matrix_exponential": "scipy.linalg.expm",
             "shared_evolution_helpers_used": False,
             "continuum_interpolation_assumption": (
@@ -625,6 +801,9 @@ def independent_validation_to_serializable(
             ],
             "observables": dict(result.continuum_reference_observables),
         },
+        "factor_ordering_comparison": (
+            result.factor_ordering_comparison.to_serializable()
+        ),
         "convergence": [
             record.to_serializable() for record in result.convergence_records
         ],
@@ -714,8 +893,8 @@ def _write_independent_report(
         "## Refinement study",
         "",
         (
-            "The refinement study compares the discrete ordered product with an "
-            "ODE obtained by linearly interpolating the prescribed scale factor. "
+            "The refinement study compares the symmetric discrete product with "
+            "an ODE obtained by linearly interpolating the prescribed scale factor. "
             "This is an added discretization diagnostic; it is not a claim of a "
             "continuum-exact quantum field calculation."
         ),
@@ -731,6 +910,16 @@ def _write_independent_report(
         (
             "- Final observed convergence order: "
             f"{assessment.metrics['final_observable_convergence_order']:.6f}"
+        ),
+        "",
+        "## Factor-ordering comparison",
+        "",
+        (
+            f"At the official `N = {result.factor_ordering_comparison.time_steps}`, "
+            "the symmetric product reduces the maximum observable error by a "
+            f"factor of `{result.factor_ordering_comparison.observable_error_improvement_factor:.6f}` "
+            "relative to the superseded phase-then-pairing product under the same "
+            "ODE diagnostic."
         ),
         "",
         "## Interpretation",
@@ -811,6 +1000,74 @@ def write_independent_validation_artifacts(
     }
 
 
+def _computed_payload_mismatch_details(
+    stored: Any,
+    recomputed: Any,
+    *,
+    path: str,
+    absolute_tolerance: float,
+    relative_tolerance: float,
+) -> list[str]:
+    """Describe non-equivalent computed leaves for reproducibility diagnosis."""
+
+    if type(stored) is not type(recomputed):
+        return [
+            f"{path}: stored type {type(stored).__name__}, "
+            f"fresh type {type(recomputed).__name__}"
+        ]
+    if isinstance(stored, Mapping):
+        details: list[str] = []
+        stored_keys = set(stored)
+        recomputed_keys = set(recomputed)
+        for key in sorted(stored_keys - recomputed_keys):
+            details.append(f"{path}.{key}: unexpected stored key")
+        for key in sorted(recomputed_keys - stored_keys):
+            details.append(f"{path}.{key}: missing stored key")
+        for key in sorted(stored_keys & recomputed_keys):
+            details.extend(
+                _computed_payload_mismatch_details(
+                    stored[key],
+                    recomputed[key],
+                    path=f"{path}.{key}",
+                    absolute_tolerance=absolute_tolerance,
+                    relative_tolerance=relative_tolerance,
+                )
+            )
+        return details
+    if isinstance(stored, (list, tuple)):
+        details = []
+        if len(stored) != len(recomputed):
+            details.append(
+                f"{path}: stored length {len(stored)}, fresh length {len(recomputed)}"
+            )
+        for index, (stored_item, recomputed_item) in enumerate(zip(stored, recomputed)):
+            details.extend(
+                _computed_payload_mismatch_details(
+                    stored_item,
+                    recomputed_item,
+                    path=f"{path}[{index}]",
+                    absolute_tolerance=absolute_tolerance,
+                    relative_tolerance=relative_tolerance,
+                )
+            )
+        return details
+    if isinstance(stored, float):
+        if math.isclose(
+            stored,
+            recomputed,
+            rel_tol=relative_tolerance,
+            abs_tol=absolute_tolerance,
+        ):
+            return []
+        return [
+            f"{path}: stored={stored!r}, fresh={recomputed!r}, "
+            f"absolute_delta={abs(stored - recomputed)!r}"
+        ]
+    if stored != recomputed:
+        return [f"{path}: stored={stored!r}, fresh={recomputed!r}"]
+    return []
+
+
 def independent_validation_record(
     experiment: ParticleCreationFLRWExperiment,
     benchmark: Any,
@@ -872,6 +1129,7 @@ def independent_validation_record(
         "official_reference",
         "independent_discrete_result",
         "continuum_reference",
+        "factor_ordering_comparison",
         "convergence",
         "assessment",
     )
@@ -881,23 +1139,36 @@ def independent_validation_record(
         policy.normalization_tolerance,
         policy.continuum_absolute_tolerance,
     )
-    stored_result_matches = all(
-        payload.get(key) == expected_payload[key] for key in exact_keys
-    ) and all(
-        computed_payloads_equivalent(
-            payload.get(key),
-            expected_payload[key],
+    mismatch_details: list[str] = []
+    for key in exact_keys:
+        if payload.get(key) != expected_payload[key]:
+            mismatch_details.append(f"{key}: exact content differs")
+    for key in computed_keys:
+        stored_section = payload.get(key)
+        expected_section = expected_payload[key]
+        if not computed_payloads_equivalent(
+            stored_section,
+            expected_section,
             absolute_tolerance=comparison_absolute_tolerance,
             relative_tolerance=policy.continuum_relative_tolerance,
-        )
-        for key in computed_keys
-    )
+        ):
+            mismatch_details.extend(
+                _computed_payload_mismatch_details(
+                    stored_section,
+                    expected_section,
+                    path=key,
+                    absolute_tolerance=comparison_absolute_tolerance,
+                    relative_tolerance=policy.continuum_relative_tolerance,
+                )
+            )
+    stored_result_matches = not mismatch_details
     errors: list[str] = []
     if lineage.status is not ArtifactLineageStatus.CURRENT:
         errors.append(lineage.reason or "Independent artifact lineage is not current.")
     if not stored_result_matches:
         errors.append(
-            "Stored independent validation content does not match fresh computation."
+            "Stored independent validation content does not match fresh computation. "
+            "Differences: " + "; ".join(mismatch_details[:8])
         )
     if not recomputed.assessment.passed:
         errors.extend(recomputed.assessment.errors)

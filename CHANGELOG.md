@@ -32,6 +32,14 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
 
 ### Changed
 
+- Replaced the particle-creation experiment's first-order phase-then-pairing
+  slice product with a lineage-bound symmetric
+  phase-half/pairing/phase-half composition, and strengthened the independent
+  refinement policy to require approximately second-order convergence.
+- Canonicalized only the condition-sensitive factor-ordering comparison and
+  derived convergence-order summaries so persisted independent evidence
+  reproduces across supported platforms without loosening benchmark or
+  acceptance-policy tolerances.
 - Made validation-lineage fingerprints and persisted-evidence reproduction
   portable across supported operating systems and Python versions by
   canonicalizing computed benchmark floats more strictly than the declared
@@ -39,8 +47,9 @@ Formal repository releases are now tracked by semantic-version tags, with `1.0.0
   exact nonnumeric structure.
 - Made current, freshly reproducible, passing independent-benchmark evidence a
   content-checked prerequisite for the particle-creation IBM hardware path.
-- Clarified the phase-then-pairing slice order in the particle-creation model
-  statement.
+- Updated the particle-creation model statement, circuit metadata, benchmark
+  provenance, generated artifacts, and regression values for the symmetric
+  factor ordering.
 - Replaced file-existence-only IBM progression for `particle_creation_flrw` with recomputed current-lineage exact/noisy assessments before any backend resolution or job submission.
 - Extended particle-creation analysis outputs to distinguish current local evidence from legacy-unbound IBM evidence and to classify the preserved IBM result retrospectively as failing the current hardware policy without altering the historical IBM artifacts.
 - Extended future IBM hardware reports to include optional validation fingerprints, aggregate assessment status, allowed observable errors, standardized residuals, and per-observable PASS/FAIL results.

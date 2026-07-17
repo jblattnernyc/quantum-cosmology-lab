@@ -31,13 +31,17 @@ def build_particle_creation_circuit(parameters: ParticleCreationFLRWParameters):
     )
     circuit = qiskit.QuantumCircuit(2, name="flrw_particle_creation")
     for evolution_slice in evolution_slices(parameters):
-        circuit.rz(-evolution_slice.phase_angle, 0)
-        circuit.rz(-evolution_slice.phase_angle, 1)
+        half_phase_angle = 0.5 * evolution_slice.phase_angle
+        circuit.rz(-half_phase_angle, 0)
+        circuit.rz(-half_phase_angle, 1)
         circuit.rxx(evolution_slice.squeezing_angle, 0, 1)
         circuit.ryy(-evolution_slice.squeezing_angle, 0, 1)
+        circuit.rz(-half_phase_angle, 0)
+        circuit.rz(-half_phase_angle, 1)
     circuit.metadata = {
         "experiment": "particle_creation_flrw",
         "time_steps": parameters.time_steps,
+        "factor_ordering": parameters.factor_ordering,
         "state_preparation": "discrete_pair_creation_from_vacuum",
     }
     return circuit
@@ -61,14 +65,15 @@ def build_particle_creation_artifact(
             ),
         },
         construction_summary=(
-            "Two-qubit stepwise evolution from the vacuum using discrete "
-            "frequency phases and Bogoliubov-inspired pairing rotations."
+            "Two-qubit stepwise evolution from the vacuum using a symmetric "
+            "phase-half/pairing/phase-half factor ordering."
         ),
         payload=build_particle_creation_circuit(parameters),
         metadata={
             "qubit_encoding": "q0 -> k mode occupation, q1 -> -k mode occupation",
             "retained_subspace": "|00>, |11>",
             "time_steps": parameters.time_steps,
+            "factor_ordering": parameters.factor_ordering,
         },
     )
 

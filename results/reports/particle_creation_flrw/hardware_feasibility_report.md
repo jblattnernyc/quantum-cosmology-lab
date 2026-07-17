@@ -14,13 +14,13 @@ The study required current, passing independent-validation evidence; the exact i
 
 ## Result
 
-`N = 6` has the lowest structural hardware cost among the compared candidates. Its median transpiled depth is `72.0`, its median two-qubit gate count is `24.0`, and its median two-qubit calibration-error proxy is `0.191687`.
-At `N = 24`, the continuum-interpolation observable error decreases to `8.564926e-03`, but the two-qubit burden and calibration-error proxy increase.
+`N = 6` has the lowest structural hardware cost among the compared candidates. Its median transpiled depth is `73.0`, its median two-qubit gate count is `24.0`, and its median two-qubit calibration-error proxy is `0.191687`.
+At `N = 24`, the continuum-interpolation observable error decreases to `3.986591e-04`, but the two-qubit burden and calibration-error proxy increase.
 
 ## Decision
 
 Retain `N = 6` only as the least costly declared discrete candidate. The study does not authorize a live run because the calibration is a fixed fake-backend snapshot and structural proxies do not establish observable accuracy.
-A current real-backend transpilation assessment and an acceptable noisy or local-testing observable assessment remain required. If the noise-versus-discretization tradeoff remains unacceptable, investigate a symmetric splitting refinement before increasing the slice count.
+A current real-backend transpilation assessment and an acceptable noisy or local-testing observable assessment remain required. If the noise-versus-discretization tradeoff remains unacceptable after the current symmetric splitting refinement, reassess the slice count and backend mapping before considering live execution.
 
 ## Artifacts
 

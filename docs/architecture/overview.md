@@ -111,6 +111,14 @@ and seeds but never executes a primitive. Its structural and calibration-proxy
 metrics inform hardware decisions; they are not prerequisite validation tiers
 and do not alter the scientific lineage.
 
+The particle-creation slice evolution uses a symmetric
+phase-half/pairing/phase-half composition. The independent validation layer
+reconstructs that composition without shared evolution helpers and requires
+approximately second-order convergence toward its explicitly added
+linear-interpolation ODE diagnostic. This reduces factor-ordering error while
+leaving the model's two-mode, single-pair truncation and interpretive limits
+unchanged.
+
 ## Current State
 
 The active repository baseline now contains:

@@ -154,7 +154,7 @@ class ParticleCreationHardwareFeasibilityTests(unittest.TestCase):
         self.assertFalse(payload["job_submitted"])
         self.assertIn("Live hardware recommendation: DEFER", report)
         self.assertIn("No circuit was executed", report)
-        self.assertIn("|6|18|12|", table)
+        self.assertIn("|6|24|12|", table)
 
     def test_report_uses_selected_and_highest_configured_time_steps(self) -> None:
         reordered_study = replace(

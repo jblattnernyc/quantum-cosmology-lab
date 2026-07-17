@@ -1,28 +1,28 @@
 {
   "benchmark_values": {
-    "pairing_correlator_expectation": -0.3465452307022457,
-    "single_mode_particle_number_expectation": 0.03422860544437148,
-    "total_particle_number_expectation": 0.06845721088874296
+    "pairing_correlator_expectation": -0.32551651813899957,
+    "single_mode_particle_number_expectation": 0.03892064274087119,
+    "total_particle_number_expectation": 0.07784128548174238
   },
   "comparison_figure": "results/figures/particle_creation_flrw/observable_comparison.png",
   "convergence_summary_table_markdown": "results/tables/particle_creation_flrw/convergence_summary.md",
   "exact_local_absolute_errors": {
-    "pairing_correlator_expectation": 1.1102230246251565e-16,
-    "single_mode_particle_number_expectation": 2.7755575615628914e-17,
-    "total_particle_number_expectation": 0.0
+    "pairing_correlator_expectation": 7.771561172376096e-16,
+    "single_mode_particle_number_expectation": 1.5265566588595902e-16,
+    "total_particle_number_expectation": 2.498001805406602e-16
   },
   "exact_local_values": {
-    "pairing_correlator_expectation": -0.3465452307022456,
-    "single_mode_particle_number_expectation": 0.03422860544437145,
-    "total_particle_number_expectation": 0.06845721088874296
+    "pairing_correlator_expectation": -0.3255165181389988,
+    "single_mode_particle_number_expectation": 0.038920642740871036,
+    "total_particle_number_expectation": 0.07784128548174213
   },
   "hardware_feasibility_json": "data/processed/particle_creation_flrw/hardware_feasibility.json",
   "hardware_feasibility_report_markdown": "results/reports/particle_creation_flrw/hardware_feasibility_report.md",
   "hardware_feasibility_table_markdown": "results/tables/particle_creation_flrw/hardware_feasibility_summary.md",
   "ibm_runtime_absolute_errors": {
-    "pairing_correlator_expectation": 0.13982031674937304,
-    "single_mode_particle_number_expectation": 0.2694795210090256,
-    "total_particle_number_expectation": 0.5228915817597541
+    "pairing_correlator_expectation": 0.11879160418612691,
+    "single_mode_particle_number_expectation": 0.26478748371252586,
+    "total_particle_number_expectation": 0.5135075071667546
   },
   "ibm_runtime_comparisons_json": "data/processed/particle_creation_flrw/ibm_runtime_comparisons.json",
   "ibm_runtime_json": "data/processed/particle_creation_flrw/ibm_runtime.json",
@@ -36,45 +36,45 @@
   "independent_validation_json": "data/processed/particle_creation_flrw/independent_validation.json",
   "independent_validation_report_markdown": "results/reports/particle_creation_flrw/independent_validation_report.md",
   "noisy_local_absolute_errors": {
-    "pairing_correlator_expectation": 0.044386957320950715,
-    "single_mode_particle_number_expectation": 0.029620315418937865,
-    "total_particle_number_expectation": 0.0538449473846383
+    "pairing_correlator_expectation": 0.04494097857065421,
+    "single_mode_particle_number_expectation": 0.024028997546898592,
+    "total_particle_number_expectation": 0.057950081424732486
   },
   "noisy_local_values": {
-    "pairing_correlator_expectation": -0.302158273381295,
-    "single_mode_particle_number_expectation": 0.06384892086330934,
-    "total_particle_number_expectation": 0.12230215827338126
+    "pairing_correlator_expectation": -0.28057553956834536,
+    "single_mode_particle_number_expectation": 0.06294964028776978,
+    "total_particle_number_expectation": 0.13579136690647486
   },
   "observable_summary_table_markdown": "results/tables/particle_creation_flrw/observable_summary.md",
   "validation": {
     "current_context": {
-      "benchmark_fingerprint": "ce8aa4a71dc6b6c202024f7209615216da02d1847426b8394bc1fbb47881a464",
-      "configuration_fingerprint": "d49e754e7ff2fd221f4ac4029510c74939051e575484ecbf92f01bcfeb0bb732",
+      "benchmark_fingerprint": "e7f6ebea31786bb1e7488286305ca38eeeae39cdce9d75b74fe5244f48aa2767",
+      "configuration_fingerprint": "d8d2b6d1a5fb89fb01f21933282e61a5efa9f5595c7d07f04ad1c43348472ea6",
       "experiment_name": "particle_creation_flrw",
-      "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
-      "model_fingerprint": "e34bd7e6d9389c4ff69bfb1c8ec75b29d38a618c1c071582d069eb9a8c29ed13",
+      "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
+      "model_fingerprint": "95b3b2d902ef21a6dcbbb7f1888881c6b4da86e864cae8c649020110d4d2b969",
       "observable_fingerprint": "707fea366a2d04c99a636bd857bfd72cac1f0de446245c9d6fbd3800d29e5c7b",
       "schema_version": 1
     },
     "exact_local": {
       "artifact_context": {
-        "benchmark_fingerprint": "ce8aa4a71dc6b6c202024f7209615216da02d1847426b8394bc1fbb47881a464",
-        "configuration_fingerprint": "d49e754e7ff2fd221f4ac4029510c74939051e575484ecbf92f01bcfeb0bb732",
+        "benchmark_fingerprint": "e7f6ebea31786bb1e7488286305ca38eeeae39cdce9d75b74fe5244f48aa2767",
+        "configuration_fingerprint": "d8d2b6d1a5fb89fb01f21933282e61a5efa9f5595c7d07f04ad1c43348472ea6",
         "experiment_name": "particle_creation_flrw",
-        "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
-        "model_fingerprint": "e34bd7e6d9389c4ff69bfb1c8ec75b29d38a618c1c071582d069eb9a8c29ed13",
+        "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
+        "model_fingerprint": "95b3b2d902ef21a6dcbbb7f1888881c6b4da86e864cae8c649020110d4d2b969",
         "observable_fingerprint": "707fea366a2d04c99a636bd857bfd72cac1f0de446245c9d6fbd3800d29e5c7b",
         "schema_version": 1
       },
       "assessment": {
         "errors": [],
-        "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
+        "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
         "observables": [
           {
-            "absolute_error": 1.1102230246251565e-16,
-            "allowed_error": 3.565452307022457e-09,
-            "benchmark_value": -0.3465452307022457,
-            "candidate_value": -0.3465452307022456,
+            "absolute_error": 7.771561172376096e-16,
+            "allowed_error": 3.3551651813899957e-09,
+            "benchmark_value": -0.32551651813899957,
+            "candidate_value": -0.3255165181389988,
             "checks": {
               "bounds": true,
               "finite": true,
@@ -90,10 +90,10 @@
             "uncertainty": 0.0
           },
           {
-            "absolute_error": 2.7755575615628914e-17,
-            "allowed_error": 4.422860544437148e-10,
-            "benchmark_value": 0.03422860544437148,
-            "candidate_value": 0.03422860544437145,
+            "absolute_error": 1.5265566588595902e-16,
+            "allowed_error": 4.892064274087119e-10,
+            "benchmark_value": 0.03892064274087119,
+            "candidate_value": 0.038920642740871036,
             "checks": {
               "bounds": true,
               "finite": true,
@@ -109,10 +109,10 @@
             "uncertainty": 0.0
           },
           {
-            "absolute_error": 0.0,
-            "allowed_error": 7.845721088874296e-10,
-            "benchmark_value": 0.06845721088874296,
-            "candidate_value": 0.06845721088874296,
+            "absolute_error": 2.498001805406602e-16,
+            "allowed_error": 8.784128548174237e-10,
+            "benchmark_value": 0.07784128548174238,
+            "candidate_value": 0.07784128548174213,
             "checks": {
               "bounds": true,
               "finite": true,
@@ -141,12 +141,12 @@
       "artifact_context": null,
       "assessment": {
         "errors": [],
-        "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
+        "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
         "observables": [
           {
-            "absolute_error": 0.13982031674937304,
-            "allowed_error": 0.27327261535112285,
-            "benchmark_value": -0.3465452307022457,
+            "absolute_error": 0.11879160418612691,
+            "allowed_error": 0.2627582590694998,
+            "benchmark_value": -0.32551651813899957,
             "candidate_value": -0.20672491395287265,
             "checks": {
               "bounds": true,
@@ -161,13 +161,13 @@
             "reasons": [
               "The standardized residual limit was exceeded or uncertainty was zero."
             ],
-            "standardized_residual": 4.206198575016972,
+            "standardized_residual": 3.5735942234153732,
             "uncertainty": 0.0332414921111538
           },
           {
-            "absolute_error": 0.2694795210090256,
-            "allowed_error": 0.14845721088874297,
-            "benchmark_value": 0.03422860544437148,
+            "absolute_error": 0.26478748371252586,
+            "allowed_error": 0.15784128548174237,
+            "benchmark_value": 0.03892064274087119,
             "candidate_value": 0.30370812645339706,
             "checks": {
               "bounds": true,
@@ -183,13 +183,13 @@
               "Absolute/relative tolerance was exceeded.",
               "The standardized residual limit was exceeded or uncertainty was zero."
             ],
-            "standardized_residual": 17.497281442740086,
+            "standardized_residual": 17.19262787645317,
             "uncertainty": 0.015401222292211409
           },
           {
-            "absolute_error": 0.5228915817597541,
-            "allowed_error": 0.2569144217774859,
-            "benchmark_value": 0.06845721088874296,
+            "absolute_error": 0.5135075071667546,
+            "allowed_error": 0.27568257096348475,
+            "benchmark_value": 0.07784128548174238,
             "candidate_value": 0.591348792648497,
             "checks": {
               "bounds": true,
@@ -205,7 +205,7 @@
               "Absolute/relative tolerance was exceeded.",
               "The standardized residual limit was exceeded or uncertainty was zero."
             ],
-            "standardized_residual": 20.231856914939716,
+            "standardized_residual": 19.86876586305141,
             "uncertainty": 0.025844962425255084
           }
         ],
@@ -222,7 +222,7 @@
       "artifact_path": "data/processed/particle_creation_flrw/independent_validation.json",
       "assessment": {
         "errors": [],
-        "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
+        "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
         "observables": [],
         "passed": true,
         "schema_version": 1,
@@ -242,21 +242,22 @@
           "odd_parity_suppression": true,
           "official_observable_error": true,
           "official_phase_aligned_amplitude_error": true,
-          "official_state_infidelity": true
+          "official_state_infidelity": true,
+          "official_step_factor_ordering_improvement": true
         },
         "errors": [],
         "metrics": {
           "continuum_reference_normalization_error": 2.2881696537524476e-13,
-          "even_parity_probability": 1.0000000000000004,
-          "final_maximum_observable_absolute_error": 0.0022420442670131324,
-          "final_observable_convergence_order": 0.9783535093489433,
-          "final_state_infidelity": 1.0521519472006524e-05,
-          "independent_normalization_error": 2.220446049250313e-16,
+          "even_parity_probability": 1.0000000000000007,
+          "final_maximum_observable_absolute_error": 2.4906779561462145e-05,
+          "final_observable_convergence_order": 2.00010901,
+          "final_state_infidelity": 1.9176682464205896e-10,
+          "independent_normalization_error": 6.661338147750939e-16,
           "monotone_observable_error": true,
           "odd_parity_probability": 0.0,
           "official_maximum_observable_absolute_error": 5.551115123125783e-17,
-          "official_phase_aligned_maximum_amplitude_error": 5.168646919320887e-17,
-          "official_state_infidelity": 0.0
+          "official_phase_aligned_maximum_amplitude_error": 1.1102312492854563e-16,
+          "official_state_infidelity": 2.220446049250313e-16
         },
         "passed": true,
         "schema_version": 1,
@@ -266,23 +267,23 @@
     },
     "noisy_local": {
       "artifact_context": {
-        "benchmark_fingerprint": "ce8aa4a71dc6b6c202024f7209615216da02d1847426b8394bc1fbb47881a464",
-        "configuration_fingerprint": "d49e754e7ff2fd221f4ac4029510c74939051e575484ecbf92f01bcfeb0bb732",
+        "benchmark_fingerprint": "e7f6ebea31786bb1e7488286305ca38eeeae39cdce9d75b74fe5244f48aa2767",
+        "configuration_fingerprint": "d8d2b6d1a5fb89fb01f21933282e61a5efa9f5595c7d07f04ad1c43348472ea6",
         "experiment_name": "particle_creation_flrw",
-        "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
-        "model_fingerprint": "e34bd7e6d9389c4ff69bfb1c8ec75b29d38a618c1c071582d069eb9a8c29ed13",
+        "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
+        "model_fingerprint": "95b3b2d902ef21a6dcbbb7f1888881c6b4da86e864cae8c649020110d4d2b969",
         "observable_fingerprint": "707fea366a2d04c99a636bd857bfd72cac1f0de446245c9d6fbd3800d29e5c7b",
         "schema_version": 1
       },
       "assessment": {
         "errors": [],
-        "lineage_id": "94b2995642005f78f1fb06904a28dcbfe0bf455903794fdbfc6a9abfa4bea3e6",
+        "lineage_id": "55f8373cc4fe4f6e808305bf3c42a356794a98c8df70ec8e95358f551d9ea7c8",
         "observables": [
           {
-            "absolute_error": 0.044386957320950715,
-            "allowed_error": 0.27327261535112285,
-            "benchmark_value": -0.3465452307022457,
-            "candidate_value": -0.302158273381295,
+            "absolute_error": 0.04494097857065421,
+            "allowed_error": 0.2627582590694998,
+            "benchmark_value": -0.32551651813899957,
+            "candidate_value": -0.28057553956834536,
             "checks": {
               "bounds": true,
               "finite": true,
@@ -295,13 +296,13 @@
             "passed": true,
             "reasons": [],
             "standardized_residual": null,
-            "uncertainty": 0.02858176493533135
+            "uncertainty": 0.028776809389598992
           },
           {
-            "absolute_error": 0.029620315418937865,
-            "allowed_error": 0.14845721088874297,
-            "benchmark_value": 0.03422860544437148,
-            "candidate_value": 0.06384892086330934,
+            "absolute_error": 0.024028997546898592,
+            "allowed_error": 0.15784128548174237,
+            "benchmark_value": 0.03892064274087119,
+            "candidate_value": 0.06294964028776978,
             "checks": {
               "bounds": true,
               "finite": true,
@@ -314,13 +315,13 @@
             "passed": true,
             "reasons": [],
             "standardized_residual": null,
-            "uncertainty": 0.007331576293155265
+            "uncertainty": 0.007283258068295922
           },
           {
-            "absolute_error": 0.0538449473846383,
-            "allowed_error": 0.2569144217774859,
-            "benchmark_value": 0.06845721088874296,
-            "candidate_value": 0.12230215827338126,
+            "absolute_error": 0.057950081424732486,
+            "allowed_error": 0.27568257096348475,
+            "benchmark_value": 0.07784128548174238,
+            "candidate_value": 0.13579136690647486,
             "checks": {
               "bounds": true,
               "finite": true,
@@ -333,7 +334,7 @@
             "passed": true,
             "reasons": [],
             "standardized_residual": null,
-            "uncertainty": 0.014366717814740698
+            "uncertainty": 0.015076437241163913
           }
         ],
         "passed": true,
